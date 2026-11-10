@@ -1,0 +1,17 @@
+# Keamanan PDKQu - Sistem Informasi Qurban
+
+# Blokir akses langsung ke berkas sensitif
+<FilesMatch "^(app\.html|database\.sqlite|\.cpanel\.yml|\.gitignore|README-KEAMANAN\.txt)$">
+    Require all denied
+</FilesMatch>
+
+# Matikan directory listing
+Options -Indexes
+
+# Security Headers
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set X-XSS-Protection "1; mode=block"
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
