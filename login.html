@@ -7,11 +7,11 @@
 <meta name="robots" content="noindex,nofollow,noarchive">
 <style>
 :root{
-  --primary:#10b981;
-  --primary-dark:#059669;
-  --text:#f8fafc;
-  --muted:#94a3b8;
-  --border:rgba(52,211,153,.26);
+  --primary:#059669;
+  --primary-gradient:linear-gradient(135deg, #059669 0%, #10b981 100%);
+  --text:#0f172a;
+  --muted:#64748b;
+  --border:#cbd5e1;
 }
 *{box-sizing:border-box}
 html,body{height:100%;margin:0}
@@ -23,10 +23,10 @@ body{
   font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
   color:var(--text);
   background:
-    radial-gradient(circle at 18% 18%,rgba(16,185,129,.24),transparent 35%),
-    radial-gradient(circle at 82% 16%,rgba(245,158,11,.16),transparent 30%),
-    radial-gradient(circle at 75% 85%,rgba(5,150,105,.22),transparent 35%),
-    linear-gradient(135deg,#051a14 0%,#082e23 45%,#04140f 100%);
+    radial-gradient(circle at 15% 15%, rgba(16,185,129,.12), transparent 35%),
+    radial-gradient(circle at 85% 15%, rgba(37,99,235,.10), transparent 30%),
+    radial-gradient(circle at 75% 85%, rgba(245,158,11,.08), transparent 35%),
+    linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
   overflow:hidden;
   position:relative;
 }
@@ -34,31 +34,31 @@ body:before,body:after{
   content:"";
   position:absolute;
   border-radius:999px;
-  filter:blur(60px);
-  opacity:.35;
+  filter:blur(80px);
+  opacity:.45;
   pointer-events:none;
 }
 body:before{
-  width:360px;height:360px;
-  left:-100px;bottom:-140px;
-  background:linear-gradient(135deg,#10b981,#34d399);
+  width:380px;height:380px;
+  left:-120px;bottom:-140px;
+  background:linear-gradient(135deg,#a7f3d0,#6ee7b7);
 }
 body:after{
-  width:320px;height:320px;
-  right:-90px;top:-110px;
-  background:linear-gradient(135deg,#f59e0b,#10b981);
+  width:340px;height:340px;
+  right:-100px;top:-120px;
+  background:linear-gradient(135deg,#fed7aa,#fde68a);
 }
 form{
   width:min(440px,100%);
-  padding:38px 34px;
+  padding:40px 36px;
   position:relative;
   z-index:1;
-  border:1px solid rgba(52,211,153,.28);
+  border:1px solid #e2e8f0;
   border-radius:24px;
-  background:rgba(8,45,34,.90);
-  box-shadow:0 30px 90px rgba(0,0,0,.6),0 10px 30px rgba(0,0,0,.35);
-  backdrop-filter:blur(20px);
-  -webkit-backdrop-filter:blur(20px);
+  background:rgba(255,255,255,.96);
+  box-shadow:0 20px 60px -10px rgba(15,23,42,.12),0 8px 24px -5px rgba(15,23,42,.06);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
 }
 form:before{
   content:"";
@@ -66,72 +66,73 @@ form:before{
   width:64px;height:6px;
   margin-bottom:24px;
   border-radius:99px;
-  background:linear-gradient(90deg,#10b981,#fbbf24);
+  background:linear-gradient(90deg,#10b981,#3b82f6);
 }
 .brand-pill{
   display:inline-flex;
   align-items:center;
   gap:8px;
-  padding:4px 12px;
+  padding:5px 14px;
   border-radius:999px;
-  background:rgba(245,158,11,.14);
-  border:1px solid rgba(245,158,11,.4);
-  color:#fbbf24;
+  background:#fef3c7;
+  border:1px solid #fde68a;
+  color:#92400e;
   font-size:12px;
-  font-weight:700;
-  margin-bottom:14px;
+  font-weight:750;
+  margin-bottom:16px;
 }
-h1{margin:0 0 6px;font-size:30px;line-height:1.15;letter-spacing:-.6px;color:#fff;font-weight:800}
-p{color:#94a3b8;margin:0 0 24px;font-size:14px}
-label{display:block;font-weight:650;margin:16px 0 7px;font-size:14px;color:#cbd5e1}
+h1{margin:0 0 6px;font-size:28px;line-height:1.2;letter-spacing:-.6px;color:#0f172a;font-weight:850}
+p{color:#64748b;margin:0 0 24px;font-size:14px;font-weight:500}
+label{display:block;font-weight:650;margin:16px 0 7px;font-size:14px;color:#334155}
 input{
   width:100%;
   padding:13px 15px;
-  border:1px solid var(--border);
+  border:1.5px solid var(--border);
   border-radius:12px;
   font-size:15px;
-  background:rgba(4,24,18,.85);
-  color:#fff;
+  background:#ffffff;
+  color:#0f172a;
   outline:none;
   transition:border-color .2s,box-shadow .2s;
 }
 input:focus{
-  border-color:#34d399;
-  box-shadow:0 0 0 4px rgba(52,211,153,.20);
+  border-color:#10b981;
+  box-shadow:0 0 0 4px rgba(16,185,129,.15);
 }
 button{
   width:100%;
   margin-top:24px;
-  padding:13px 16px;
+  padding:14px 16px;
   border:0;
   border-radius:12px;
   color:#fff;
-  background:linear-gradient(135deg,#10b981,#059669);
-  box-shadow:0 10px 24px rgba(16,185,129,.35);
+  background:var(--primary-gradient);
+  box-shadow:0 8px 20px rgba(16,185,129,.35);
   font-size:16px;
   font-weight:750;
   cursor:pointer;
   transition:transform .18s,box-shadow .18s,filter .18s;
 }
-button:hover{transform:translateY(-1px);box-shadow:0 14px 28px rgba(16,185,129,.5);filter:brightness(1.05)}
+button:hover{transform:translateY(-1px);box-shadow:0 12px 26px rgba(16,185,129,.45);filter:brightness(1.03)}
 button:active{transform:translateY(0)}
 .error{
-  color:#fca5a5;
-  background:rgba(239,68,68,.16);
-  border:1px solid rgba(239,68,68,.35);
-  padding:11px 12px;
-  border-radius:10px;
+  color:#b91c1c;
+  background:#fef2f2;
+  border:1px solid #fecaca;
+  padding:11px 14px;
+  border-radius:12px;
   margin-bottom:14px;
   font-size:14px;
+  font-weight:500;
 }
 form>div:last-child{
   margin-top:20px!important;
-  color:#64748b!important;
+  color:#94a3b8!important;
 }
 @media(max-width:480px){
   body{padding:16px}
-  form{padding:28px 22px;border-radius:20px}
-  h1{font-size:26px}
+  form{padding:30px 22px;border-radius:20px}
+  h1{font-size:25px}
 }
 </style>
 </head>
@@ -148,7 +149,7 @@ form>div:last-child{
 <label for="password">Password</label>
 <input id="password" name="password" type="password" required autocomplete="current-password" placeholder="Masukkan password">
 <button type="submit">Masuk ke Sistem</button>
-<div style="margin-top:14px;text-align:center;color:#64748b;font-size:12px">Akun default: <strong style="color:#94a3b8">admin / admin</strong></div>
+<div style="margin-top:16px;text-align:center;color:#94a3b8;font-size:12px">Akun default: <strong style="color:#475569">admin / admin</strong></div>
 </form>
 <script>
 const q=new URLSearchParams(location.search);
