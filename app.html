@@ -6,982 +6,138 @@
   <title>Sistem Informasi Qurban</title>
   <script src="https://cdn.tailwindcss.com"></script>
 
-<style id="pdkq-mobile-responsive">
+<style id="pdkq-reference-theme">
 /* ==========================================================================
-   MOBILE & RESPONSIVE CORE RULES (Smartphones & Small Screens)
+   PDKQu - MODERN ISLAMIC SAAS THEME (Reference Mockup)
+   Emerald Green #04583d, Gold Accent, Clean Crisp Cards
    ========================================================================== */
+:root {
+  --pdkq-emerald-deep: #04583d;
+  --pdkq-emerald-dark: #03442e;
+  --pdkq-emerald-primary: #059669;
+  --pdkq-emerald-light: #10b981;
+  --pdkq-mint-light: #e6f7ef;
+  --pdkq-mint-border: #c7eedb;
+  --pdkq-gold: #eab308;
+  --pdkq-gold-text: #fde047;
+  --pdkq-canvas: #f0f4f8;
+  --pdkq-card-border: #e2e8f0;
+}
+
 html, body, #root {
-  width: 100% !important;
-  max-width: 100% !important;
-  overflow-x: hidden !important;
+  width: 100%;
+  max-width: 100%;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
   box-sizing: border-box;
 }
+
 *, *:before, *:after {
   box-sizing: border-box;
 }
 
-.pdkq-dashboard-mobile {
-  display: none;
-}
-
-@media (max-width: 767px) {
-  .pdkq-dashboard-desktop {
-    display: none !important;
-  }
-  .pdkq-dashboard-mobile {
-    display: block !important;
-  }
-  
-  /* Viewport canvas and scrolling */
-  body {
-    background: #f8fafc !important;
-    padding-bottom: 0 !important;
-  }
-  body > #root > .min-h-screen {
-    position: relative !important;
-    overflow-x: hidden !important;
-    min-height: 100vh !important;
-    display: flex !important;
-    flex-direction: column !important;
-  }
-  body > #root > .min-h-screen > .flex-1 {
-    padding: 16px 14px calc(98px + env(safe-area-inset-bottom)) 14px !important;
-    background: transparent !important;
-    overflow-y: auto !important;
-    min-height: 100vh !important;
-    max-height: none !important;
-    width: 100% !important;
-    min-width: 0 !important;
-  }
-  body > #root > .min-h-screen > .flex-1 > .max-w-7xl {
-    width: 100% !important;
-    max-width: 100% !important;
-    margin: 0 !important;
-    min-width: 0 !important;
-  }
-
-  /* Form controls touch friendly and avoid iOS zoom */
-  input, select, textarea {
-    font-size: 16px !important;
-    max-width: 100% !important;
-    min-width: 0 !important;
-  }
-
-  /* Tables horizontal scrolling */
-  .overflow-x-auto {
-    width: 100% !important;
-    max-width: 100% !important;
-    overflow-x: auto !important;
-    -webkit-overflow-scrolling: touch !important;
-  }
-  .overflow-x-auto table {
-    min-width: 560px !important;
-  }
-  .overflow-x-auto th, .overflow-x-auto td {
-    white-space: nowrap !important;
-  }
-
-  /* Mobile Dashboard Welcome Card */
-  .pdkq-dashboard-shell {
-    margin: 0 !important;
-    padding: 0 !important;
-  }
-  .pdkq-welcome-card {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    background: linear-gradient(135deg, #ecfdf5 0%, #eff6ff 100%);
-    border: 1px solid #d1fae5;
-    border-radius: 20px;
-    padding: 16px 18px;
-    margin-bottom: 16px;
-    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.05);
-  }
-  .pdkq-welcome-icon {
-    width: 52px;
-    height: 52px;
-    flex: 0 0 52px;
-    border-radius: 16px;
-    background: linear-gradient(135deg, #059669, #10b981);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);
-  }
-  .pdkq-welcome-card h2 {
-    margin: 0 0 2px;
-    color: #064e3b;
-    font-size: 20px;
-    font-weight: 800;
-    letter-spacing: -0.02em;
-    border: 0 !important;
-  }
-  .pdkq-welcome-card strong {
-    display: block;
-    color: #0f172a;
-    font-size: 15px;
-    font-weight: 700;
-  }
-  .pdkq-welcome-card p {
-    margin: 0;
-    color: #64748b;
-    font-size: 13px;
-    line-height: 1.35;
-  }
-
-  /* Mobile 2x2 Stat Cards */
-  .pdkq-mobile-stat-grid {
-    display: grid !important;
-    grid-template-columns: 1fr 1fr !important;
-    gap: 12px !important;
-    margin-bottom: 18px !important;
-  }
-  .pdkq-mobile-stat-grid > div {
-    border-radius: 18px !important;
-    padding: 14px !important;
-    border: 0 !important;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: flex-start !important;
-    position: relative !important;
-    overflow: hidden !important;
-  }
-  .pdkq-mobile-stat-grid > div .p-3.bg-gray-50 {
-    background: rgba(255, 255, 255, 0.22) !important;
-    border-radius: 12px !important;
-    width: 36px !important;
-    height: 36px !important;
-    padding: 0 !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    margin-bottom: 8px !important;
-  }
-  .pdkq-mobile-stat-grid > div svg {
-    color: #ffffff !important;
-    width: 18px !important;
-    height: 18px !important;
-  }
-  .pdkq-mobile-stat-grid > div p.text-sm {
-    color: rgba(255, 255, 255, 0.92) !important;
-    font-weight: 700 !important;
-    font-size: 11px !important;
-    margin: 0 !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.03em !important;
-  }
-  .pdkq-mobile-stat-grid > div h3 {
-    color: #ffffff !important;
-    font-size: 22px !important;
-    font-weight: 850 !important;
-    letter-spacing: -0.02em !important;
-    margin: 4px 0 !important;
-    line-height: 1.1 !important;
-  }
-  .pdkq-mobile-stat-grid > div p.text-xs {
-    color: rgba(255, 255, 255, 0.95) !important;
-    font-weight: 600 !important;
-    background: rgba(0, 0, 0, 0.16) !important;
-    padding: 2px 8px !important;
-    border-radius: 999px !important;
-    display: inline-block !important;
-    font-size: 10px !important;
-    margin: 0 !important;
-  }
-  .pdkq-mobile-stat-grid > div:nth-child(1) {
-    background: linear-gradient(135deg, #1d4ed8 0%, #3b82f6 100%) !important;
-    box-shadow: 0 8px 20px -3px rgba(37, 99, 235, 0.35) !important;
-  }
-  .pdkq-mobile-stat-grid > div:nth-child(2) {
-    background: linear-gradient(135deg, #047857 0%, #10b981 100%) !important;
-    box-shadow: 0 8px 20px -3px rgba(16, 185, 129, 0.35) !important;
-  }
-  .pdkq-mobile-stat-grid > div:nth-child(3) {
-    background: linear-gradient(135deg, #6d28d9 0%, #8b5cf6 100%) !important;
-    box-shadow: 0 8px 20px -3px rgba(124, 58, 237, 0.35) !important;
-  }
-  .pdkq-mobile-stat-grid > div:nth-child(4) {
-    background: linear-gradient(135deg, #b45309 0%, #f59e0b 100%) !important;
-    box-shadow: 0 8px 20px -3px rgba(217, 119, 6, 0.35) !important;
-  }
-
-  /* Mobile Dashboard Shortcuts Grid */
-  .pdkq-menu-grid {
-    display: grid !important;
-    grid-template-columns: 1fr 1fr !important;
-    gap: 12px !important;
-    margin: 0 auto 16px !important;
-    width: 100% !important;
-  }
-  .pdkq-dashboard-menu {
-    position: relative !important;
-    min-width: 0 !important;
-    min-height: 104px !important;
-    padding: 13px 12px !important;
-    border: 1px solid var(--vibrant-border) !important;
-    border-radius: 18px !important;
-    background: #ffffff !important;
-    box-shadow: 0 3px 12px rgba(15, 23, 42, 0.04) !important;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: flex-start !important;
-    text-align: left !important;
-    transition: transform 0.12s ease, box-shadow 0.12s ease !important;
-  }
-  .pdkq-dashboard-menu:active {
-    transform: scale(0.98) !important;
-  }
-  .pdkq-dashboard-menu-icon {
-    width: 42px !important;
-    height: 42px !important;
-    border-radius: 13px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    margin-bottom: 8px !important;
-  }
-  .pdkq-dashboard-menu-copy {
-    display: block !important;
-    min-width: 0 !important;
-    padding-right: 8px !important;
-  }
-  .pdkq-dashboard-menu-copy strong {
-    display: block !important;
-    color: #0f172a !important;
-    font-size: 15px !important;
-    line-height: 1.15 !important;
-    margin-bottom: 3px !important;
-  }
-  .pdkq-dashboard-menu-copy small {
-    display: block !important;
-    color: #64748b !important;
-    font-size: 11px !important;
-    line-height: 1.25 !important;
-  }
-  .pdkq-dashboard-chevron {
-    position: absolute !important;
-    right: 12px !important;
-    top: 50% !important;
-    transform: translateY(-50%) !important;
-    font-size: 24px !important;
-    color: #94a3b8 !important;
-    font-weight: 300 !important;
-  }
-  .pdkq-dashboard-menu.green .pdkq-dashboard-menu-icon { background: #dff8ee; color: #12916e; }
-  .pdkq-dashboard-menu.blue .pdkq-dashboard-menu-icon { background: #e2efff; color: #287eea; }
-  .pdkq-dashboard-menu.orange .pdkq-dashboard-menu-icon { background: #fff0dc; color: #f19a16; }
-  .pdkq-dashboard-menu.purple .pdkq-dashboard-menu-icon { background: #eee6ff; color: #7754d6; }
-  .pdkq-dashboard-menu.red .pdkq-dashboard-menu-icon { background: #ffe5e7; color: #ee4850; }
-  .pdkq-dashboard-menu.cyan .pdkq-dashboard-menu-icon { background: #def5f7; color: #0aa4b2; }
-  .pdkq-dashboard-menu.slate .pdkq-dashboard-menu-icon { background: #e9eef2; color: #536474; }
-
-  /* Persistent Bottom Navigation */
-  .pdkq-bottom-nav-new {
-    position: fixed !important;
-    left: 0 !important;
-    right: 0 !important;
-    bottom: 0 !important;
-    height: calc(74px + env(safe-area-inset-bottom)) !important;
-    min-height: 74px !important;
-    padding: 0 6px env(safe-area-inset-bottom) 6px !important;
-    display: grid !important;
-    grid-template-columns: 1fr 1fr 72px 1fr 1fr !important;
-    gap: 2px !important;
-    align-items: center !important;
-    background: rgba(255, 255, 255, 0.96) !important;
-    backdrop-filter: blur(16px) !important;
-    -webkit-backdrop-filter: blur(16px) !important;
-    border-top: 1px solid var(--vibrant-border) !important;
-    box-shadow: 0 -4px 20px rgba(15, 23, 42, 0.07) !important;
-    z-index: 60 !important;
-  }
-  .pdkq-bottom-nav-new button {
-    position: relative !important;
-    min-width: 0 !important;
-    width: 100% !important;
-    height: 62px !important;
-    padding: 5px 2px !important;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    justify-content: center !important;
-    gap: 3px !important;
-    color: #64748b !important;
-    border-radius: 12px !important;
-    border: 0 !important;
-    background: transparent !important;
-  }
-  .pdkq-bottom-nav-new button span {
-    font-size: 11px !important;
-    line-height: 1.1 !important;
-    font-weight: 600 !important;
-    white-space: nowrap !important;
-  }
-  .pdkq-bottom-nav-new button.active {
-    color: #059669 !important;
-    font-weight: 750 !important;
-  }
-  .pdkq-bottom-nav-new button.active:after {
-    content: "" !important;
-    position: absolute !important;
-    bottom: 4px !important;
-    width: 20px !important;
-    height: 3px !important;
-    border-radius: 3px !important;
-    background: #059669 !important;
-    display: block !important;
-  }
-  .pdkq-bottom-nav-new .pdkq-plus-button {
-    width: 58px !important;
-    height: 58px !important;
-    margin: 0 auto !important;
-    border-radius: 50% !important;
-    background: linear-gradient(135deg, #059669 0%, #10b981 100%) !important;
-    color: #ffffff !important;
-    box-shadow: 0 8px 24px rgba(16, 185, 129, 0.45) !important;
-    transform: translateY(-16px) !important;
-    border: 4px solid #ffffff !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-  }
-  .pdkq-bottom-nav-new .pdkq-plus-button:active {
-    transform: translateY(-16px) scale(0.94) !important;
-  }
-  .pdkq-bottom-nav-new .pdkq-plus-button:after {
-    display: none !important;
-  }
-
-  /* Quick Add Popup */
-  .pdkq-quick-add {
-    position: fixed !important;
-    left: 50% !important;
-    bottom: calc(88px + env(safe-area-inset-bottom)) !important;
-    transform: translateX(-50%) !important;
-    width: min(320px, calc(100vw - 32px)) !important;
-    padding: 12px !important;
-    background: #ffffff !important;
-    border: 1px solid var(--vibrant-border) !important;
-    border-radius: 20px !important;
-    box-shadow: 0 16px 45px rgba(15, 23, 42, 0.22) !important;
-    z-index: 75 !important;
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 8px !important;
-    animation: pdkqSlideUp 0.2s ease-out;
-  }
-  .pdkq-quick-add button {
-    border: 1px solid #f1f5f9 !important;
-    background: #f8fafc !important;
-    color: #0f172a !important;
-    min-height: 48px !important;
-    border-radius: 12px !important;
-    display: flex !important;
-    align-items: center !important;
-    gap: 12px !important;
-    padding: 10px 14px !important;
-    font-weight: 700 !important;
-    text-align: left !important;
-    font-size: 14px !important;
-    transition: background 0.15s ease !important;
-  }
-  .pdkq-quick-add button:active {
-    background: #e2e8f0 !important;
-  }
-
-  @keyframes pdkqSlideUp {
-    from { opacity: 0; transform: translate(-50%, 15px); }
-    to { opacity: 1; transform: translate(-50%, 0); }
-  }
-}
-
-@media (max-width: 380px) {
-  .pdkq-bottom-nav-new {
-    grid-template-columns: 1fr 1fr 64px 1fr 1fr !important;
-  }
-  .pdkq-bottom-nav-new .pdkq-plus-button {
-    width: 52px !important;
-    height: 52px !important;
-  }
-  .pdkq-bottom-nav-new button span {
-    font-size: 10px !important;
-  }
-}
-</style>
-
-<style id="visual-modern-vibrant">
-/* ==========================================================================
-   MODERN VIBRANT SAAS THEME (PDKQu - Qurban Management System)
-   Fresh, Crisp, Multi-Colored & Dynamic Design
-   ========================================================================== */
-:root {
-  --vibrant-canvas: #f8fafc;
-  --vibrant-surface: #ffffff;
-  --vibrant-border: #e2e8f0;
-  --vibrant-border-subtle: #f1f5f9;
-  --vibrant-emerald-deep: #064e3b;
-  --vibrant-emerald-primary: #059669;
-  --vibrant-emerald-light: #10b981;
-  --vibrant-blue: #2563eb;
-  --vibrant-blue-light: #3b82f6;
-  --vibrant-purple: #7c3aed;
-  --vibrant-purple-light: #8b5cf6;
-  --vibrant-coral: #ea580c;
-  --vibrant-coral-light: #f97316;
-  --vibrant-gold: #d97706;
-  --vibrant-gold-light: #fbbf24;
-  --vibrant-text-heading: #0f172a;
-  --vibrant-text-body: #334155;
-  --vibrant-text-muted: #64748b;
-  --vibrant-shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.04);
-  --vibrant-shadow-md: 0 6px 20px rgba(15, 23, 42, 0.06);
-  --vibrant-shadow-lg: 0 14px 34px rgba(15, 23, 42, 0.08);
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
 body {
-  background: 
-    radial-gradient(circle at 10% 5%, rgba(16, 185, 129, 0.08), transparent 30rem),
-    radial-gradient(circle at 90% 12%, rgba(37, 99, 235, 0.06), transparent 28rem),
-    radial-gradient(circle at 50% 90%, rgba(245, 158, 11, 0.05), transparent 35rem),
-    linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%) !important;
-  color: var(--vibrant-text-body) !important;
+  background-color: var(--pdkq-canvas) !important;
   font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
-  min-height: 100vh;
+  color: #334155;
+  overflow-x: hidden;
 }
 
-body > #root > .min-h-screen {
-  background: transparent !important;
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.4);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 116, 139, 0.6);
 }
 
-body > #root > .min-h-screen > .flex-1 {
-  background: transparent !important;
+/* Form controls touch friendly */
+input, select, textarea {
+  font-size: 15px;
 }
-
-/* ==========================================================================
-   SIDEBAR (Desktop)
-   ========================================================================== */
-@media (min-width: 768px) {
-  body > #root > .min-h-screen > div:nth-child(2) {
-    background: #ffffff !important;
-    border-right: 1px solid var(--vibrant-border) !important;
-    box-shadow: 4px 0 25px rgba(15, 23, 42, 0.04) !important;
-  }
-  body > #root > .min-h-screen > div:nth-child(2) > div:first-child {
-    background: linear-gradient(135deg, #064e3b 0%, #047857 50%, #0d9488 100%) !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.12) !important;
-    color: #ffffff !important;
-    padding: 24px 20px !important;
-  }
-  body > #root > .min-h-screen > div:nth-child(2) > div:first-child h1 {
-    color: #ffffff !important;
-  }
-  body > #root > .min-h-screen > div:nth-child(2) > div:first-child p {
-    color: #a7f3d0 !important;
-  }
-  body > #root > .min-h-screen > div:nth-child(2) .bg-emerald-900\/60 {
-    background: rgba(0, 0, 0, 0.22) !important;
-    border: 1px solid rgba(251, 191, 36, 0.40) !important;
-    border-radius: 14px !important;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15) !important;
-  }
-  body > #root > .min-h-screen > div:nth-child(2) .bg-emerald-900\/60 span.text-white {
-    color: #fbbf24 !important;
-    font-weight: 800 !important;
-  }
-  body > #root > .min-h-screen > div:nth-child(2) nav {
-    padding: 16px !important;
-  }
-  body > #root > .min-h-screen > div:nth-child(2) nav button {
-    border-radius: 14px !important;
-    transition: all 0.18s ease !important;
-    color: #475569 !important;
-    font-weight: 600 !important;
-    margin: 3px 0 !important;
-  }
-  body > #root > .min-h-screen > div:nth-child(2) nav button:hover {
-    background: #f1f5f9 !important;
-    color: #0f172a !important;
-    transform: translateX(3px) !important;
-  }
-  body > #root > .min-h-screen > div:nth-child(2) nav button[class*="bg-emerald-900"] {
-    background: linear-gradient(90deg, #ecfdf5 0%, #f0fdf4 100%) !important;
-    border-left: 3.5px solid #10b981 !important;
-    color: #047857 !important;
-    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.15) !important;
-    font-weight: 750 !important;
-  }
-  body > #root > .min-h-screen > div:nth-child(2) nav button[class*="bg-emerald-900"] div {
-    color: #059669 !important;
-  }
-}
-
-/* ==========================================================================
-   HEADER & TITLES
-   ========================================================================== */
 @media (max-width: 767px) {
-  body > #root > .min-h-screen > .md\:hidden {
-    background: linear-gradient(135deg, #064e3b 0%, #047857 100%) !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.12) !important;
-    box-shadow: 0 6px 20px rgba(4, 120, 87, 0.25) !important;
-    color: #ffffff !important;
-  }
-  body > #root > .min-h-screen > .md\:hidden button {
-    border-radius: 12px !important;
-    background: rgba(255, 255, 255, 0.15) !important;
-    border: 1px solid rgba(255, 255, 255, 0.25) !important;
-    color: #ffffff !important;
+  input, select, textarea {
+    font-size: 16px !important; /* Avoid auto-zoom on iOS */
   }
 }
 
-.max-w-7xl h2 {
-  color: var(--vibrant-text-heading) !important;
-  font-weight: 800 !important;
-  letter-spacing: -0.02em !important;
-  border-bottom: 2px solid var(--vibrant-border) !important;
+/* Table scroll wrapper */
+.overflow-x-auto {
+  -webkit-overflow-scrolling: touch;
 }
 
-/* Year badge button */
-.max-w-7xl .pdkq-dashboard-desktop button[class*="bg-emerald-100"] {
-  background: #fef3c7 !important;
-  border: 1.5px solid #fde68a !important;
-  color: #92400e !important;
-  border-radius: 12px !important;
-  font-weight: 750 !important;
-  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.15) !important;
+/* Mobile Quick Menu grid */
+.pdkq-menu-grid {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 10px !important;
+  margin-top: 12px !important;
 }
-.max-w-7xl .pdkq-dashboard-desktop button[class*="bg-emerald-100"]:hover {
-  background: #fde68a !important;
-  transform: translateY(-1px) !important;
-}
-
-/* ==========================================================================
-   4 VIBRANT GRADIENT STAT CARDS (Mudhohi, Sapi, Daging, Mustahiq)
-   ========================================================================== */
-.max-w-7xl .grid.grid-cols-1.md\:grid-cols-2.lg\:grid-cols-4 > div {
-  border-radius: 20px !important;
-  padding: 24px !important;
-  border: 0 !important;
-  transition: all 0.22s ease !important;
-}
-.max-w-7xl .grid.grid-cols-1.md\:grid-cols-2.lg\:grid-cols-4 > div:hover {
-  transform: translateY(-4px) !important;
-}
-.max-w-7xl .grid.grid-cols-1.md\:grid-cols-2.lg\:grid-cols-4 > div .p-3.bg-gray-50 {
-  background: rgba(255, 255, 255, 0.22) !important;
-  border-radius: 14px !important;
-}
-.max-w-7xl .grid.grid-cols-1.md\:grid-cols-2.lg\:grid-cols-4 > div svg {
-  color: #ffffff !important;
-}
-.max-w-7xl .grid.grid-cols-1.md\:grid-cols-2.lg\:grid-cols-4 > div p.text-sm {
-  color: rgba(255, 255, 255, 0.90) !important;
-  font-weight: 650 !important;
-  font-size: 13px !important;
-}
-.max-w-7xl .grid.grid-cols-1.md\:grid-cols-2.lg\:grid-cols-4 > div h3 {
-  color: #ffffff !important;
-  font-size: 32px !important;
-  font-weight: 850 !important;
-  letter-spacing: -0.03em !important;
-}
-.max-w-7xl .grid.grid-cols-1.md\:grid-cols-2.lg\:grid-cols-4 > div p.text-xs {
-  color: rgba(255, 255, 255, 0.92) !important;
-  font-weight: 600 !important;
-  background: rgba(0, 0, 0, 0.15) !important;
-  padding: 3px 10px !important;
-  border-radius: 999px !important;
-  display: inline-block !important;
-  width: fit-content !important;
-  margin-top: 6px !important;
-}
-
-/* Card 1: Total Mudhohi (Vibrant Royal Blue) */
-.max-w-7xl .grid.grid-cols-1.md\:grid-cols-2.lg\:grid-cols-4 > div:nth-child(1) {
-  background: linear-gradient(135deg, #1d4ed8 0%, #3b82f6 100%) !important;
-  box-shadow: 0 12px 28px -4px rgba(37, 99, 235, 0.38) !important;
-}
-.max-w-7xl .grid.grid-cols-1.md\:grid-cols-2.lg\:grid-cols-4 > div:nth-child(1):hover {
-  box-shadow: 0 16px 36px -4px rgba(37, 99, 235, 0.50) !important;
-}
-
-/* Card 2: Total Sapi / Hewan (Vibrant Emerald Green) */
-.max-w-7xl .grid.grid-cols-1.md\:grid-cols-2.lg\:grid-cols-4 > div:nth-child(2) {
-  background: linear-gradient(135deg, #047857 0%, #10b981 100%) !important;
-  box-shadow: 0 12px 28px -4px rgba(16, 185, 129, 0.38) !important;
-}
-.max-w-7xl .grid.grid-cols-1.md\:grid-cols-2.lg\:grid-cols-4 > div:nth-child(2):hover {
-  box-shadow: 0 16px 36px -4px rgba(16, 185, 129, 0.50) !important;
-}
-
-/* Card 3: Total Gantingan / Mustahiq (Vibrant Purple / Violet) */
-.max-w-7xl .grid.grid-cols-1.md\:grid-cols-2.lg\:grid-cols-4 > div:nth-child(3) {
-  background: linear-gradient(135deg, #6d28d9 0%, #8b5cf6 100%) !important;
-  box-shadow: 0 12px 28px -4px rgba(124, 58, 237, 0.38) !important;
-}
-.max-w-7xl .grid.grid-cols-1.md\:grid-cols-2.lg\:grid-cols-4 > div:nth-child(3):hover {
-  box-shadow: 0 16px 36px -4px rgba(124, 58, 237, 0.50) !important;
-}
-
-/* Card 4: Total Daging (Vibrant Coral / Orange) */
-.max-w-7xl .grid.grid-cols-1.md\:grid-cols-2.lg\:grid-cols-4 > div:nth-child(4) {
-  background: linear-gradient(135deg, #c2410c 0%, #f97316 100%) !important;
-  box-shadow: 0 12px 28px -4px rgba(234, 88, 12, 0.38) !important;
-}
-.max-w-7xl .grid.grid-cols-1.md\:grid-cols-2.lg\:grid-cols-4 > div:nth-child(4):hover {
-  box-shadow: 0 16px 36px -4px rgba(234, 88, 12, 0.50) !important;
-}
-
-/* ==========================================================================
-   PANELS & CARDS (.bg-white)
-   ========================================================================== */
-.max-w-7xl .bg-white {
+.pdkq-dashboard-menu {
+  position: relative !important;
+  min-width: 0 !important;
+  padding: 12px 10px !important;
+  border: 1px solid var(--pdkq-card-border) !important;
+  border-radius: 16px !important;
   background: #ffffff !important;
-  border: 1px solid var(--vibrant-border) !important;
-  border-radius: 20px !important;
-  box-shadow: var(--vibrant-shadow-md) !important;
-  color: var(--vibrant-text-body) !important;
-  padding: 24px !important;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  text-align: left !important;
 }
-.max-w-7xl .bg-white h3 {
-  color: var(--vibrant-text-heading) !important;
-  font-weight: 800 !important;
-  font-size: 18px !important;
+.pdkq-dashboard-menu-icon {
+  width: 38px !important;
+  height: 38px !important;
+  border-radius: 12px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin-bottom: 6px !important;
 }
-.max-w-7xl .bg-white p {
-  color: var(--vibrant-text-body) !important;
-}
-.max-w-7xl .bg-white small,
-.max-w-7xl .bg-white .text-gray-500,
-.max-w-7xl .bg-white .text-gray-400 {
-  color: var(--vibrant-text-muted) !important;
-}
-
-/* Agenda list on dashboard */
-.max-w-7xl .bg-white li.border-b {
-  border-bottom: 1px solid #f1f5f9 !important;
-  padding: 12px 0 !important;
-}
-.max-w-7xl .bg-white li.border-b p.font-bold {
-  color: var(--vibrant-text-heading) !important;
-  font-weight: 700 !important;
-}
-.max-w-7xl .bg-white li.border-b p.text-sm {
-  color: var(--vibrant-text-muted) !important;
-}
-
-/* Settings button at bottom of dashboard */
-.pdkq-dashboard-desktop button.bg-white {
-  background: #ffffff !important;
-  border: 1px solid var(--vibrant-border) !important;
-  border-radius: 18px !important;
-  box-shadow: var(--vibrant-shadow-sm) !important;
-  transition: all 0.2s ease !important;
-}
-.pdkq-dashboard-desktop button.bg-white:hover {
-  border-color: #10b981 !important;
-  box-shadow: var(--vibrant-shadow-md) !important;
-  transform: translateY(-2px) !important;
-}
-.pdkq-dashboard-desktop button.bg-white .bg-slate-100 {
-  background: #ecfdf5 !important;
-  color: #059669 !important;
-}
-.pdkq-dashboard-desktop button.bg-white .text-gray-800 {
-  color: var(--vibrant-text-heading) !important;
-}
-
-/* ==========================================================================
-   TABLES & DATA LISTS
-   ========================================================================== */
-.max-w-7xl table {
-  width: 100% !important;
-  border-collapse: separate !important;
-  border-spacing: 0 !important;
-}
-.max-w-7xl table thead {
-  background: #f8fafc !important;
-  border-bottom: 2px solid var(--vibrant-border) !important;
-}
-.max-w-7xl table th {
-  color: #475569 !important;
-  font-size: 12px !important;
-  font-weight: 750 !important;
-  letter-spacing: 0.05em !important;
-  text-transform: uppercase !important;
-  border-bottom: 2px solid var(--vibrant-border) !important;
-  padding: 16px !important;
-}
-.max-w-7xl table tbody tr {
-  border-bottom: 1px solid #f1f5f9 !important;
-  transition: background-color 0.15s ease !important;
-}
-.max-w-7xl table tbody tr:hover {
-  background: #f8fafc !important;
-}
-.max-w-7xl table td {
-  color: var(--vibrant-text-body) !important;
-  border-bottom: 1px solid #f1f5f9 !important;
-  padding: 16px !important;
-}
-.max-w-7xl table td.text-gray-900,
-.max-w-7xl table td .text-gray-900,
-.max-w-7xl table td .font-bold {
+.pdkq-dashboard-menu-copy strong {
+  display: block !important;
   color: #0f172a !important;
-  font-weight: 700 !important;
+  font-size: 14px !important;
+  line-height: 1.15 !important;
+  margin-bottom: 2px !important;
 }
-.max-w-7xl table td.text-gray-600,
-.max-w-7xl table td .text-gray-600 {
-  color: var(--vibrant-text-muted) !important;
+.pdkq-dashboard-menu-copy small {
+  display: block !important;
+  color: #64748b !important;
+  font-size: 11px !important;
+  line-height: 1.2 !important;
 }
-.max-w-7xl table td .text-emerald-700 {
-  color: #047857 !important;
-  font-weight: 700 !important;
+.pdkq-dashboard-chevron {
+  position: absolute !important;
+  right: 10px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  font-size: 20px !important;
+  color: #94a3b8 !important;
 }
+.pdkq-dashboard-menu.green .pdkq-dashboard-menu-icon { background: #dff8ee; color: #12916e; }
+.pdkq-dashboard-menu.blue .pdkq-dashboard-menu-icon { background: #e2efff; color: #287eea; }
+.pdkq-dashboard-menu.orange .pdkq-dashboard-menu-icon { background: #fff0dc; color: #f19a16; }
+.pdkq-dashboard-menu.purple .pdkq-dashboard-menu-icon { background: #eee6ff; color: #7754d6; }
+.pdkq-dashboard-menu.red .pdkq-dashboard-menu-icon { background: #ffe5e7; color: #ee4850; }
+.pdkq-dashboard-menu.cyan .pdkq-dashboard-menu-icon { background: #def5f7; color: #0aa4b2; }
+.pdkq-dashboard-menu.slate .pdkq-dashboard-menu-icon { background: #e9eef2; color: #536474; }
 
-/* ==========================================================================
-   BADGES & STATUS PILLS
-   ========================================================================== */
-.bg-green-100, .bg-emerald-100 {
-  background: #dcfce7 !important;
-  color: #15803d !important;
-  border: 1px solid #bbf7d0 !important;
-  border-radius: 999px !important;
-  font-weight: 700 !important;
-  padding: 4px 10px !important;
-}
-.bg-blue-100 {
-  background: #dbeafe !important;
-  color: #1d4ed8 !important;
-  border: 1px solid #bfdbfe !important;
-  border-radius: 999px !important;
-  font-weight: 700 !important;
-  padding: 4px 10px !important;
-}
-.bg-amber-100, .bg-yellow-100 {
-  background: #fef3c7 !important;
-  color: #b45309 !important;
-  border: 1px solid #fde68a !important;
-  border-radius: 999px !important;
-  font-weight: 700 !important;
-  padding: 4px 10px !important;
-}
-.bg-gray-100 {
-  background: #f1f5f9 !important;
-  color: #475569 !important;
-  border: 1px solid #e2e8f0 !important;
-  border-radius: 999px !important;
-  padding: 4px 10px !important;
-}
-
-/* ==========================================================================
-   BUTTONS & CONTROLS
-   ========================================================================== */
-button.bg-emerald-600,
-button.bg-emerald-700,
-.bg-emerald-600 {
-  background: linear-gradient(135deg, #059669 0%, #10b981 100%) !important;
-  color: #ffffff !important;
-  border: 0 !important;
-  border-radius: 12px !important;
-  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35) !important;
-  font-weight: 750 !important;
-  transition: all 0.18s ease !important;
-}
-button.bg-emerald-600:hover,
-button.bg-emerald-700:hover {
-  box-shadow: 0 8px 22px rgba(16, 185, 129, 0.45) !important;
-  transform: translateY(-1px) !important;
-  filter: brightness(1.04) !important;
-}
-
-button.bg-blue-50 {
-  background: #eff6ff !important;
-  border: 1.5px solid #bfdbfe !important;
-  color: #1d4ed8 !important;
-  border-radius: 12px !important;
-  font-weight: 700 !important;
-}
-button.bg-blue-50:hover {
-  background: #dbeafe !important;
-}
-
-button.bg-emerald-50 {
-  background: #ecfdf5 !important;
-  border: 1.5px solid #a7f3d0 !important;
-  color: #047857 !important;
-  border-radius: 12px !important;
-  font-weight: 700 !important;
-}
-button.bg-emerald-50:hover {
-  background: #d1fae5 !important;
-}
-
-button.bg-gray-100,
-button.bg-gray-50 {
-  background: #f8fafc !important;
-  border: 1px solid #e2e8f0 !important;
-  color: #334155 !important;
-  border-radius: 12px !important;
-}
-
-/* Table action buttons */
-.max-w-7xl table button {
-  border-radius: 10px !important;
-  transition: transform 0.14s ease !important;
-}
-.max-w-7xl table button:hover {
-  transform: scale(1.08) !important;
-}
-.max-w-7xl table button.bg-indigo-50 {
-  background: #eff6ff !important;
-  border: 1px solid #dbeafe !important;
-  color: #2563eb !important;
-}
-.max-w-7xl table button.bg-red-50 {
-  background: #fef2f2 !important;
-  border: 1px solid #fee2e2 !important;
-  color: #dc2626 !important;
-}
-.max-w-7xl table button.bg-blue-50 {
-  background: #f0fdf4 !important;
-  border: 1px solid #dcfce7 !important;
-  color: #16a34a !important;
-}
-
-/* Form Inputs, Selects, and Textareas */
-.max-w-7xl input,
-.max-w-7xl select,
-.max-w-7xl textarea {
-  background: #ffffff !important;
-  border: 1.5px solid #cbd5e1 !important;
-  color: #0f172a !important;
-  border-radius: 12px !important;
-  transition: all 0.2s ease !important;
-}
-.max-w-7xl input:focus,
-.max-w-7xl select:focus,
-.max-w-7xl textarea:focus {
-  border-color: #10b981 !important;
-  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15) !important;
-  outline: none !important;
-}
-
-/* ==========================================================================
-   MODALS
-   ========================================================================== */
-.fixed.inset-0.bg-black\/60 {
-  background: rgba(15, 23, 42, 0.55) !important;
-  backdrop-filter: blur(8px) !important;
-}
-.fixed.inset-0 .bg-white.rounded-xl {
-  background: #ffffff !important;
-  border: 1px solid var(--vibrant-border) !important;
-  border-radius: 24px !important;
-  box-shadow: 0 25px 60px -12px rgba(15, 23, 42, 0.25) !important;
-  color: #0f172a !important;
-}
-.fixed.inset-0 .bg-white.rounded-xl .bg-gray-50 {
-  background: #f8fafc !important;
-  border-bottom: 1px solid var(--vibrant-border) !important;
-}
-.fixed.inset-0 .bg-white.rounded-xl h3 {
-  color: #0f172a !important;
-  font-weight: 800 !important;
-}
-.fixed.inset-0 .bg-white.rounded-xl label {
-  color: #334155 !important;
-}
-
-/* ==========================================================================
-   MOBILE DASHBOARD & NAVIGATION
-   ========================================================================== */
-@media (max-width: 767px) {
-  body {
-    background: #f8fafc !important;
-  }
-  .pdkq-welcome-card {
-    background: linear-gradient(135deg, #ecfdf5 0%, #eff6ff 100%) !important;
-    border: 1px solid #d1fae5 !important;
-    box-shadow: 0 6px 20px rgba(15, 23, 42, 0.05) !important;
-    border-radius: 22px !important;
-  }
-  .pdkq-welcome-icon {
-    background: linear-gradient(135deg, #059669, #10b981) !important;
-    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35) !important;
-    color: #ffffff !important;
-  }
-  .pdkq-welcome-card h2 {
-    color: #064e3b !important;
-  }
-  .pdkq-welcome-card strong {
-    color: #0f172a !important;
-  }
-  .pdkq-welcome-card p {
-    color: #475569 !important;
-  }
-
-  .pdkq-dashboard-menu {
-    background: #ffffff !important;
-    border: 1px solid var(--vibrant-border) !important;
-    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04) !important;
-    border-radius: 18px !important;
-  }
-  .pdkq-dashboard-menu-copy strong {
-    color: #0f172a !important;
-  }
-  .pdkq-dashboard-menu-copy small {
-    color: var(--vibrant-text-muted) !important;
-  }
-  .pdkq-dashboard-chevron {
-    color: #10b981 !important;
-  }
-
-  .pdkq-bottom-nav-new {
-    background: rgba(255, 255, 255, 0.94) !important;
-    border-top: 1px solid var(--vibrant-border) !important;
-    backdrop-filter: blur(16px) !important;
-    box-shadow: 0 -4px 25px rgba(15, 23, 42, 0.06) !important;
-  }
-  .pdkq-bottom-nav-new button {
-    color: var(--vibrant-text-muted) !important;
-  }
-  .pdkq-bottom-nav-new button.active {
-    color: #059669 !important;
-  }
-  .pdkq-bottom-nav-new .pdkq-plus-button {
-    background: linear-gradient(135deg, #059669 0%, #10b981 100%) !important;
-    box-shadow: 0 8px 24px rgba(16, 185, 129, 0.45) !important;
-    border: 5px solid #f8fafc !important;
-    color: #ffffff !important;
-  }
-  .pdkq-quick-add {
-    background: #ffffff !important;
-    border: 1px solid var(--vibrant-border) !important;
-    box-shadow: 0 16px 45px rgba(15, 23, 42, 0.15) !important;
-  }
-  .pdkq-quick-add button {
-    background: #f8fafc !important;
-    color: #0f172a !important;
-    border: 1px solid var(--vibrant-border) !important;
-  }
-}
-
-/* ==========================================================================
-   PRINT STYLESHEET (Preserve clean black & white paper prints)
-   ========================================================================== */
 @media print {
-  body, #root, .min-h-screen, div, table, tr, td, th {
+  body {
     background: #ffffff !important;
-    color: #000000 !important;
-    box-shadow: none !important;
-    border-color: #cbd5e1 !important;
   }
-  .md\:hidden, nav, .pdkq-bottom-nav-new {
+  header, aside, nav, footer, .no-print {
     display: none !important;
   }
 }
@@ -992,7 +148,7 @@ button.bg-gray-50 {
   <div id="root"></div>
   <script type="module">
 import React, { useState, useEffect } from 'https://esm.sh/react@18.3.1';
-import { Users, FileText, Home, Printer, Scale, Plus, X, Search, Menu, Beef, Calendar, Settings, Trash2, Edit, Camera, Layers, FileCheck, CheckCircle2, Sliders, Mail, Eye, Upload, Image as ImageIcon, Archive, Ticket, LogOut } from 'https://esm.sh/lucide-react@0.468.0?deps=react@18.3.1';
+import { Users, FileText, Home, Printer, Scale, Plus, X, Search, Menu, Beef, Calendar, Settings, Trash2, Edit, Camera, Layers, FileCheck, CheckCircle2, Sliders, Mail, Eye, Upload, Image as ImageIcon, Archive, Ticket, LogOut, ChevronRight, ChevronDown, BarChart3, Clock, Heart, ArrowRight, User } from 'https://esm.sh/lucide-react@0.468.0?deps=react@18.3.1';
 const INITIAL_AGENDA = [
     { id: 1, task: 'Pembentukan Panitia Qurban', date: 'Maret 2026', status: 'Selesai', media: true },
     { id: 2, task: 'Pendaftaran & Pengelompokan Mudhohi', date: 'Mei 2026', status: 'Selesai', media: true },
@@ -2233,39 +1389,121 @@ function App() {
                 React.createElement("strong", null, title),
                 React.createElement("small", null, desc)),
             React.createElement("span", { className: "pdkq-dashboard-chevron" }, "›"));
-        return (React.createElement("div", { className: "space-y-6 pdkq-dashboard-shell" },
-            React.createElement("section", { className: "pdkq-dashboard-desktop" },
-                React.createElement("div", { className: "flex flex-col sm:flex-row justify-between items-start sm:items-center border-b pb-2 gap-2" },
-                    React.createElement("h2", { className: "text-2xl font-bold text-gray-800" }, "Dashboard Statistik (", activeYear, ")"),
-                    React.createElement("button", { onClick: () => setShowYearModal(true), className: "flex items-center text-xs font-bold text-emerald-800 bg-emerald-100 hover:bg-emerald-200 px-3 py-1.5 rounded-lg border border-emerald-300 transition-colors shadow-sm" },
-                        React.createElement(Archive, { className: "w-3.5 h-3.5 mr-1.5 text-emerald-700" }), "Tahun Aktif: ", activeYear, " (Ganti / Tambah)")),
-                React.createElement("div", { className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-6" },
-                    React.createElement(StatCard, { icon: React.createElement(Users, { className: "w-8 h-8 text-blue-600" }), title: "Total Mudhohi", value: mudhohi.length, desc: "Peserta Terdaftar" }),
-                    React.createElement(StatCard, { icon: React.createElement(Beef, { className: "w-8 h-8 text-green-600" }), title: "Total Sapi", value: Math.ceil(mudhohi.filter(m => !m.jenis || m.jenis === 'Sapi').length / 7), desc: "Estimasi Kelompok" }),
-                    React.createElement(StatCard, { icon: React.createElement(FileText, { className: "w-8 h-8 text-yellow-600" }), title: "Total Gantingan", value: totalGantingan, desc: "Kupon Mustahiq" }),
-                    React.createElement(StatCard, { icon: React.createElement(Scale, { className: "w-8 h-8 text-purple-600" }), title: "Total Daging", value: `${totalDaging} Kg`, desc: "Berdasarkan Rekap" })),
-                React.createElement("div", { className: "bg-white p-6 rounded-xl shadow-sm border border-gray-100 mt-6" },
-                    React.createElement("div", { className: "flex justify-between items-center mb-4" },
-                        React.createElement("h3", { className: "text-lg font-bold text-gray-800" }, "Agenda Terdekat (Rencana Kerja)"),
-                        React.createElement("button", { onClick: () => setActiveTab('agenda'), className: "text-sm text-emerald-600 hover:underline font-medium" }, "Kelola Agenda →")),
-                    React.createElement("ul", { className: "space-y-3" }, agendas.map(agenda => React.createElement(AgendaItem, { key: agenda.id, date: agenda.date, task: agenda.task, status: agenda.status })))),
-                React.createElement("button", { onClick: openAccountSettings, className: "pdkq-dashboard-desktop w-full mt-4 bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between text-left hover:border-emerald-300" },
-                    React.createElement("div", { className: "flex items-center gap-3" },
-                        React.createElement("div", { className: "w-10 h-10 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center" }, React.createElement(Settings, { className: "w-5 h-5" })),
-                        React.createElement("div", null, React.createElement("div", { className: "font-bold text-gray-800" }, "Pengaturan"), React.createElement("div", { className: "text-sm text-gray-500" }, "Atur akun admin dan akun petugas"))),
-                    React.createElement("span", { className: "text-xl text-gray-400" }, "›"))),
-            React.createElement("section", { className: "pdkq-dashboard-mobile" },
-                React.createElement("div", { className: "pdkq-welcome-card" },
-                    React.createElement("div", { className: "pdkq-welcome-icon" }, React.createElement(Beef, { className: "w-8 h-8" })),
-                    React.createElement("div", null,
-                        React.createElement("h2", null, "Selamat Datang"),
-                        React.createElement("strong", null, "Admin"),
-                        React.createElement("p", null, "Kelola seluruh data dan proses qurban dengan mudah."))),
-                React.createElement("div", { className: "pdkq-mobile-stat-grid" },
-                    React.createElement(StatCard, { icon: React.createElement(Users, { className: "w-6 h-6 text-blue-600" }), title: "Mudhohi", value: mudhohi.length, desc: "Peserta" }),
-                    React.createElement(StatCard, { icon: React.createElement(Beef, { className: "w-6 h-6 text-green-600" }), title: "Total Sapi", value: Math.ceil(mudhohi.filter(m => !m.jenis || m.jenis === 'Sapi').length / 7), desc: "Kelompok" }),
-                    React.createElement(StatCard, { icon: React.createElement(FileText, { className: "w-6 h-6 text-yellow-600" }), title: "Gantingan", value: totalGantingan, desc: "Kupon" }),
-                    React.createElement(StatCard, { icon: React.createElement(Scale, { className: "w-6 h-6 text-purple-600" }), title: "Daging", value: `${totalDaging} Kg`, desc: "Rekap" })),
+        return (React.createElement("div", { className: "space-y-6" },
+            // Desktop Dashboard View (hidden on mobile)
+            React.createElement("section", { className: "hidden md:block space-y-6" },
+                // Welcome Hero Card
+                React.createElement("div", { className: "bg-white rounded-3xl shadow-sm border border-slate-200/80 overflow-hidden relative flex flex-col md:flex-row items-center justify-between min-h-[220px]" },
+                    React.createElement("div", { className: "p-6 sm:p-8 flex-1 z-10" },
+                        React.createElement("h2", { className: "text-2xl sm:text-3xl font-black text-slate-800 tracking-tight" }, "Selamat Datang, Admin"),
+                        React.createElement("p", { className: "text-slate-500 mt-2 text-sm sm:text-base leading-relaxed" }, "Kelola seluruh data dan proses qurban dengan mudah."),
+                        React.createElement("button", {
+                            type: "button",
+                            onClick: () => setActiveTab('mudhohi'),
+                            className: "mt-6 px-6 py-2.5 bg-[#04583d] hover:bg-[#034530] text-white font-bold text-sm rounded-full shadow-md hover:shadow-lg inline-flex items-center gap-2 transition-all cursor-pointer"
+                        },
+                            "Mulai Kelola",
+                            React.createElement(ArrowRight, { className: "w-4 h-4" }))
+                    ),
+                    React.createElement("div", { className: "w-full md:w-1/2 h-52 md:h-full relative overflow-hidden self-stretch" },
+                        React.createElement(PastoralCowScene, { className: "w-full h-full object-cover" })
+                    )
+                ),
+                // 4 Horizontal KPI Stat Cards
+                React.createElement("div", { className: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5" },
+                    React.createElement(KpiStatCard, {
+                        type: "mudhohi",
+                        icon: React.createElement(Users),
+                        title: "MUDHOHI",
+                        value: mudhohi.length,
+                        buttonLabel: "Peserta",
+                        onClick: () => setActiveTab('mudhohi')
+                    }),
+                    React.createElement(KpiStatCard, {
+                        type: "sapi",
+                        icon: React.createElement(Beef),
+                        title: "TOTAL SAPI",
+                        value: Math.ceil(mudhohi.filter(m => !m.jenis || m.jenis === 'Sapi').length / 7),
+                        buttonLabel: "Kelompok",
+                        onClick: () => setActiveTab('kelompok')
+                    }),
+                    React.createElement(KpiStatCard, {
+                        type: "cantingan",
+                        icon: React.createElement(Ticket),
+                        title: "CANTINGAN",
+                        value: totalGantingan,
+                        buttonLabel: "Kupon",
+                        onClick: () => setActiveTab('mustahiq')
+                    }),
+                    React.createElement(KpiStatCard, {
+                        type: "daging",
+                        icon: React.createElement(Scale),
+                        title: "DAGING",
+                        value: `${totalDaging} Kg`,
+                        buttonLabel: "Rekap",
+                        onClick: () => setActiveTab('hasil')
+                    })
+                ),
+                // Lower 2-column Grid (Grafik Qurban + Aktivitas Terbaru)
+                React.createElement("div", { className: "grid grid-cols-1 lg:grid-cols-12 gap-6" },
+                    React.createElement("div", { className: "lg:col-span-7" },
+                        React.createElement(GrafikQurbanCard, { activeYear: activeYear })
+                    ),
+                    React.createElement("div", { className: "lg:col-span-5" },
+                        React.createElement(AktivitasTerbaruCard, { onViewAll: () => setActiveTab('agenda') })
+                    )
+                )
+            ),
+            // Mobile Dashboard View (visible only on mobile)
+            React.createElement("section", { className: "md:hidden space-y-4" },
+                // Mobile Welcome Card
+                React.createElement("div", { className: "bg-[#e8f5e9] border border-[#c8e6c9] rounded-2xl p-4 flex items-center gap-3.5 relative overflow-hidden shadow-xs" },
+                    React.createElement("div", { className: "w-12 h-12 rounded-xl bg-emerald-600 text-white flex items-center justify-center flex-shrink-0 shadow-sm" },
+                        React.createElement(Beef, { className: "w-6 h-6" })),
+                    React.createElement("div", { className: "min-w-0 z-10" },
+                        React.createElement("h3", { className: "font-black text-emerald-900 text-base leading-tight" }, "Selamat Datang"),
+                        React.createElement("p", { className: "font-extrabold text-slate-800 text-sm leading-tight mt-0.5" }, "Admin"),
+                        React.createElement("p", { className: "text-slate-500 text-xs mt-1 leading-snug line-clamp-2" }, "Kelola seluruh data dan proses qurban dengan mudah.")),
+                    React.createElement(MosqueWatermark, { className: "w-32 h-auto text-emerald-700/15 absolute -right-2 -bottom-2 pointer-events-none" })
+                ),
+                // Mobile 2x2 Stat Grid
+                React.createElement("div", { className: "grid grid-cols-2 gap-3" },
+                    React.createElement(KpiStatCard, {
+                        type: "mudhohi",
+                        icon: React.createElement(Users),
+                        title: "MUDHOHI",
+                        value: mudhohi.length,
+                        buttonLabel: "Peserta",
+                        onClick: () => setActiveTab('mudhohi')
+                    }),
+                    React.createElement(KpiStatCard, {
+                        type: "sapi",
+                        icon: React.createElement(Beef),
+                        title: "TOTAL SAPI",
+                        value: Math.ceil(mudhohi.filter(m => !m.jenis || m.jenis === 'Sapi').length / 7),
+                        buttonLabel: "Kelompok",
+                        onClick: () => setActiveTab('kelompok')
+                    }),
+                    React.createElement(KpiStatCard, {
+                        type: "cantingan",
+                        icon: React.createElement(Ticket),
+                        title: "CANTINGAN",
+                        value: totalGantingan,
+                        buttonLabel: "Kupon",
+                        onClick: () => setActiveTab('mustahiq')
+                    }),
+                    React.createElement(KpiStatCard, {
+                        type: "daging",
+                        icon: React.createElement(Scale),
+                        title: "DAGING",
+                        value: `${totalDaging} Kg`,
+                        buttonLabel: "Rekap",
+                        onClick: () => setActiveTab('hasil')
+                    })
+                ),
+                // Mobile Ringkasan Kegiatan Card
+                React.createElement(RingkasanKegiatanCard, { onDetail: () => setActiveTab('agenda') }),
+                // Mobile Quick Action Grid
                 React.createElement("div", { className: "pdkq-menu-grid" },
                     menuCard(React.createElement(Calendar), "Tahun / Arsip", "Kelola tahun dan arsip data", () => setShowYearModal(true), "green"),
                     menuCard(React.createElement(Users), "Mudhohi", "Kelola data mudhohi", () => setActiveTab('mudhohi'), "blue"),
@@ -2274,7 +1512,10 @@ function App() {
                     menuCard(React.createElement(Calendar), "Agenda", "Kelola agenda kegiatan", () => setActiveTab('agenda'), "red"),
                     menuCard(React.createElement(Beef), "Hasil Sembelih", "Kelola hasil sembelih", () => setActiveTab('hasil'), "cyan"),
                     menuCard(React.createElement(Mail), "Surat", "Kelola surat dan laporan", () => setActiveTab('surat'), "blue"),
-                    menuCard(React.createElement(Settings), "Pengaturan", "Atur akun admin dan petugas", openAccountSettings, "slate")))));
+                    menuCard(React.createElement(Settings), "Pengaturan", "Atur akun admin dan petugas", openAccountSettings, "slate")
+                )
+            )
+        ));
     };
     const renderAgenda = () => (React.createElement("div", { className: "space-y-6" },
         React.createElement("div", { className: "flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b pb-2" },
@@ -2811,22 +2052,47 @@ function App() {
         React.createElement("h2", { className: "text-2xl font-bold text-gray-800 border-b pb-2" }, "LPJ"),
         React.createElement("div", { className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" },
             React.createElement(DocCard, { icon: React.createElement(FileCheck, null), title: "Laporan Pertanggungjawaban (LPJ)", desc: "Kompilasi otomatis data mudhohi, mustahiq, keuangan, dan hasil sembelih.", onClick: () => handlePrintDokumenKhusus('Buku LPJ Lengkap'), highlight: true }))));
-    return (React.createElement("div", { className: "min-h-screen bg-gray-50 flex flex-col md:flex-row font-sans relative" },
-        // Mobile Top Header (Sticky)
-        React.createElement("div", { className: "md:hidden bg-emerald-800 text-white p-3.5 px-4 flex justify-between items-center shadow-md sticky top-0 z-40" },
-            React.createElement("div", { className: "flex items-center space-x-2.5 min-w-0" },
+    return (React.createElement("div", { className: "min-h-screen bg-[#f0f4f8] flex flex-col font-sans relative" },
+        // Top Sticky Header (Desktop & Mobile)
+        React.createElement("header", { className: "bg-[#04583d] text-white px-4 md:px-7 py-3 flex justify-between items-center shadow-md sticky top-0 z-40 select-none" },
+            // Brand left
+            React.createElement("div", { className: "flex items-center space-x-3 min-w-0" },
                 customConfigs?.kopLogo
-                    ? React.createElement("img", { src: customConfigs.kopLogo, alt: "Logo Aplikasi", className: "w-8 h-8 rounded-lg object-contain bg-white/95 p-0.5 flex-shrink-0" })
-                    : React.createElement(Beef, { className: "w-6 h-6 text-emerald-300 flex-shrink-0" }),
+                    ? React.createElement("img", { src: customConfigs.kopLogo, alt: "Logo", className: "w-10 h-10 rounded-xl object-contain bg-white p-0.5 flex-shrink-0 shadow-sm" })
+                    : React.createElement(PDKQuLogoBadge, { className: "w-10 h-10 flex-shrink-0 shadow-sm" }),
                 React.createElement("div", { className: "min-w-0" },
-                    React.createElement("h1", { className: "font-black text-lg text-white leading-tight tracking-tight truncate" }, "PDKQu"),
-                    React.createElement("span", { className: "text-[11px] text-emerald-200 block truncate font-normal" }, "Sistem Qurban"))),
-            React.createElement("div", { className: "flex items-center space-x-2 flex-shrink-0" },
-                React.createElement("button", { onClick: () => setShowYearModal(true), className: "px-2.5 py-1.5 bg-emerald-700/80 hover:bg-emerald-600 text-emerald-100 rounded-lg text-xs font-bold flex items-center border border-emerald-600/60 shadow-xs" },
-                    React.createElement(Archive, { className: "w-3.5 h-3.5 mr-1 text-amber-300" }),
+                    React.createElement("h1", { className: "font-black text-xl md:text-2xl text-white leading-tight tracking-tight truncate" }, "PDKQu"),
+                    React.createElement("span", { className: "text-xs text-emerald-200 block truncate font-medium -mt-0.5" }, "Sistem Qurban"))),
+            // Header right controls
+            React.createElement("div", { className: "flex items-center space-x-2.5 flex-shrink-0" },
+                // Year gold pill button
+                React.createElement("button", {
+                    type: "button",
+                    onClick: () => setShowYearModal(true),
+                    title: "Ganti Tahun Aktif / Buka Arsip",
+                    className: "px-3 py-1.5 bg-[#08543c] hover:bg-[#0a6649] text-amber-300 rounded-full text-xs font-bold flex items-center border border-amber-500/80 shadow-inner transition-all cursor-pointer"
+                },
+                    React.createElement(Calendar, { className: "w-3.5 h-3.5 mr-1.5 text-amber-400" }),
                     activeYear.split(' / ')[0]),
-                React.createElement("button", { onClick: () => setIsMobileMenuOpen(!isMobileMenuOpen), className: "p-2 bg-emerald-700/80 hover:bg-emerald-600 rounded-lg text-white border border-emerald-600/60", "aria-label": "Menu Navigasi" },
-                    React.createElement(Menu, { className: "w-5 h-5" })))),
+                // Desktop User Pill
+                React.createElement("div", {
+                    onClick: openAccountSettings,
+                    className: "hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full hover:bg-emerald-800/80 cursor-pointer text-white font-semibold text-xs border border-emerald-600/50 transition-colors"
+                },
+                    React.createElement("div", { className: "w-6 h-6 rounded-full bg-white/20 flex items-center justify-center text-white" },
+                        React.createElement(User, { className: "w-3.5 h-3.5" })),
+                    React.createElement("span", null, "Admin"),
+                    React.createElement(ChevronDown, { className: "w-3.5 h-3.5 text-emerald-200" })),
+                // Mobile Hamburger Button
+                React.createElement("button", {
+                    type: "button",
+                    onClick: () => setIsMobileMenuOpen(!isMobileMenuOpen),
+                    className: "md:hidden p-2 bg-emerald-800/80 hover:bg-emerald-700 rounded-lg text-white border border-emerald-600/50",
+                    "aria-label": "Menu Navigasi"
+                },
+                    React.createElement(Menu, { className: "w-5 h-5" }))
+            )
+        ),
         // Mobile Drawer Backdrop
         isMobileMenuOpen ? React.createElement("div", {
             className: "fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 md:hidden transition-opacity",
@@ -2834,100 +2100,117 @@ function App() {
         }) : null,
         // Mobile Slide-over Drawer
         React.createElement("div", {
-            className: `fixed inset-y-0 left-0 w-[290px] max-w-[85vw] bg-emerald-900 text-white flex flex-col z-50 shadow-2xl transition-transform duration-300 ease-out md:hidden ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`
+            className: `fixed inset-y-0 left-0 w-[290px] max-w-[85vw] bg-[#04583d] text-white flex flex-col z-50 shadow-2xl transition-transform duration-300 ease-out md:hidden ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`
         },
-            React.createElement("div", { className: "p-5 border-b border-emerald-800 flex justify-between items-center bg-emerald-950/40" },
+            React.createElement("div", { className: "p-5 border-b border-emerald-700 flex justify-between items-center bg-emerald-950/40" },
                 React.createElement("div", { className: "flex items-center space-x-3 min-w-0" },
                     customConfigs?.kopLogo
                         ? React.createElement("img", { src: customConfigs.kopLogo, alt: "Logo", className: "w-9 h-9 rounded-lg object-contain bg-white p-0.5" })
-                        : React.createElement(Beef, { className: "w-7 h-7 text-emerald-400" }),
+                        : React.createElement(PDKQuLogoBadge, { className: "w-9 h-9" }),
                     React.createElement("div", { className: "min-w-0" },
                         React.createElement("h2", { className: "text-xl font-black text-white leading-tight" }, "PDKQu"),
-                        React.createElement("p", { className: "text-xs text-emerald-300 truncate" }, "Sistem Informasi Qurban"))),
+                        React.createElement("p", { className: "text-xs text-emerald-300 truncate" }, "Sistem Qurban"))),
                 React.createElement("button", { onClick: () => setIsMobileMenuOpen(false), className: "p-2 text-emerald-300 hover:text-white rounded-lg hover:bg-emerald-800", "aria-label": "Tutup Menu" },
                     React.createElement(X, { className: "w-6 h-6" }))),
             React.createElement("div", { className: "p-3 mx-4 my-3 bg-emerald-950/60 rounded-xl border border-emerald-700/60 flex items-center justify-between" },
                 React.createElement("div", null,
                     React.createElement("span", { className: "text-[10px] text-emerald-300 font-bold uppercase tracking-wider block" }, "Tahun Aktif"),
                     React.createElement("span", { className: "text-xs font-bold text-white flex items-center mt-0.5" },
-                        React.createElement(Archive, { className: "w-3.5 h-3.5 mr-1 text-amber-400" }),
+                        React.createElement(Calendar, { className: "w-3.5 h-3.5 mr-1 text-amber-400" }),
                         activeYear)),
                 React.createElement("button", { onClick: () => { setIsMobileMenuOpen(false); setShowYearModal(true); }, className: "px-2.5 py-1 bg-emerald-700 hover:bg-emerald-600 text-white rounded text-xs font-bold" }, "Ganti")),
             React.createElement("nav", { className: "p-4 space-y-1 flex-1 overflow-y-auto" },
                 React.createElement(NavItem, { icon: React.createElement(Home, null), label: "Dashboard", active: activeTab === 'dashboard', onClick: () => { setActiveTab('dashboard'); setIsMobileMenuOpen(false); } }),
-                React.createElement(NavItem, { icon: React.createElement(Calendar, null), label: "Agenda Kegiatan", active: activeTab === 'agenda', onClick: () => { setActiveTab('agenda'); setIsMobileMenuOpen(false); } }),
-                React.createElement(NavItem, { icon: React.createElement(Settings, null), label: "Susunan Panitia", active: activeTab === 'panitia', onClick: () => { setActiveTab('panitia'); setIsMobileMenuOpen(false); } }),
-                React.createElement(NavItem, { icon: React.createElement(Mail, null), label: "Surat", active: activeTab === 'surat', onClick: () => { setActiveTab('surat'); setIsMobileMenuOpen(false); } }),
-                React.createElement("div", { className: "my-2 border-b border-emerald-800" }),
                 React.createElement(NavItem, { icon: React.createElement(Users, null), label: "Data Mudhohi", active: activeTab === 'mudhohi', onClick: () => { setActiveTab('mudhohi'); setIsMobileMenuOpen(false); } }),
-                React.createElement(NavItem, { icon: React.createElement(Layers, null), label: "Kelompok", active: activeTab === 'kelompok', onClick: () => { setActiveTab('kelompok'); setIsMobileMenuOpen(false); } }),
-                React.createElement(NavItem, { icon: React.createElement(FileText, null), label: "Data Mustahiq", active: activeTab === 'mustahiq', onClick: () => { setActiveTab('mustahiq'); setIsMobileMenuOpen(false); } }),
+                React.createElement(NavItem, { icon: React.createElement(Heart, null), label: "Data Mustahiq", active: activeTab === 'mustahiq', onClick: () => { setActiveTab('mustahiq'); setIsMobileMenuOpen(false); } }),
+                React.createElement(NavItem, { icon: React.createElement(Beef, null), label: "Data Hewan", active: activeTab === 'kelompok', onClick: () => { setActiveTab('kelompok'); setIsMobileMenuOpen(false); } }),
+                React.createElement(NavItem, { icon: React.createElement(Ticket, null), label: "Data Cantingan", active: false, onClick: () => { setActiveTab('mustahiq'); setIsMobileMenuOpen(false); } }),
+                React.createElement(NavItem, { icon: React.createElement(BarChart3, null), label: "Laporan (LPJ)", active: activeTab === 'dokumen', onClick: () => { setActiveTab('dokumen'); setIsMobileMenuOpen(false); } }),
+                React.createElement("div", { className: "my-2 border-b border-emerald-800" }),
+                React.createElement(NavItem, { icon: React.createElement(Calendar, null), label: "Agenda Kegiatan", active: activeTab === 'agenda', onClick: () => { setActiveTab('agenda'); setIsMobileMenuOpen(false); } }),
+                React.createElement(NavItem, { icon: React.createElement(Users, null), label: "Susunan Panitia", active: activeTab === 'panitia', onClick: () => { setActiveTab('panitia'); setIsMobileMenuOpen(false); } }),
+                React.createElement(NavItem, { icon: React.createElement(Mail, null), label: "Surat & Undangan", active: activeTab === 'surat', onClick: () => { setActiveTab('surat'); setIsMobileMenuOpen(false); } }),
                 React.createElement(NavItem, { icon: React.createElement(Scale, null), label: "Hasil Sembelih", active: activeTab === 'hasil', onClick: () => { setActiveTab('hasil'); setIsMobileMenuOpen(false); } }),
                 React.createElement("div", { className: "my-2 border-b border-emerald-800" }),
-                React.createElement(NavItem, { icon: React.createElement(CheckCircle2, null), label: "LPJ", active: activeTab === 'dokumen', onClick: () => { setActiveTab('dokumen'); setIsMobileMenuOpen(false); } }),
                 React.createElement(NavItem, { icon: React.createElement(Settings, null), label: "Pengaturan", active: activeTab === 'akun', onClick: () => { setActiveTab('akun'); setIsMobileMenuOpen(false); loadAccountData(); } }),
-                React.createElement(NavItem, { icon: React.createElement(LogOut, null), label: "Keluar", active: false, onClick: () => { window.location.href = 'logout.php'; } }))),
-        // Desktop Sidebar (Persistent)
-        React.createElement("div", { className: "hidden md:block w-72 bg-emerald-800 text-white flex-shrink-0 shadow-xl z-30 transition-all min-h-screen sticky top-0" },
-            React.createElement("div", { className: "p-6 hidden md:block border-b border-emerald-700 bg-emerald-900/30" },
-                React.createElement("div", { className: "flex items-center space-x-3 mb-2" },
-                    customConfigs?.kopLogo
-                        ? React.createElement("img", { src: customConfigs.kopLogo, alt: "Logo Aplikasi", className: "w-10 h-10 rounded-lg object-contain bg-white p-0.5 flex-shrink-0" })
-                        : React.createElement(Beef, { className: "w-8 h-8 text-emerald-400" }),
-                    React.createElement("h1", { className: "text-3xl font-black tracking-tight text-white" }, "PDKQu")),
-                React.createElement("p", { className: "text-emerald-200 text-sm font-medium" }, "Sistem Informasi Qurban"),
-                React.createElement("p", { className: "text-emerald-300 text-xs mt-1" }, ""),
-                React.createElement("div", { className: "mt-4 bg-emerald-900/60 p-2.5 rounded-lg border border-emerald-700/60" },
-                    React.createElement("div", { className: "flex items-center justify-between" },
-                        React.createElement("div", null,
-                            React.createElement("span", { className: "text-[10px] text-emerald-300 font-bold uppercase tracking-wider block" }, "Tahun Aktif"),
-                            React.createElement("span", { className: "text-xs font-bold text-white flex items-center mt-0.5" },
-                                React.createElement(Archive, { className: "w-3.5 h-3.5 mr-1 text-emerald-400" }),
-                                activeYear)),
-                        React.createElement("button", { onClick: () => setShowYearModal(true), title: "Kelola & Ganti Tahun Arsip", className: "px-2.5 py-1 bg-emerald-700 hover:bg-emerald-600 text-white rounded text-xs font-bold transition-colors shadow-sm" }, "Ganti / Arsip")))),
-            React.createElement("nav", { className: "p-4 space-y-1" },
-                React.createElement(NavItem, { icon: React.createElement(Home, null), label: "Dashboard", active: activeTab === 'dashboard', onClick: () => { setActiveTab('dashboard'); } }),
-                React.createElement(NavItem, { icon: React.createElement(Calendar, null), label: "Agenda Kegiatan", active: activeTab === 'agenda', onClick: () => { setActiveTab('agenda'); } }),
-                React.createElement(NavItem, { icon: React.createElement(Settings, null), label: "Susunan Panitia", active: activeTab === 'panitia', onClick: () => { setActiveTab('panitia'); } }),
-                React.createElement(NavItem, { icon: React.createElement(Mail, null), label: "Surat", active: activeTab === 'surat', onClick: () => { setActiveTab('surat'); } }),
-                React.createElement("div", { className: "my-2 border-b border-emerald-700/50" }),
-                React.createElement(NavItem, { icon: React.createElement(Users, null), label: "Data Mudhohi", active: activeTab === 'mudhohi', onClick: () => { setActiveTab('mudhohi'); } }),
-                React.createElement(NavItem, { icon: React.createElement(Layers, null), label: "Kelompok", active: activeTab === 'kelompok', onClick: () => { setActiveTab('kelompok'); } }),
-                React.createElement(NavItem, { icon: React.createElement(FileText, null), label: "Data Mustahiq", active: activeTab === 'mustahiq', onClick: () => { setActiveTab('mustahiq'); } }),
-                React.createElement(NavItem, { icon: React.createElement(Scale, null), label: "Hasil Sembelih", active: activeTab === 'hasil', onClick: () => { setActiveTab('hasil'); } }),
-                React.createElement("div", { className: "my-2 border-b border-emerald-700/50" }),
-                React.createElement(NavItem, { icon: React.createElement(CheckCircle2, null), label: "LPJ", active: activeTab === 'dokumen', onClick: () => { setActiveTab('dokumen'); } }),
-                React.createElement(NavItem, { icon: React.createElement(Settings, null), label: "Pengaturan", active: activeTab === 'akun', onClick: () => { setActiveTab('akun'); loadAccountData(); } }),
-                React.createElement(NavItem, { icon: React.createElement(LogOut, null), label: "Keluar", active: false, onClick: () => { window.location.href = 'logout.php'; } }))),
-        // Main Content Area
-        React.createElement("div", { className: "flex-1 p-4 md:p-8 overflow-y-auto max-h-screen" },
-            React.createElement("div", { className: "max-w-7xl mx-auto" },
-                activeTab === 'dashboard' && renderDashboard(),
-                activeTab === 'agenda' && renderAgenda(),
-                activeTab === 'panitia' && renderPanitia(),
-                activeTab === 'surat' && renderSurat(),
-                activeTab === 'mudhohi' && renderMudhohi(),
-                activeTab === 'kelompok' && renderKelompok(),
-                activeTab === 'mustahiq' && renderMustahiq(),
-                activeTab === 'hasil' && renderHasil(),
-                activeTab === 'dokumen' && renderDokumen(),
-                activeTab === 'akun' && renderAccountSettings())),
-        // Mobile Bottom Navigation Bar (Persistent across all tabs)
-        React.createElement("nav", { className: "pdkq-bottom-nav pdkq-bottom-nav-new md:hidden", "aria-label": "Navigasi Bawah" },
-            React.createElement("button", { onClick: () => { setActiveTab('dashboard'); setIsMobileMenuOpen(false); }, className: activeTab === 'dashboard' ? 'active' : '' },
+                React.createElement(NavItem, { icon: React.createElement(LogOut, null), label: "Logout", active: false, onClick: () => { window.location.href = 'logout.php'; } }))
+        ),
+        // Body Layout: Sidebar + Main Content
+        React.createElement("div", { className: "flex flex-1 relative overflow-hidden" },
+            // Desktop Sidebar (Persistent)
+            React.createElement("aside", { className: "hidden md:flex w-64 bg-[#04583d] text-white flex-shrink-0 flex-col justify-between shadow-xl z-30 sticky top-[61px] h-[calc(100vh-61px)] relative overflow-hidden select-none" },
+                React.createElement("div", { className: "p-4 space-y-1 relative z-10 overflow-y-auto max-h-[calc(100vh-210px)]" },
+                    React.createElement(NavItem, { icon: React.createElement(Home, null), label: "Dashboard", active: activeTab === 'dashboard', onClick: () => { setActiveTab('dashboard'); } }),
+                    React.createElement(NavItem, { icon: React.createElement(Users, null), label: "Data Mudhohi", active: activeTab === 'mudhohi', onClick: () => { setActiveTab('mudhohi'); } }),
+                    React.createElement(NavItem, { icon: React.createElement(Heart, null), label: "Data Mustahiq", active: activeTab === 'mustahiq', onClick: () => { setActiveTab('mustahiq'); } }),
+                    React.createElement(NavItem, { icon: React.createElement(Beef, null), label: "Data Hewan", active: activeTab === 'kelompok', onClick: () => { setActiveTab('kelompok'); } }),
+                    React.createElement(NavItem, { icon: React.createElement(Ticket, null), label: "Data Cantingan", active: false, onClick: () => { setActiveTab('mustahiq'); } }),
+                    React.createElement(NavItem, { icon: React.createElement(BarChart3, null), label: "Laporan", chevron: true, active: activeTab === 'dokumen', onClick: () => { setActiveTab('dokumen'); } }),
+                    React.createElement(NavItem, { icon: React.createElement(Settings, null), label: "Pengaturan", active: activeTab === 'akun', onClick: () => { setActiveTab('akun'); loadAccountData(); } }),
+                    React.createElement(NavItem, { icon: React.createElement(LogOut, null), label: "Logout", active: false, onClick: () => { window.location.href = 'logout.php'; } }),
+                    // Submenu / Extra items
+                    React.createElement("div", { className: "pt-2 mt-2 border-t border-emerald-700/60" },
+                        React.createElement("span", { className: "text-[10px] text-emerald-300 font-bold uppercase tracking-wider px-3 mb-1 block" }, "Lainnya"),
+                        React.createElement(NavItem, { icon: React.createElement(Calendar, null), label: "Agenda", active: activeTab === 'agenda', onClick: () => { setActiveTab('agenda'); } }),
+                        React.createElement(NavItem, { icon: React.createElement(Users, null), label: "Panitia", active: activeTab === 'panitia', onClick: () => { setActiveTab('panitia'); } }),
+                        React.createElement(NavItem, { icon: React.createElement(Mail, null), label: "Surat", active: activeTab === 'surat', onClick: () => { setActiveTab('surat'); } }),
+                        React.createElement(NavItem, { icon: React.createElement(Scale, null), label: "Hasil Sembelih", active: activeTab === 'hasil', onClick: () => { setActiveTab('hasil'); } })
+                    )
+                ),
+                // Mosque silhouette watermark at the bottom of the sidebar
+                React.createElement("div", { className: "relative w-full h-36 flex items-end justify-center pointer-events-none overflow-hidden" },
+                    React.createElement(MosqueWatermark, { className: "w-full text-emerald-400 opacity-25 scale-110 translate-y-3" })
+                )
+            ),
+            // Main Content Area
+            React.createElement("main", { className: "flex-1 p-4 md:p-8 overflow-y-auto max-h-[calc(100vh-61px)] flex flex-col justify-between" },
+                React.createElement("div", { className: "max-w-7xl mx-auto w-full" },
+                    activeTab === 'dashboard' && renderDashboard(),
+                    activeTab === 'agenda' && renderAgenda(),
+                    activeTab === 'panitia' && renderPanitia(),
+                    activeTab === 'surat' && renderSurat(),
+                    activeTab === 'mudhohi' && renderMudhohi(),
+                    activeTab === 'kelompok' && renderKelompok(),
+                    activeTab === 'mustahiq' && renderMustahiq(),
+                    activeTab === 'hasil' && renderHasil(),
+                    activeTab === 'dokumen' && renderDokumen(),
+                    activeTab === 'akun' && renderAccountSettings()),
+                // Desktop Footer
+                React.createElement("footer", { className: "hidden md:flex justify-between items-center text-xs text-emerald-800/90 border-t border-slate-200 pt-6 mt-12 pb-2" },
+                    React.createElement("div", { className: "font-semibold text-slate-500" }, "© 2026 PDKQu. Sistem Qurban"),
+                    React.createElement("div", { className: "text-emerald-700 italic font-bold" }, "Berbagi Kebaikan, Menebar Keberkahan 🍃"))
+            )
+        ),
+        // Mobile Persistent Bottom Bar (4 items matching mockup)
+        React.createElement("nav", { className: "md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#04583d] text-white border-t border-emerald-700/60 shadow-2xl flex items-center justify-around h-16 px-2 pb-[env(safe-area-inset-bottom)]", "aria-label": "Navigasi Bawah" },
+            React.createElement("button", {
+                type: "button",
+                onClick: () => { setActiveTab('dashboard'); setIsMobileMenuOpen(false); },
+                className: `flex-1 py-1 px-2 rounded-xl flex flex-col items-center justify-center transition-all ${activeTab === 'dashboard' ? 'bg-white/20 text-white font-bold' : 'text-emerald-200 hover:text-white'}`
+            },
                 React.createElement(Home, { className: "w-5 h-5" }),
-                React.createElement("span", null, "Beranda")),
-            React.createElement("button", { onClick: () => { setActiveTab('mudhohi'); setIsMobileMenuOpen(false); }, className: (activeTab === 'mudhohi' || activeTab === 'kelompok') ? 'active' : '' },
+                React.createElement("span", { className: "text-[11px] mt-0.5" }, "Beranda")),
+            React.createElement("button", {
+                type: "button",
+                onClick: () => { setActiveTab('mudhohi'); setIsMobileMenuOpen(false); },
+                className: `flex-1 py-1 px-2 rounded-xl flex flex-col items-center justify-center transition-all ${(activeTab === 'mudhohi' || activeTab === 'kelompok') ? 'bg-white/20 text-white font-bold' : 'text-emerald-200 hover:text-white'}`
+            },
                 React.createElement(Users, { className: "w-5 h-5" }),
-                React.createElement("span", null, "Mudhohi")),
-            React.createElement("button", { className: "pdkq-plus-button", onClick: () => setShowQuickAdd(!showQuickAdd), "aria-label": "Aksi Cepat" },
-                React.createElement(Plus, { className: "w-7 h-7" })),
-            React.createElement("button", { onClick: () => { setActiveTab('mustahiq'); setIsMobileMenuOpen(false); }, className: activeTab === 'mustahiq' ? 'active' : '' },
-                React.createElement(FileText, { className: "w-5 h-5" }),
-                React.createElement("span", null, "Mustahiq")),
-            React.createElement("button", { onClick: () => setIsMobileMenuOpen(!isMobileMenuOpen), className: isMobileMenuOpen ? 'active' : '' },
+                React.createElement("span", { className: "text-[11px] mt-0.5" }, "Mudhohi")),
+            React.createElement("button", {
+                type: "button",
+                onClick: () => { setActiveTab('mustahiq'); setIsMobileMenuOpen(false); },
+                className: `flex-1 py-1 px-2 rounded-xl flex flex-col items-center justify-center transition-all ${activeTab === 'mustahiq' ? 'bg-white/20 text-white font-bold' : 'text-emerald-200 hover:text-white'}`
+            },
+                React.createElement(Heart, { className: "w-5 h-5" }),
+                React.createElement("span", { className: "text-[11px] mt-0.5" }, "Mustahiq")),
+            React.createElement("button", {
+                type: "button",
+                onClick: () => setIsMobileMenuOpen(!isMobileMenuOpen),
+                className: `flex-1 py-1 px-2 rounded-xl flex flex-col items-center justify-center transition-all ${isMobileMenuOpen ? 'bg-white/20 text-white font-bold' : 'text-emerald-200 hover:text-white'}`
+            },
                 React.createElement(Menu, { className: "w-5 h-5" }),
-                React.createElement("span", null, "Menu"))
+                React.createElement("span", { className: "text-[11px] mt-0.5" }, "Menu"))
         ),
         // Quick Add Overlay & Modal
         showQuickAdd ? React.createElement(React.Fragment, null,
@@ -3282,10 +2565,301 @@ function App() {
                 React.createElement("div", { className: "flex justify-end gap-2 pt-4" },
                     React.createElement("button", { type: "button", onClick: () => setDocCustomizer(null), className: "px-4 py-2 bg-emerald-600 text-white rounded font-medium" }, "Terapkan Pengaturan")))))));
 }
-function NavItem({ icon, label, active, onClick }) {
-    return (React.createElement("button", { onClick: onClick, className: `w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-all text-sm font-medium ${active ? 'bg-emerald-900 text-white border-l-4 border-emerald-400' : 'text-emerald-100 hover:bg-emerald-700 hover:text-white border-l-4 border-transparent'}` },
-        React.createElement("div", { className: `${active ? 'text-emerald-400' : 'text-emerald-300'}` }, React.cloneElement(icon, { className: 'w-5 h-5' })),
-        React.createElement("span", null, label)));
+function PDKQuLogoBadge({ className = "w-10 h-10" }) {
+    return React.createElement("svg", {
+        className,
+        viewBox: "0 0 100 100",
+        fill: "none",
+        xmlns: "http://www.w3.org/2000/svg"
+    },
+        React.createElement("rect", { width: "100", height: "100", rx: "22", fill: "#034830" }),
+        React.createElement("rect", { x: "4", y: "4", width: "92", height: "92", rx: "18", stroke: "#34d399", strokeWidth: "3.5", strokeOpacity: "0.9" }),
+        React.createElement("path", { d: "M50 16 C42 26 30 32 30 46 C30 54 36 58 50 58 C64 58 70 54 70 46 C70 32 58 26 50 16 Z", fill: "none", stroke: "#ffffff", strokeWidth: "3" }),
+        React.createElement("path", { d: "M43 36 C43 34 46 32 50 32 C54 32 57 34 57 36 C59 36 61 38 60 41 C59 44 56 46 54 46 L54 51 L51 51 L51 47 L49 47 L49 51 L46 51 L46 46 C44 46 41 44 40 41 C39 38 41 36 43 36 Z", fill: "#ffffff" }),
+        React.createElement("path", { d: "M49 12 A3 3 0 0 1 52 14 A3 3 0 1 1 48 10 A3.5 3.5 0 0 0 49 12 Z", fill: "#fde047" }),
+        React.createElement("text", { x: "50", y: "78", textAnchor: "middle", fill: "#ffffff", fontSize: "13", fontWeight: "900", letterSpacing: "1.5" }, "QURBAN")
+    );
+}
+
+function MosqueWatermark({ className = "w-full h-auto" }) {
+    return React.createElement("svg", {
+        className,
+        viewBox: "0 0 320 180",
+        fill: "currentColor",
+        xmlns: "http://www.w3.org/2000/svg"
+    },
+        React.createElement("rect", { x: "25", y: "50", width: "12", height: "130" }),
+        React.createElement("polygon", { points: "23,50 31,15 39,50" }),
+        React.createElement("circle", { cx: "31", cy: "12", r: "3" }),
+        React.createElement("rect", { x: "20", y: "70", width: "22", height: "6" }),
+        React.createElement("rect", { x: "20", y: "115", width: "22", height: "6" }),
+        React.createElement("rect", { x: "283", y: "50", width: "12", height: "130" }),
+        React.createElement("polygon", { points: "281,50 289,15 297,50" }),
+        React.createElement("circle", { cx: "289", cy: "12", r: "3" }),
+        React.createElement("rect", { x: "278", y: "70", width: "22", height: "6" }),
+        React.createElement("rect", { x: "278", y: "115", width: "22", height: "6" }),
+        React.createElement("path", { d: "M110 180 L110 120 C110 75 140 60 160 40 C180 60 210 75 210 120 L210 180 Z" }),
+        React.createElement("circle", { cx: "160", cy: "36", r: "4" }),
+        React.createElement("path", { d: "M159 28 A4 4 0 0 1 163 31 A4 4 0 1 1 158 26 A4.5 4.5 0 0 0 159 28 Z" }),
+        React.createElement("path", { d: "M55 180 L55 135 C55 105 75 95 90 80 C105 95 125 105 125 135 L125 180 Z" }),
+        React.createElement("path", { d: "M195 180 L195 135 C195 105 215 95 230 80 C245 95 265 105 265 135 L265 180 Z" }),
+        React.createElement("rect", { x: "40", y: "155", width: "240", height: "25" })
+    );
+}
+
+function PastoralCowScene({ className = "w-full h-full" }) {
+    return React.createElement("svg", {
+        className,
+        viewBox: "0 0 600 300",
+        fill: "none",
+        preserveAspectRatio: "xMidYMid slice",
+        xmlns: "http://www.w3.org/2000/svg"
+    },
+        React.createElement("defs", null,
+            React.createElement("linearGradient", { id: "pSky", x1: "0", y1: "0", x2: "0", y2: "1" },
+                React.createElement("stop", { offset: "0%", stopColor: "#67e8f9" }),
+                React.createElement("stop", { offset: "50%", stopColor: "#bae6fd" }),
+                React.createElement("stop", { offset: "100%", stopColor: "#f0fdf4" })
+            ),
+            React.createElement("linearGradient", { id: "pHill1", x1: "0", y1: "0", x2: "0", y2: "1" },
+                React.createElement("stop", { offset: "0%", stopColor: "#86efac" }),
+                React.createElement("stop", { offset: "100%", stopColor: "#22c55e" })
+            ),
+            React.createElement("linearGradient", { id: "pHill2", x1: "0", y1: "0", x2: "0", y2: "1" },
+                React.createElement("stop", { offset: "0%", stopColor: "#4ade80" }),
+                React.createElement("stop", { offset: "100%", stopColor: "#15803d" })
+            ),
+            React.createElement("linearGradient", { id: "pCowBody", x1: "0", y1: "0", x2: "1", y2: "1" },
+                React.createElement("stop", { offset: "0%", stopColor: "#a16207" }),
+                React.createElement("stop", { offset: "100%", stopColor: "#78350f" })
+            )
+        ),
+        React.createElement("rect", { width: "600", height: "300", fill: "url(#pSky)" }),
+        React.createElement("path", { d: "M80 60 Q95 40 120 42 Q145 30 170 45 Q190 40 200 58 Q205 75 185 80 L90 80 Q75 75 80 60 Z", fill: "#ffffff", opacity: "0.85" }),
+        React.createElement("path", { d: "M360 50 Q375 32 400 35 Q425 25 450 38 Q470 34 480 50 Q485 65 465 70 L370 70 Q355 65 360 50 Z", fill: "#ffffff", opacity: "0.75" }),
+        React.createElement("rect", { x: "180", y: "75", width: "7", height: "55", fill: "#ffffff" }),
+        React.createElement("polygon", { points: "178,75 183.5,45 189,75", fill: "#15803d" }),
+        React.createElement("circle", { cx: "183.5", cy: "43", r: "2", fill: "#fbbf24" }),
+        React.createElement("path", { d: "M205 110 C205 82 218 72 227 62 C236 72 249 82 249 110 Z", fill: "#ffffff" }),
+        React.createElement("path", { d: "M209 110 C209 87 220 77 227 69 C234 77 245 87 245 110 Z", fill: "#16a34a" }),
+        React.createElement("circle", { cx: "227", cy: "59", r: "2.5", fill: "#fbbf24" }),
+        React.createElement("rect", { x: "265", y: "70", width: "8", height: "60", fill: "#ffffff" }),
+        React.createElement("polygon", { points: "263,70 269,38 275,70", fill: "#15803d" }),
+        React.createElement("circle", { cx: "269", cy: "36", r: "2", fill: "#fbbf24" }),
+        React.createElement("path", { d: "M0 125 Q160 95 320 115 Q480 135 600 105 L600 300 L0 300 Z", fill: "url(#pHill1)" }),
+        React.createElement("circle", { cx: "130", cy: "115", r: "18", fill: "#15803d" }),
+        React.createElement("circle", { cx: "148", cy: "108", r: "24", fill: "#166534" }),
+        React.createElement("circle", { cx: "170", cy: "116", r: "16", fill: "#15803d" }),
+        React.createElement("circle", { cx: "295", cy: "118", r: "20", fill: "#15803d" }),
+        React.createElement("circle", { cx: "320", cy: "110", r: "26", fill: "#166534" }),
+        React.createElement("circle", { cx: "348", cy: "115", r: "18", fill: "#15803d" }),
+        React.createElement("path", { d: "M0 155 Q200 125 410 150 Q510 160 600 140 L600 300 L0 300 Z", fill: "url(#pHill2)" }),
+        React.createElement("ellipse", { cx: "475", cy: "195", rx: "72", ry: "46", fill: "url(#pCowBody)" }),
+        React.createElement("path", { d: "M435 205 Q475 225 520 200 Q495 235 440 232 Z", fill: "#ffffff" }),
+        React.createElement("path", { d: "M470 162 Q490 182 510 168 Q515 198 485 192 Z", fill: "#ffffff" }),
+        React.createElement("rect", { x: "420", y: "215", width: "13", height: "54", rx: "5", fill: "#78350f" }),
+        React.createElement("rect", { x: "445", y: "220", width: "12", height: "50", rx: "5", fill: "#92400e" }),
+        React.createElement("rect", { x: "510", y: "220", width: "12", height: "50", rx: "5", fill: "#78350f" }),
+        React.createElement("rect", { x: "532", y: "215", width: "13", height: "54", rx: "5", fill: "#92400e" }),
+        React.createElement("rect", { x: "419", y: "262", width: "15", height: "8", rx: "3", fill: "#1c1917" }),
+        React.createElement("rect", { x: "444", y: "263", width: "14", height: "8", rx: "3", fill: "#1c1917" }),
+        React.createElement("rect", { x: "509", y: "263", width: "14", height: "8", rx: "3", fill: "#1c1917" }),
+        React.createElement("rect", { x: "531", y: "262", width: "15", height: "8", rx: "3", fill: "#1c1917" }),
+        React.createElement("path", { d: "M544 185 Q568 205 562 235", stroke: "#78350f", strokeWidth: "5", fill: "none", strokeLinecap: "round" }),
+        React.createElement("circle", { cx: "562", cy: "237", r: "6", fill: "#1c1917" }),
+        React.createElement("path", { d: "M425 175 L390 150 L405 125 L445 160 Z", fill: "#92400e" }),
+        React.createElement("ellipse", { cx: "390", cy: "135", rx: "26", ry: "30", fill: "#92400e" }),
+        React.createElement("path", { d: "M390 110 Q378 130 384 152 Q390 155 396 152 Q402 130 390 110 Z", fill: "#ffffff" }),
+        React.createElement("path", { d: "M372 118 Q358 105 362 95", stroke: "#d97706", strokeWidth: "5.5", fill: "none", strokeLinecap: "round" }),
+        React.createElement("path", { d: "M408 118 Q422 105 418 95", stroke: "#d97706", strokeWidth: "5.5", fill: "none", strokeLinecap: "round" }),
+        React.createElement("ellipse", { cx: "362", cy: "130", rx: "13", ry: "6.5", fill: "#92400e", transform: "rotate(-15 362 130)" }),
+        React.createElement("ellipse", { cx: "362", cy: "130", rx: "8", ry: "3.5", fill: "#fbcfe8", transform: "rotate(-15 362 130)" }),
+        React.createElement("ellipse", { cx: "418", cy: "130", rx: "13", ry: "6.5", fill: "#92400e", transform: "rotate(15 418 130)" }),
+        React.createElement("ellipse", { cx: "418", cy: "130", rx: "8", ry: "3.5", fill: "#fbcfe8", transform: "rotate(15 418 130)" }),
+        React.createElement("ellipse", { cx: "378", cy: "128", rx: "3.5", ry: "4.5", fill: "#1c1917" }),
+        React.createElement("circle", { cx: "379", cy: "126", r: "1.2", fill: "#ffffff" }),
+        React.createElement("ellipse", { cx: "402", cy: "128", rx: "3.5", ry: "4.5", fill: "#1c1917" }),
+        React.createElement("circle", { cx: "403", cy: "126", r: "1.2", fill: "#ffffff" }),
+        React.createElement("ellipse", { cx: "390", cy: "155", rx: "17", ry: "11", fill: "#fbcfe8", stroke: "#f472b6", strokeWidth: "1.2" }),
+        React.createElement("circle", { cx: "384", cy: "155", r: "2.5", fill: "#831843" }),
+        React.createElement("circle", { cx: "396", cy: "155", r: "2.5", fill: "#831843" }),
+        React.createElement("path", { d: "M30 270 L35 242 L42 270 L48 238 L55 270", stroke: "#16a34a", strokeWidth: "2.5", fill: "none" }),
+        React.createElement("circle", { cx: "40", cy: "238", r: "3", fill: "#fef08a" }),
+        React.createElement("path", { d: "M280 280 L285 252 L292 280 L300 248 L308 280", stroke: "#16a34a", strokeWidth: "2.5", fill: "none" }),
+        React.createElement("circle", { cx: "290", cy: "248", r: "3", fill: "#ffffff" })
+    );
+}
+
+function KpiStatCard({ type, icon, title, value, buttonLabel, onClick }) {
+    const config = {
+        mudhohi: {
+            bg: "linear-gradient(135deg, #0284c7 0%, #2563eb 100%)",
+            shadow: "0 10px 25px -4px rgba(37, 99, 235, 0.35)",
+            watermark: React.createElement(Users, { className: "w-28 h-28 text-white/10 absolute -right-4 -bottom-4 pointer-events-none" })
+        },
+        sapi: {
+            bg: "linear-gradient(135deg, #059669 0%, #10b981 100%)",
+            shadow: "0 10px 25px -4px rgba(16, 185, 129, 0.35)",
+            watermark: React.createElement(Beef, { className: "w-28 h-28 text-white/10 absolute -right-4 -bottom-4 pointer-events-none" })
+        },
+        cantingan: {
+            bg: "linear-gradient(135deg, #7c3aed 0%, #9333ea 100%)",
+            shadow: "0 10px 25px -4px rgba(124, 58, 237, 0.35)",
+            watermark: React.createElement(Ticket, { className: "w-28 h-28 text-white/10 absolute -right-4 -bottom-4 pointer-events-none" })
+        },
+        daging: {
+            bg: "linear-gradient(135deg, #ea580c 0%, #f59e0b 100%)",
+            shadow: "0 10px 25px -4px rgba(234, 88, 12, 0.35)",
+            watermark: React.createElement(Scale, { className: "w-28 h-28 text-white/10 absolute -right-4 -bottom-4 pointer-events-none" })
+        }
+    }[type] || {
+        bg: "linear-gradient(135deg, #059669 0%, #10b981 100%)",
+        shadow: "0 10px 25px -4px rgba(16, 185, 129, 0.35)",
+        watermark: null
+    };
+
+    return React.createElement("div", {
+        style: { background: config.bg, boxShadow: config.shadow },
+        className: "rounded-2xl p-4 sm:p-5 text-white flex flex-col justify-between relative overflow-hidden transition-transform duration-200 hover:-translate-y-1"
+    },
+        config.watermark,
+        React.createElement("div", { className: "relative z-10" },
+            React.createElement("div", { className: "w-10 h-10 rounded-xl bg-white/25 backdrop-blur-xs flex items-center justify-center text-white mb-3 shadow-inner" },
+                React.cloneElement(icon, { className: "w-5 h-5" })),
+            React.createElement("p", { className: "text-white/85 text-[11px] sm:text-xs font-bold uppercase tracking-wider" }, title),
+            React.createElement("h3", { className: "text-2xl sm:text-3xl font-black text-white mt-0.5 tracking-tight" }, value)
+        ),
+        React.createElement("div", { className: "mt-4 relative z-10" },
+            React.createElement("button", {
+                type: "button",
+                onClick: onClick,
+                className: "px-3 py-1 bg-white/20 hover:bg-white/30 backdrop-blur-xs rounded-full text-xs font-bold text-white inline-flex items-center gap-1 border border-white/30 transition-colors shadow-xs"
+            },
+                buttonLabel,
+                React.createElement(ArrowRight, { className: "w-3 h-3 ml-0.5" }))
+        )
+    );
+}
+
+function GrafikQurbanCard({ activeYear }) {
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+    const values = [55, 75, 95, 125, 160, 260, 290, 235, 165, 145, 125, 175];
+    const maxVal = 300;
+
+    return React.createElement("div", { className: "bg-white rounded-2xl p-5 sm:p-6 shadow-sm border border-slate-200/80 flex flex-col justify-between" },
+        React.createElement("div", { className: "flex justify-between items-center mb-6" },
+            React.createElement("div", { className: "flex items-center gap-2" },
+                React.createElement("div", { className: "w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center" },
+                    React.createElement(BarChart3, { className: "w-4 h-4" })),
+                React.createElement("h3", { className: "font-black text-slate-800 text-base sm:text-lg" }, "Grafik Qurban")),
+            React.createElement("div", { className: "flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-slate-200 bg-slate-50 text-slate-700 text-xs font-bold shadow-xs cursor-pointer" },
+                React.createElement("span", null, "Tahun Ini"),
+                React.createElement(ChevronDown, { className: "w-3.5 h-3.5 text-slate-400" }))
+        ),
+        React.createElement("div", { className: "relative pt-2" },
+            React.createElement("div", { className: "flex flex-col justify-between h-44 text-[10px] text-slate-400 font-semibold absolute left-0 top-2 bottom-6 w-8 pointer-events-none" },
+                React.createElement("span", null, "300"),
+                React.createElement("span", null, "200"),
+                React.createElement("span", null, "100"),
+                React.createElement("span", null, "0")
+            ),
+            React.createElement("div", { className: "ml-8 pl-2 flex flex-col justify-between h-44 border-b border-slate-200 relative" },
+                React.createElement("div", { className: "w-full border-b border-dashed border-slate-100 absolute top-0" }),
+                React.createElement("div", { className: "w-full border-b border-dashed border-slate-100 absolute top-1/3" }),
+                React.createElement("div", { className: "w-full border-b border-dashed border-slate-100 absolute top-2/3" }),
+                React.createElement("div", { className: "w-full h-full flex items-end justify-between gap-1 sm:gap-2 pt-2 z-10" },
+                    months.map((m, idx) => {
+                        const val = values[idx];
+                        const pct = Math.round((val / maxVal) * 100);
+                        return React.createElement("div", { key: m, className: "flex-1 flex flex-col items-center h-full justify-end group cursor-pointer" },
+                            React.createElement("div", {
+                                title: `${m}: ${val}`,
+                                style: { height: `${pct}%` },
+                                className: "w-full max-w-[24px] bg-emerald-500 group-hover:bg-emerald-600 rounded-t-md transition-all shadow-xs relative"
+                            }),
+                            React.createElement("span", { className: "text-[10px] text-slate-500 font-bold mt-2 truncate w-full text-center" }, m)
+                        );
+                    })
+                )
+            )
+        )
+    );
+}
+
+function AktivitasTerbaruCard({ onViewAll }) {
+    const items = [
+        { id: 1, title: "Data mudhohi baru ditambahkan", time: "09 Nov 2026, 20:45", icon: React.createElement(Users, { className: "w-4 h-4" }), color: "bg-sky-100 text-sky-600" },
+        { id: 2, title: "Laporan cantingan dicetak", time: "09 Nov 2026, 19:30", icon: React.createElement(FileText, { className: "w-4 h-4" }), color: "bg-amber-100 text-amber-600" },
+        { id: 3, title: "Data sapi diperbarui", time: "09 Nov 2026, 18:20", icon: React.createElement(Beef, { className: "w-4 h-4" }), color: "bg-emerald-100 text-emerald-600" },
+        { id: 4, title: "Pembagian daging selesai", time: "09 Nov 2026, 17:10", icon: React.createElement(CheckCircle2, { className: "w-4 h-4" }), color: "bg-orange-100 text-orange-600" }
+    ];
+
+    return React.createElement("div", { className: "bg-white rounded-2xl p-5 sm:p-6 shadow-sm border border-slate-200/80 flex flex-col justify-between" },
+        React.createElement("div", { className: "flex justify-between items-center mb-4" },
+            React.createElement("div", { className: "flex items-center gap-2" },
+                React.createElement("div", { className: "w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center" },
+                    React.createElement(Clock, { className: "w-4 h-4" })),
+                React.createElement("h3", { className: "font-black text-slate-800 text-base sm:text-lg" }, "Aktivitas Terbaru")),
+            React.createElement("button", {
+                type: "button",
+                onClick: onViewAll,
+                className: "text-emerald-700 hover:text-emerald-800 font-bold text-xs flex items-center gap-1 transition-colors"
+            },
+                "Lihat Semua",
+                React.createElement(ArrowRight, { className: "w-3 h-3" }))
+        ),
+        React.createElement("div", { className: "space-y-3.5 divide-y divide-slate-100" },
+            items.map(it => React.createElement("div", { key: it.id, className: "pt-3.5 first:pt-0 flex items-center gap-3" },
+                React.createElement("div", { className: `w-9 h-9 rounded-xl ${it.color} flex items-center justify-center flex-shrink-0 shadow-xs` },
+                    it.icon),
+                React.createElement("div", { className: "min-w-0 flex-1" },
+                    React.createElement("p", { className: "text-xs sm:text-sm font-bold text-slate-800 truncate" }, it.title),
+                    React.createElement("p", { className: "text-[11px] text-slate-400 mt-0.5" }, it.time))
+            ))
+        )
+    );
+}
+
+function RingkasanKegiatanCard({ onDetail }) {
+    return React.createElement("div", { className: "bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-slate-200/80" },
+        React.createElement("div", { className: "flex justify-between items-center mb-3" },
+            React.createElement("div", { className: "flex items-center gap-2" },
+                React.createElement("div", { className: "w-7 h-7 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center" },
+                    React.createElement(BarChart3, { className: "w-4 h-4" })),
+                React.createElement("h4", { className: "font-black text-slate-800 text-sm" }, "Ringkasan Kegiatan")),
+            React.createElement("button", { type: "button", onClick: onDetail, className: "text-emerald-700 font-bold text-xs flex items-center hover:underline" },
+                "Lihat Detail",
+                React.createElement(ChevronRight, { className: "w-3 h-3 ml-0.5" }))
+        ),
+        React.createElement("div", { className: "flex items-center gap-4 pt-1" },
+            React.createElement("div", { className: "relative w-16 h-16 flex-shrink-0 flex items-center justify-center" },
+                React.createElement("svg", { className: "w-16 h-16 -rotate-90", viewBox: "0 0 100 100" },
+                    React.createElement("circle", { cx: "50", cy: "50", r: "40", fill: "none", stroke: "#f1f5f9", strokeWidth: "10" }),
+                    React.createElement("circle", { cx: "50", cy: "50", r: "40", fill: "none", stroke: "#10b981", strokeWidth: "10", strokeLinecap: "round", strokeDasharray: "213.6 37.7" })
+                ),
+                React.createElement("span", { className: "absolute font-black text-emerald-700 text-sm" }, "85%")
+            ),
+            React.createElement("div", { className: "flex-1 min-w-0" },
+                React.createElement("p", { className: "text-xs font-bold text-slate-700 mb-2 truncate" }, "Proses Qurban Tahun Ini"),
+                React.createElement("div", { className: "w-full bg-slate-100 rounded-full h-3 overflow-hidden p-0.5" },
+                    React.createElement("div", { className: "bg-emerald-500 h-full rounded-full transition-all duration-500", style: { width: "85%" } })
+                )
+            )
+        )
+    );
+}
+
+function NavItem({ icon, label, active, onClick, chevron }) {
+    return React.createElement("button", {
+        type: "button",
+        onClick: onClick,
+        className: `w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl transition-all text-xs font-semibold ${active ? 'bg-white/20 text-white shadow-xs font-bold' : 'text-emerald-100 hover:bg-white/10 hover:text-white'}`
+    },
+        React.createElement("div", { className: "flex items-center space-x-3" },
+            React.cloneElement(icon, { className: `w-4 h-4 ${active ? 'text-white' : 'text-emerald-200'}` }),
+            React.createElement("span", null, label)),
+        chevron ? React.createElement(ChevronRight, { className: `w-3.5 h-3.5 ${active ? 'text-white' : 'text-emerald-300/80'}` }) : null
+    );
 }
 function StatCard({ icon, title, value, desc }) {
     return (React.createElement("div", { className: "bg-white p-5 rounded-xl shadow-sm border border-gray-100 flex items-start space-x-4 hover:shadow-md transition-shadow" },
