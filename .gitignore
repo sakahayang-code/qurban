@@ -1,0 +1,5 @@
+*.sqlite-journal
+*.sqlite-wal
+*.sqlite-shm
+*.tmp
+.DS_Store

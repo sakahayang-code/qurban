@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Login</title>
+<meta name="robots" content="noindex,nofollow,noarchive">
+<style>
+:root{
+  --primary:#2563eb;
+  --primary-dark:#1d4ed8;
+  --text:#101828;
+  --muted:#667085;
+  --border:#d0d5dd;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{
+  min-height:100%;
+  display:grid;
+  place-items:center;
+  padding:24px;
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text);
+  background:
+    radial-gradient(circle at 15% 20%,rgba(59,130,246,.28),transparent 30%),
+    radial-gradient(circle at 85% 15%,rgba(14,165,233,.22),transparent 28%),
+    radial-gradient(circle at 80% 85%,rgba(99,102,241,.24),transparent 30%),
+    linear-gradient(135deg,#0f172a 0%,#172554 45%,#0b1120 100%);
+  overflow:hidden;
+  position:relative;
+}
+body:before,body:after{
+  content:"";
+  position:absolute;
+  border-radius:999px;
+  filter:blur(2px);
+  opacity:.35;
+  pointer-events:none;
+}
+body:before{
+  width:340px;height:340px;
+  left:-110px;bottom:-150px;
+  background:linear-gradient(135deg,#38bdf8,#6366f1);
+}
+body:after{
+  width:300px;height:300px;
+  right:-100px;top:-120px;
+  background:linear-gradient(135deg,#60a5fa,#a78bfa);
+}
+form{
+  width:min(420px,100%);
+  padding:34px;
+  position:relative;
+  z-index:1;
+  border:1px solid rgba(255,255,255,.22);
+  border-radius:24px;
+  background:rgba(255,255,255,.94);
+  box-shadow:0 28px 80px rgba(0,0,0,.32),0 8px 24px rgba(0,0,0,.12);
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+}
+form:before{
+  content:"";
+  display:block;
+  width:58px;height:6px;
+  margin-bottom:24px;
+  border-radius:99px;
+  background:linear-gradient(90deg,var(--primary),#38bdf8);
+}
+h1{margin:0 0 8px;font-size:30px;line-height:1.15;letter-spacing:-.6px}
+p{color:var(--muted);margin:0 0 26px;font-size:14px}
+label{display:block;font-weight:650;margin:16px 0 7px;font-size:14px}
+input{
+  width:100%;
+  padding:13px 14px;
+  border:1px solid var(--border);
+  border-radius:12px;
+  font-size:16px;
+  background:#fff;
+  color:var(--text);
+  outline:none;
+  transition:border-color .2s,box-shadow .2s,transform .2s;
+}
+input:focus{
+  border-color:#60a5fa;
+  box-shadow:0 0 0 4px rgba(37,99,235,.12);
+}
+button{
+  width:100%;
+  margin-top:24px;
+  padding:13px 16px;
+  border:0;
+  border-radius:12px;
+  color:#fff;
+  background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+  box-shadow:0 10px 20px rgba(37,99,235,.24);
+  font-size:16px;
+  font-weight:750;
+  cursor:pointer;
+  transition:transform .18s,box-shadow .18s,filter .18s;
+}
+button:hover{transform:translateY(-1px);box-shadow:0 14px 25px rgba(37,99,235,.3);filter:brightness(1.03)}
+button:active{transform:translateY(0)}
+.error{
+  color:#b42318;
+  background:#fef3f2;
+  border:1px solid #fecdca;
+  padding:11px 12px;
+  border-radius:10px;
+  margin-bottom:12px;
+  font-size:14px;
+}
+form>div:last-child{
+  margin-top:18px!important;
+  color:#98a2b3!important;
+}
+@media(max-width:480px){
+  body{padding:16px}
+  form{padding:27px 22px;border-radius:20px}
+  h1{font-size:27px}
+}
+</style>
+</head>
+<body>
+<form method="post" action="login.php" autocomplete="on">
+<h1>Login</h1>
+<p>Sistem Informasi Qurban</p>
+<div id="msg" class="error" hidden>Username atau password salah.</div>
+<label for="username">Username</label>
+<input id="username" name="username" required autocomplete="username">
+<label for="password">Password</label>
+<input id="password" name="password" type="password" required autocomplete="current-password">
+<button type="submit">Masuk</button>
+<div style="margin-top:12px;text-align:center;color:#98a2b3;font-size:12px">Akun admin default: <strong>admin / admin</strong></div>
+</form>
+<script>
+const q=new URLSearchParams(location.search);
+if(q.get('error')==='1')document.getElementById('msg').hidden=false;
+</script>
+</body>
+</html>
