@@ -41,3 +41,20 @@ Karena aplikasi aslinya client-side, login ini melindungi akses ke halaman aplik
 - Admin maupun petugas dapat mengubah password akun sendiri.
 - Endpoint pengelolaan akun dilindungi sesi login + CSRF token.
 - Password tidak disimpan dalam bentuk teks biasa.
+
+## Perlindungan & Keamanan Data (Anti-Hilang / Anti-Tertimpa)
+1. **Perlindungan Deployment cPanel (`.cpanel.yml`)**:
+   - Skrip deployment secara otomatis mencadangkan `database.sqlite` sebelum menyalin berkas aplikasi baru.
+   - Database produksi dikembalikan secara utuh setelah penyalinan berkas, sehingga pembaruan aplikasi lewat Git/cPanel tidak akan pernah menimpa atau menghapus data qurban yang sedang berjalan.
+2. **Penyimpanan Ganda (Dual-Layer Persistence)**:
+   - Data disimpan secara otomatis ke SQLite (`database.sqlite`) dan cermin file JSON terproteksi (`database/app_state.json`).
+3. **Pencadangan Otomatis (Auto-Snapshots)**:
+   - Setiap kali data disimpan oleh panitia, sistem otomatis membuat snapshot cadangan di folder `database/backups/`.
+   - Tabel `app_state_history` di SQLite mencatat 50 riwayat perubahan terakhir.
+4. **Pusat Cadangan & Pemulihan Mandiri (UI Pengaturan)**:
+   - Admin dapat mengunduh berkas cadangan JSON lengkap ke komputer/ponsel kapan saja via menu Pengaturan.
+   - Admin dapat mengunduh berkas mentah `database.sqlite`.
+   - Admin dapat memulihkan seluruh data dari berkas cadangan JSON hanya dengan 1 klik.
+   - Admin dapat memulihkan data dari snapshot riwayat server.
+5. **Proteksi Folder & Berkas Sensitif (`.htaccess`)**:
+   - Seluruh berkas database (`*.sqlite`, `*.db`, `*.json`, `*.bak`) dan direktori `database/` serta `storage/` diblokir total dari akses langsung melalui web browser.

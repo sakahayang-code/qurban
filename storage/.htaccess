@@ -1,0 +1,2 @@
+# Blokir semua akses langsung ke direktori storage
+Require all denied

@@ -3,3 +3,8 @@
 *.sqlite-shm
 *.tmp
 .DS_Store
+*.prod_safe
+*.bak
+*.backup
+database/backups/*.json
+database/backups/*.sqlite

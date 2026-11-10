@@ -1,7 +1,7 @@
 # Keamanan PDKQu - Sistem Informasi Qurban
 
-# Blokir akses langsung ke berkas sensitif
-<FilesMatch "^(app\.html|database\.sqlite|\.cpanel\.yml|\.gitignore|README-KEAMANAN\.txt)$">
+# Blokir akses langsung ke database, berkas cadangan, dan konfigurasi sensitif
+<FilesMatch "(app\.html|database\.sqlite|\.cpanel\.yml|\.gitignore|README-KEAMANAN\.txt|.*\.sqlite|.*\.sqlite-wal|.*\.sqlite-shm|.*\.db|.*\.json|.*\.bak|.*\.backup|.*\.sql)$">
     Require all denied
 </FilesMatch>
 

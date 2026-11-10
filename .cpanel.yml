@@ -2,7 +2,14 @@
 deployment:
   tasks:
     - export DEPLOYPATH=/home/mulw1713/public_html/qurban
-    - /bin/mkdir -p $DEPLOYPATH
+    - /bin/mkdir -p $DEPLOYPATH/database/backups $DEPLOYPATH/storage
+    # 1. Amankan cadangan database produksi sebelum proses salin berkas
+    - if [ -f $DEPLOYPATH/database.sqlite ]; then /bin/cp -a $DEPLOYPATH/database.sqlite $DEPLOYPATH/database/backups/deploy_pre_backup.sqlite; fi
+    - if [ -f $DEPLOYPATH/database.sqlite ]; then /bin/cp -a $DEPLOYPATH/database.sqlite $DEPLOYPATH/database.sqlite.prod_safe; fi
+    # 2. Salin seluruh berkas aplikasi
     - /bin/cp -R * $DEPLOYPATH/
     - /bin/cp .htaccess $DEPLOYPATH/
+    # 3. KEMBALIKAN database produksi agar tidak pernah tertimpa oleh git/aplikasi
+    - if [ -f $DEPLOYPATH/database.sqlite.prod_safe ]; then /bin/mv -f $DEPLOYPATH/database.sqlite.prod_safe $DEPLOYPATH/database.sqlite; fi
+    # 4. Amankan hak akses direktori data & cadangan
     - /bin/chmod -R 775 $DEPLOYPATH/storage $DEPLOYPATH/database

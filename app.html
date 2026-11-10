@@ -148,7 +148,7 @@ input, select, textarea {
   <div id="root"></div>
   <script type="module">
 import React, { useState, useEffect } from 'https://esm.sh/react@18.3.1';
-import { Users, FileText, Home, Printer, Scale, Plus, X, Search, Menu, Beef, Calendar, Settings, Trash2, Edit, Camera, Layers, FileCheck, CheckCircle2, Sliders, Mail, Eye, Upload, Image as ImageIcon, Archive, Ticket, LogOut, ChevronRight, ChevronDown, BarChart3, Clock, Heart, ArrowRight, User } from 'https://esm.sh/lucide-react@0.468.0?deps=react@18.3.1';
+import { Users, FileText, Home, Printer, Scale, Plus, X, Search, Menu, Beef, Calendar, Settings, Trash2, Edit, Camera, Layers, FileCheck, CheckCircle2, Sliders, Mail, Eye, Upload, Image as ImageIcon, Archive, Ticket, LogOut, ChevronRight, ChevronDown, BarChart3, Clock, Heart, ArrowRight, User, Download, ShieldCheck, Database } from 'https://esm.sh/lucide-react@0.468.0?deps=react@18.3.1';
 const INITIAL_AGENDA = [
     { id: 1, task: 'Pembentukan Panitia Qurban', date: 'Maret 2026', status: 'Selesai', media: true },
     { id: 2, task: 'Pendaftaran & Pengelompokan Mudhohi', date: 'Mei 2026', status: 'Selesai', media: true },
@@ -255,6 +255,11 @@ function App() {
     const [accountMessage, setAccountMessage] = useState('');
     const [accountError, setAccountError] = useState('');
     const [adminForm, setAdminForm] = useState({ username: '', display_name: '', current_password: '', new_password: '' });
+    const [serverBackups, setServerBackups] = useState([]);
+    const [loadingBackups, setLoadingBackups] = useState(false);
+    const [backupActionMsg, setBackupActionMsg] = useState('');
+    const [backupActionError, setBackupActionError] = useState('');
+    const [showServerBackups, setShowServerBackups] = useState(false);
     const [petugasForm, setPetugasForm] = useState({ id: 0, username: '', display_name: '', password: '' });
     const [managedUserForm, setManagedUserForm] = useState({ id: 0, username: '', display_name: '', role: 'petugas', password: '' });
     const [newHijriah, setNewHijriah] = useState('');
@@ -342,13 +347,13 @@ function App() {
             }
         }
     });
-    // SQLite persistence: load once after login, then persist all business data/state changes.
+    // Dual-layer persistence (SQLite + JSON Backup + Local Mirror)
     useEffect(() => {
         let cancelled = false;
         (async () => {
             try {
                 const response = await fetch(`${DB_API}?action=load`, { credentials: 'same-origin', cache: 'no-store' });
-                if (!response.ok) throw new Error(`SQLite load failed: ${response.status}`);
+                if (!response.ok) throw new Error(`Data load failed: ${response.status}`);
                 const payload = await response.json();
                 if (!cancelled && payload && payload.data) {
                     const d = payload.data;
@@ -364,11 +369,24 @@ function App() {
                     if (Array.isArray(d.suratTugasDB)) setSuratTugasDB(d.suratTugasDB);
                     if (d.customConfigs && typeof d.customConfigs === 'object') setCustomConfigs(d.customConfigs);
                     if (d.archives && typeof d.archives === 'object') setArchives(d.archives);
+                    try { localStorage.setItem('pdkq_safety_cache', JSON.stringify(d)); } catch (e) {}
                 }
-            } catch (error) {
-                console.error('SQLite load error:', error);
-            } finally {
                 if (!cancelled) setDbReady(true);
+            } catch (error) {
+                console.error('Data load error:', error);
+                // Do not enable auto-save if load failed, to prevent overwriting existing data with blanks!
+                try {
+                    const cached = localStorage.getItem('pdkq_safety_cache');
+                    if (cached && !cancelled) {
+                        const d = JSON.parse(cached);
+                        if (d && d.mudhohi) {
+                            if (d.activeYear) setActiveYear(d.activeYear);
+                            if (Array.isArray(d.mudhohi)) setMudhohi(d.mudhohi);
+                            if (Array.isArray(d.mustahiq)) setMustahiq(d.mustahiq);
+                            if (Array.isArray(d.hasil)) setHasil(d.hasil);
+                        }
+                    }
+                } catch (e) {}
             }
         })();
         return () => { cancelled = true; };
@@ -380,6 +398,7 @@ function App() {
             activeYear, availableYears, agendas, panitia, mudhohi, mustahiq, hasil,
             suratRapatDB, suratEdaranDB, suratTugasDB, customConfigs, archives
         };
+        try { localStorage.setItem('pdkq_safety_cache', JSON.stringify(data)); } catch (e) {}
         const timer = setTimeout(async () => {
             try {
                 const response = await fetch(DB_API, {
@@ -389,11 +408,11 @@ function App() {
                     body: JSON.stringify(data),
                     cache: 'no-store'
                 });
-                if (!response.ok) throw new Error(`SQLite save failed: ${response.status}`);
+                if (!response.ok) throw new Error(`Save failed: ${response.status}`);
                 const result = await response.json();
-                if (!result.ok) throw new Error(result.error || 'SQLite save failed');
+                if (!result.ok) throw new Error(result.error || 'Save failed');
             } catch (error) {
-                console.error('SQLite save error:', error);
+                console.error('Data save error:', error);
             }
         }, 250);
         return () => clearTimeout(timer);
@@ -1306,6 +1325,119 @@ function App() {
         try { const result = await accountPost('delete_user', { id: u.id }); setAccountMessage(result.message || 'Akun berhasil dihapus.'); await loadAccountData(); }
         catch (err) { setAccountError(err.message); } finally { setAccountSaving(false); }
     };
+    const handleDownloadBackup = () => {
+        window.location.href = `${DB_API}?action=export_backup`;
+    };
+
+    const handleDownloadSqlite = () => {
+        window.location.href = `${DB_API}?action=export_sqlite`;
+    };
+
+    const handleRestoreJsonFile = (e) => {
+        const file = e.target.files && e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = async (event) => {
+            try {
+                const jsonText = event.target.result;
+                const parsed = json_check = JSON.parse(jsonText);
+                if (!parsed || typeof parsed !== 'object') {
+                    throw new Error('Berkas cadangan tidak valid.');
+                }
+                if (!window.confirm('Apakah Anda yakin ingin memulihkan data dari berkas cadangan ini?\n\nData yang ada saat ini akan digantikan oleh data dari berkas cadangan. Sistem juga secara otomatis membuat cadangan sebelum pemulihan.')) {
+                    e.target.value = '';
+                    return;
+                }
+                setBackupActionError('');
+                setBackupActionMsg('Memulihkan data...');
+                const response = await fetch(`${DB_API}?action=restore_backup`, {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: jsonText
+                });
+                const res = await response.json();
+                if (!response.ok || !res.ok) throw new Error(res.error || 'Gagal memulihkan cadangan.');
+                const d = res.data;
+                if (d) {
+                    if (d.activeYear) setActiveYear(d.activeYear);
+                    if (Array.isArray(d.availableYears)) setAvailableYears(d.availableYears);
+                    if (Array.isArray(d.agendas)) setAgendas(d.agendas);
+                    if (Array.isArray(d.panitia)) setPanitia(d.panitia);
+                    if (Array.isArray(d.mudhohi)) setMudhohi(d.mudhohi);
+                    if (Array.isArray(d.mustahiq)) setMustahiq(d.mustahiq);
+                    if (Array.isArray(d.hasil)) setHasil(d.hasil);
+                    if (Array.isArray(d.suratRapatDB)) setSuratRapatDB(d.suratRapatDB);
+                    if (Array.isArray(d.suratEdaranDB)) setSuratEdaranDB(d.suratEdaranDB);
+                    if (Array.isArray(d.suratTugasDB)) setSuratTugasDB(d.suratTugasDB);
+                    if (d.customConfigs && typeof d.customConfigs === 'object') setCustomConfigs(d.customConfigs);
+                    if (d.archives && typeof d.archives === 'object') setArchives(d.archives);
+                    try { localStorage.setItem('pdkq_safety_cache', JSON.stringify(d)); } catch (err) {}
+                }
+                setBackupActionMsg('Berhasil! Seluruh data telah dipulihkan secara utuh.');
+            } catch (err) {
+                setBackupActionError(err.message || 'Gagal membaca berkas cadangan.');
+            } finally {
+                e.target.value = '';
+            }
+        };
+        reader.readAsText(file);
+    };
+
+    const fetchServerBackups = async () => {
+        setLoadingBackups(true);
+        setBackupActionError('');
+        try {
+            const resp = await fetch(`${DB_API}?action=list_backups`, { credentials: 'same-origin' });
+            const data = await resp.json();
+            if (data.ok && Array.isArray(data.backups)) {
+                setServerBackups(data.backups);
+                setShowServerBackups(true);
+            } else {
+                throw new Error('Gagal mengambil daftar cadangan server.');
+            }
+        } catch (err) {
+            setBackupActionError(err.message);
+        } finally {
+            setLoadingBackups(false);
+        }
+    };
+
+    const handleRestoreSnapshot = async (filename) => {
+        if (!window.confirm(`Pulihkan data dari snapshot: ${filename}?\n\nData saat ini akan digantikan oleh snapshot tersebut.`)) {
+            return;
+        }
+        setBackupActionError('');
+        setBackupActionMsg('Memulihkan dari snapshot...');
+        try {
+            const resp = await fetch(`${DB_API}?action=restore_snapshot`, {
+                method: 'POST',
+                credentials: 'same-origin',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ filename })
+            });
+            const res = await resp.json();
+            if (!resp.ok || !res.ok) throw new Error(res.error || 'Gagal memulihkan snapshot.');
+            const d = res.data;
+            if (d) {
+                if (d.activeYear) setActiveYear(d.activeYear);
+                if (Array.isArray(d.availableYears)) setAvailableYears(d.availableYears);
+                if (Array.isArray(d.agendas)) setAgendas(d.agendas);
+                if (Array.isArray(d.panitia)) setPanitia(d.panitia);
+                if (Array.isArray(d.mudhohi)) setMudhohi(d.mudhohi);
+                if (Array.isArray(d.mustahiq)) setMustahiq(d.mustahiq);
+                if (Array.isArray(d.hasil)) setHasil(d.hasil);
+                if (Array.isArray(d.suratRapatDB)) setSuratRapatDB(d.suratRapatDB);
+                if (Array.isArray(d.suratEdaranDB)) setSuratEdaranDB(d.suratEdaranDB);
+                if (Array.isArray(d.suratTugasDB)) setSuratTugasDB(d.suratTugasDB);
+                if (d.customConfigs && typeof d.customConfigs === 'object') setCustomConfigs(d.customConfigs);
+                if (d.archives && typeof d.archives === 'object') setArchives(d.archives);
+            }
+            setBackupActionMsg('Snapshot berhasil dipulihkan!');
+        } catch (err) {
+            setBackupActionError(err.message);
+        }
+    };
     const renderAccountSettings = () => {
         const currentRole = accountData?.me?.role || '';
         const isAdmin = currentRole === 'admin';
@@ -1378,7 +1510,97 @@ function App() {
                                 React.createElement("button", { onClick: () => editPetugas(u), className: "px-3 py-1.5 rounded-lg bg-blue-50 text-blue-700 text-xs font-bold" }, "Edit"),
                                 React.createElement("button", { onClick: () => togglePetugas(u), className: "px-3 py-1.5 rounded-lg bg-amber-50 text-amber-700 text-xs font-bold" }, u.active ? 'Nonaktifkan' : 'Aktifkan'),
                                 React.createElement("button", { onClick: () => deletePetugas(u), className: "px-3 py-1.5 rounded-lg bg-red-50 text-red-700 text-xs font-bold" }, "Hapus"))))))
-                ) : React.createElement("div", { className: "text-sm text-gray-600" }, "Akun petugas dapat mengubah passwordnya sendiri melalui pengaturan akun.")));
+                ) : React.createElement("div", { className: "text-sm text-gray-600" }, "Akun petugas dapat mengubah passwordnya sendiri melalui pengaturan akun.")),
+// Data Safety & Backup Center
+            React.createElement("div", { className: "bg-white p-5 rounded-2xl shadow-sm border border-slate-200 space-y-4" },
+                React.createElement("div", { className: "flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pb-3 border-b border-slate-100" },
+                    React.createElement("div", null,
+                        React.createElement("div", { className: "flex items-center gap-2" },
+                            React.createElement("div", { className: "w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center" },
+                                React.createElement(ShieldCheck, { className: "w-5 h-5" })),
+                            React.createElement("h3", { className: "font-black text-slate-800 text-base sm:text-lg" }, "Pusat Keamanan & Cadangan Data")),
+                        React.createElement("p", { className: "text-xs text-slate-500 mt-1" }, "Data Anda terlindungi oleh penyimpanan ganda SQLite + JSON, pencadangan otomatis di server, dan perlindungan saat deployment.")),
+                    React.createElement("div", { className: "inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-full text-xs font-bold" },
+                        React.createElement("span", { className: "w-2 h-2 rounded-full bg-emerald-500 animate-pulse" }),
+                        "Perlindungan Aktif")
+                ),
+                backupActionError && React.createElement("div", { className: "bg-red-50 border border-red-200 text-red-700 p-3 rounded-xl text-xs font-semibold" }, backupActionError),
+                backupActionMsg && React.createElement("div", { className: "bg-emerald-50 border border-emerald-200 text-emerald-700 p-3 rounded-xl text-xs font-semibold" }, backupActionMsg),
+                // 3 Safety Action Cards
+                React.createElement("div", { className: "grid grid-cols-1 md:grid-cols-3 gap-3.5 pt-1" },
+                    // Card 1: Download JSON Backup
+                    React.createElement("div", { className: "p-4 rounded-xl border border-slate-200 bg-slate-50/60 flex flex-col justify-between" },
+                        React.createElement("div", null,
+                            React.createElement("div", { className: "w-9 h-9 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center mb-2" },
+                                React.createElement(Download, { className: "w-5 h-5" })),
+                            React.createElement("h4", { className: "font-bold text-slate-800 text-sm" }, "Unduh Cadangan JSON"),
+                            React.createElement("p", { className: "text-xs text-slate-500 mt-1 leading-relaxed" }, "Simpan salinan data lengkap (mudhohi, kupon, timbangan, arsip) ke perangkat Anda.")),
+                        React.createElement("button", {
+                            type: "button",
+                            onClick: handleDownloadBackup,
+                            className: "mt-4 w-full py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 shadow-xs transition-colors cursor-pointer"
+                        },
+                            React.createElement(Download, { className: "w-3.5 h-3.5" }),
+                            "Unduh Berkas Cadangan")
+                    ),
+                    // Card 2: Download SQLite File
+                    React.createElement("div", { className: "p-4 rounded-xl border border-slate-200 bg-slate-50/60 flex flex-col justify-between" },
+                        React.createElement("div", null,
+                            React.createElement("div", { className: "w-9 h-9 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center mb-2" },
+                                React.createElement(Database, { className: "w-5 h-5" })),
+                            React.createElement("h4", { className: "font-bold text-slate-800 text-sm" }, "Unduh Database SQLite"),
+                            React.createElement("p", { className: "text-xs text-slate-500 mt-1 leading-relaxed" }, "Unduh berkas database fisik SQLite asli untuk arsip server atau migrasi.")),
+                        React.createElement("button", {
+                            type: "button",
+                            onClick: handleDownloadSqlite,
+                            className: "mt-4 w-full py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 shadow-xs transition-colors cursor-pointer"
+                        },
+                            React.createElement(Database, { className: "w-3.5 h-3.5" }),
+                            "Unduh database.sqlite")
+                    ),
+                    // Card 3: Restore from JSON File
+                    React.createElement("div", { className: "p-4 rounded-xl border border-slate-200 bg-slate-50/60 flex flex-col justify-between" },
+                        React.createElement("div", null,
+                            React.createElement("div", { className: "w-9 h-9 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center mb-2" },
+                                React.createElement(Upload, { className: "w-5 h-5" })),
+                            React.createElement("h4", { className: "font-bold text-slate-800 text-sm" }, "Pulihkan dari Berkas"),
+                            React.createElement("p", { className: "text-xs text-slate-500 mt-1 leading-relaxed" }, "Kembalikan seluruh data aplikasi dari berkas cadangan JSON yang sebelumnya diunduh.")),
+                        React.createElement("label", {
+                            className: "mt-4 w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 shadow-xs transition-colors cursor-pointer text-center"
+                        },
+                            React.createElement(Upload, { className: "w-3.5 h-3.5" }),
+                            "Pilih Berkas Cadangan",
+                            React.createElement("input", { type: "file", accept: ".json", onChange: handleRestoreJsonFile, className: "hidden" }))
+                    )
+                ),
+                // Server automated snapshots list
+                React.createElement("div", { className: "pt-3 border-t border-slate-100" },
+                    React.createElement("div", { className: "flex justify-between items-center" },
+                        React.createElement("div", null,
+                            React.createElement("span", { className: "text-xs font-bold text-slate-700 block" }, "Riwayat Cadangan Otomatis di Server"),
+                            React.createElement("span", { className: "text-[11px] text-slate-500" }, "Server membuat cadangan otomatis setiap data disimpan.")),
+                        React.createElement("button", {
+                            type: "button",
+                            onClick: fetchServerBackups,
+                            className: "px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-bold transition-colors cursor-pointer"
+                        }, loadingBackups ? "Memuat..." : (showServerBackups ? "Segarkan Riwayat" : "Lihat Riwayat Server"))
+                    ),
+                    showServerBackups && React.createElement("div", { className: "mt-3 space-y-1.5 max-h-48 overflow-y-auto pr-1" },
+                        serverBackups.length === 0
+                            ? React.createElement("div", { className: "text-xs text-slate-400 italic py-2 text-center" }, "Belum ada riwayat snapshot otomatis di server.")
+                            : serverBackups.map(b => React.createElement("div", { key: b.filename, className: "flex items-center justify-between p-2 rounded-lg border border-slate-100 bg-slate-50 text-xs" },
+                                React.createElement("div", { className: "min-w-0" },
+                                    React.createElement("span", { className: "font-bold text-slate-800 block truncate" }, b.filename),
+                                    React.createElement("span", { className: "text-[10px] text-slate-400" }, b.date_formatted, " · ", Math.round(b.size / 1024), " KB · ", b.type)),
+                                React.createElement("button", {
+                                    type: "button",
+                                    onClick: () => handleRestoreSnapshot(b.filename),
+                                    className: "px-2.5 py-1 bg-white hover:bg-emerald-600 hover:text-white border border-slate-200 text-slate-700 rounded font-bold text-[11px] transition-colors ml-2 cursor-pointer flex-shrink-0"
+                                }, "Pulihkan")
+                            ))
+                    )
+                )
+            ));
     };
     const renderDashboard = () => {
         const totalGantingan = mustahiq.reduce((sum, item) => sum + parseInt(item.jumlahKupon || 0), 0);
