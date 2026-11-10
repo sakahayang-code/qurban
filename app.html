@@ -228,495 +228,6 @@ body > #root > .min-h-screen{background:transparent!important}
 }
 </style>
 
-
-<style id="ui-desktop-mobile-premium">
-/* UI refresh only: layout/content/logic remain unchanged */
-:root{
-  --q-green:#087f5b;
-  --q-green-dark:#055b43;
-  --q-green-soft:#eaf8f2;
-  --q-gold:#d9a441;
-  --q-ink:#15251f;
-  --q-muted:#71817b;
-  --q-bg:#f4f7f6;
-}
-
-/* Desktop */
-@media(min-width:768px){
-  body{background:linear-gradient(180deg,#f8fbfa 0%,#eef4f1 100%)!important}
-  body > #root > .min-h-screen{min-height:100vh!important}
-  body > #root > .min-h-screen > div:nth-child(2){
-    width:286px!important;
-    background:
-      radial-gradient(circle at 80% 0%,rgba(217,164,65,.14),transparent 18rem),
-      radial-gradient(circle at 10% 35%,rgba(16,167,123,.15),transparent 20rem),
-      linear-gradient(180deg,#075f49 0%,#064b3c 100%)!important;
-    box-shadow:12px 0 40px rgba(15,23,42,.10)!important;
-  }
-  body > #root > .min-h-screen > div:nth-child(2) > div:first-child{
-    padding:24px 22px!important;
-    background:rgba(0,0,0,.08)!important;
-    border-bottom:1px solid rgba(255,255,255,.10)!important;
-  }
-  body > #root > .min-h-screen > div:nth-child(2) > div:first-child img{
-    width:48px!important;height:48px!important;border-radius:14px!important;
-    box-shadow:0 8px 18px rgba(0,0,0,.15)!important;
-  }
-  body > #root > .min-h-screen > div:nth-child(2) > div:first-child h1{
-    font-size:25px!important;letter-spacing:-.04em!important;
-  }
-  body > #root > .min-h-screen > div:nth-child(2) nav{padding:16px 14px!important}
-  body > #root > .min-h-screen > div:nth-child(2) nav button{
-    min-height:48px!important;border-radius:13px!important;margin:3px 0!important;
-  }
-  body > #root > .min-h-screen > div:nth-child(2) nav button:hover{
-    background:rgba(255,255,255,.10)!important;transform:translateX(2px)!important;
-  }
-  body > #root > .min-h-screen > div:nth-child(2) nav button[class*="bg-emerald-900"]{
-    background:linear-gradient(135deg,rgba(16,167,123,.30),rgba(255,255,255,.08))!important;
-    border-left-color:#d9a441!important;
-    box-shadow:0 8px 20px rgba(0,0,0,.12)!important;
-  }
-  body > #root > .min-h-screen > div.flex-1{
-    padding:30px 34px!important;
-    background:transparent!important;
-    overflow-y:auto!important;
-    max-height:none!important;
-  }
-  body > #root > .min-h-screen > div.flex-1 > .max-w-7xl{max-width:1400px!important}
-
-  /* Dashboard hero */
-  .pdkq-dashboard-desktop > div:first-child{
-    position:relative!important;overflow:hidden!important;
-    padding:22px 24px!important;margin-bottom:18px!important;
-    border:0!important;border-radius:22px!important;color:white!important;
-    background:
-      radial-gradient(circle at 88% 15%,rgba(217,164,65,.22),transparent 16rem),
-      radial-gradient(circle at 65% 120%,rgba(16,167,123,.28),transparent 20rem),
-      linear-gradient(135deg,#075f49,#087f5b)!important;
-    box-shadow:0 18px 38px rgba(6,75,60,.18)!important;
-  }
-  .pdkq-dashboard-desktop > div:first-child:after{
-    content:"";position:absolute;width:210px;height:210px;border-radius:50%;right:-80px;top:-95px;
-    border:1px solid rgba(255,255,255,.13);box-shadow:0 0 0 22px rgba(255,255,255,.035),0 0 0 44px rgba(255,255,255,.025);
-  }
-  .pdkq-dashboard-desktop > div:first-child h2{color:#fff!important;font-size:27px!important;border:0!important;position:relative;z-index:1}
-  .pdkq-dashboard-desktop > div:first-child button{position:relative;z-index:2;background:rgba(255,255,255,.12)!important;color:#fff!important;border-color:rgba(255,255,255,.25)!important;backdrop-filter:blur(8px)}
-
-  /* Statistic cards */
-  .pdkq-dashboard-desktop .grid > div{
-    border:1px solid rgba(15,118,110,.10)!important;border-radius:20px!important;
-    padding:21px!important;background:rgba(255,255,255,.96)!important;
-    box-shadow:0 10px 28px rgba(15,23,42,.06)!important;
-  }
-  .pdkq-dashboard-desktop .grid > div:hover{transform:translateY(-3px)!important;box-shadow:0 16px 34px rgba(15,23,42,.10)!important}
-  .pdkq-dashboard-desktop .grid > div h3{font-size:28px!important;letter-spacing:-.04em!important}
-  .pdkq-dashboard-desktop .grid > div > div:first-child{border-radius:15px!important;background:#eef9f5!important;padding:13px!important}
-  .pdkq-dashboard-desktop .bg-white.mt-6,
-  .pdkq-dashboard-desktop > button.bg-white{
-    border:1px solid rgba(15,118,110,.10)!important;border-radius:20px!important;
-    box-shadow:0 10px 28px rgba(15,23,42,.06)!important;
-  }
-  .pdkq-dashboard-desktop .bg-white.mt-6{padding:24px!important}
-  .pdkq-dashboard-desktop .bg-white.mt-6 h3{font-size:19px!important;color:var(--q-ink)!important}
-
-  /* Generic pages */
-  .max-w-7xl > .space-y-6 > div > h2,
-  .max-w-7xl > .space-y-6 > h2,
-  .max-w-7xl > .space-y-6 > div:first-child h2{
-    letter-spacing:-.035em!important;color:#17352c!important;
-  }
-  .max-w-7xl .bg-white{border-radius:18px!important}
-  .max-w-7xl table thead th{font-size:12px!important;text-transform:uppercase!important;letter-spacing:.04em!important;color:#50655e!important}
-  .max-w-7xl table tbody td{font-size:13px!important}
-}
-
-/* Mobile */
-@media(max-width:767px){
-  body{background:#f4f7f6!important}
-  body > #root > .min-h-screen > .md\\:hidden{
-    padding:13px 14px!important;min-height:72px!important;
-    background:linear-gradient(135deg,#075f49,#087f5b)!important;
-  }
-  body > #root > .min-h-screen > .md\\:hidden h1{font-size:20px!important}
-  body > #root > .min-h-screen > .flex-1{padding:0!important}
-  .pdkq-dashboard-shell{padding:18px 13px 112px!important}
-  .pdkq-welcome-card{border-radius:21px!important;padding:18px!important;margin-bottom:16px!important}
-  .pdkq-welcome-card h2{font-size:21px!important}
-  .pdkq-welcome-card strong{font-size:16px!important}
-  .pdkq-menu-grid{gap:11px!important}
-  .pdkq-dashboard-menu{min-height:108px!important;border-radius:17px!important;padding:13px!important}
-  .pdkq-dashboard-menu-icon{width:43px!important;height:43px!important;border-radius:13px!important;margin-bottom:9px!important}
-  .pdkq-dashboard-menu-copy strong{font-size:14px!important}
-  .pdkq-dashboard-menu-copy small{font-size:10px!important;color:#7b8985!important}
-  .pdkq-bottom-nav-new{height:80px!important;min-height:80px!important;border-radius:20px 20px 0 0!important;padding:0 6px env(safe-area-inset-bottom)!important}
-  .pdkq-bottom-nav-new button{height:68px!important;border-radius:14px!important}
-  .pdkq-bottom-nav-new .pdkq-plus-button{width:61px!important;height:61px!important;border:5px solid #f4f7f6!important;transform:translateY(-15px)!important}
-  .pdkq-quick-add{bottom:92px!important}
-  /* Prevent clipped data while keeping tables usable */
-  .max-w-7xl{width:100%!important;max-width:none!important}
-  .max-w-7xl .overflow-x-auto{border-radius:15px!important;box-shadow:0 6px 18px rgba(15,23,42,.05)!important}
-  .max-w-7xl table{min-width:680px!important}
-  .max-w-7xl .bg-white{border-radius:17px!important}
-  .max-w-7xl input,.max-w-7xl select,.max-w-7xl textarea{font-size:14px!important}
-  .max-w-7xl button{min-height:40px}
-}
-@media(max-width:380px){
-  .pdkq-dashboard-shell{padding-left:10px!important;padding-right:10px!important}
-  .pdkq-menu-grid{gap:8px!important}
-  .pdkq-dashboard-menu{min-height:102px!important;padding:11px!important}
-  .pdkq-dashboard-menu-copy strong{font-size:13px!important}
-}
-
-/* Reduced motion accessibility */
-@media(prefers-reduced-motion:reduce){
-  *,*:before,*:after{scroll-behavior:auto!important;transition:none!important;animation:none!important}
-}
-</style>
-
-
-<style id="qurban-reference-ui">
-:root{--qr-blue:#1769d2;--qr-blue2:#0f56b5;--qr-bg:#f5f8fc;--qr-ink:#17253d;--qr-muted:#718096;--qr-border:#e6ebf2;--qr-shadow:0 8px 24px rgba(22,43,77,.07)}
-body{background:var(--qr-bg)!important;color:var(--qr-ink)!important;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important}
-body > #root > .min-h-screen{background:transparent!important}
-@media(min-width:768px){
- body > #root > .min-h-screen{display:grid!important;grid-template-columns:216px minmax(0,1fr)!important;grid-template-rows:1fr!important}
- body > #root > .min-h-screen > .md\:hidden{display:none!important}
- body > #root > .min-h-screen > div:nth-child(2){grid-column:1;grid-row:1;width:216px!important;min-height:100vh!important;background:#fff!important;color:var(--qr-ink)!important;box-shadow:2px 0 16px rgba(24,43,75,.05)!important;border-right:1px solid var(--qr-border)!important;position:relative!important;z-index:3!important}
- body > #root > .min-h-screen > div:nth-child(2)>div:first-child{padding:24px 18px!important;background:#fff!important;border-bottom:1px solid var(--qr-border)!important}
- body > #root > .min-h-screen > div:nth-child(2)>div:first-child h1{color:#173b75!important;font-size:20px!important}
- body > #root > .min-h-screen > div:nth-child(2)>div:first-child p{color:#8290a5!important}
- body > #root > .min-h-screen > div:nth-child(2)>div:first-child>div:last-child{background:#f4f8ff!important;border:1px solid #e0e9f7!important}
- body > #root > .min-h-screen > div:nth-child(2) nav{padding:18px 12px!important}
- body > #root > .min-h-screen > div:nth-child(2) nav button{color:#526176!important;border:0!important;border-left:0!important;border-radius:10px!important;margin:4px 0!important;padding:11px 12px!important}
- body > #root > .min-h-screen > div:nth-child(2) nav button:hover{background:#f2f6fb!important;color:#1558aa!important;transform:none!important}
- body > #root > .min-h-screen > div:nth-child(2) nav button[class*="bg-emerald-900"]{background:#eaf2ff!important;color:#1558aa!important;box-shadow:none!important;border-left:0!important}
- body > #root > .min-h-screen > div:nth-child(2) nav button[class*="bg-emerald-900"] div{color:#1769d2!important}
- body > #root > .min-h-screen > div.flex-1{grid-column:2;grid-row:1;padding:0 30px 34px!important;background:var(--qr-bg)!important;overflow-y:auto!important;max-height:none!important}
- body > #root > .min-h-screen > div.flex-1>.max-w-7xl{max-width:1320px!important}
- .q-topbar{height:76px;margin:0 -30px 26px;padding:0 30px;background:#fff;border-bottom:1px solid var(--qr-border);box-shadow:0 2px 10px rgba(22,43,77,.035);display:flex;align-items:center;justify-content:space-between}
- .q-topbar-brand,.q-topbar-user{display:flex;align-items:center;gap:10px}.q-topbar-brand img{width:38px;height:38px;object-fit:contain;border-radius:10px;border:1px solid #e3eaf3;background:#fff;padding:2px}.q-topbar-brand>svg{width:32px;height:32px;color:#1769d2}.q-topbar-brand strong{display:block;color:#173b75;font-size:16px}.q-topbar-brand span{display:block;color:#8a96a8;font-size:10px;margin-top:1px}.q-topbar-user{gap:9px}.q-user-avatar{width:34px;height:34px;border-radius:50%;background:#e8f1ff;color:#1769d2;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800}.q-topbar-user strong{display:block;color:#26364d;font-size:11px}.q-topbar-user span{display:block;color:#8a96a8;font-size:9px}.q-topbar-user .q-user-chevron{display:block;font-size:18px;color:#8b98aa;margin-left:3px}
- .q-dashboard{max-width:1320px;margin:0 auto}
- .q-dashboard-hero{min-height:174px;border-radius:16px;padding:24px 28px;display:flex;align-items:center;justify-content:space-between;gap:24px;position:relative;overflow:hidden;color:#fff;background:linear-gradient(115deg,#115dbb 0%,#1769d2 50%,#0e58b6 100%);box-shadow:0 14px 32px rgba(23,105,210,.20);margin-bottom:22px}
- .q-dashboard-hero:after{content:"";position:absolute;right:-70px;top:-110px;width:300px;height:300px;border-radius:50%;border:1px solid rgba(255,255,255,.12);box-shadow:0 0 0 28px rgba(255,255,255,.04),0 0 0 56px rgba(255,255,255,.025)}
- .qhero-content{display:flex;align-items:center;gap:18px;position:relative;z-index:1}.qhero-icon{width:68px;height:68px;border-radius:18px;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center;overflow:hidden}.qhero-logo-img{width:58px;height:58px;object-fit:contain;border-radius:14px;background:#fff;padding:4px}.qhero-kicker{font-size:13px;opacity:.82;margin-bottom:4px}.qhero-copy h2{font-size:28px;line-height:1.1;margin:0 0 7px;color:#fff;letter-spacing:-.035em}.qhero-copy p{margin:0;max-width:620px;color:rgba(255,255,255,.82);font-size:14px;line-height:1.5}.qhero-year{position:relative;z-index:2;display:flex;align-items:center;gap:7px;border:1px solid rgba(255,255,255,.25)!important;background:rgba(255,255,255,.12)!important;color:#fff!important;padding:9px 12px!important;border-radius:10px!important;font-size:12px!important;font-weight:700!important;white-space:nowrap}.qhero-year span{font-size:20px;line-height:1}.q-stats-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:20px}.qstat-card{background:#fff;border:1px solid var(--qr-border);border-radius:14px;padding:17px;display:flex;align-items:center;gap:13px;box-shadow:var(--qr-shadow);min-width:0}.qstat-icon{width:46px;height:46px;border-radius:13px;display:flex;align-items:center;justify-content:center;flex:none}.qstat-icon svg{width:22px;height:22px}.qstat-copy{min-width:0}.qstat-title{font-size:11px;color:#68778e;font-weight:600;margin-bottom:4px}.qstat-value{font-size:22px;font-weight:800;color:#17253d;letter-spacing:-.025em;line-height:1.1}.qstat-note{font-size:10px;color:#98a3b3;margin-top:4px}.qstat-card.blue .qstat-icon{background:#e8f1ff;color:#2d7fe3}.qstat-card.green .qstat-icon{background:#e7f8ef;color:#20a56b}.qstat-card.purple .qstat-icon{background:#eee8ff;color:#7958d8}.qstat-card.orange .qstat-icon{background:#fff0dc;color:#eea31d}
- .q-dashboard-columns{display:grid;grid-template-columns:1.15fr .85fr;gap:18px}.q-panel{background:#fff;border:1px solid var(--qr-border);border-radius:14px;box-shadow:var(--qr-shadow);overflow:hidden}.q-panel-head{display:flex;align-items:center;justify-content:space-between;padding:17px 19px;border-bottom:1px solid #edf0f4}.q-panel-head h3{font-size:16px;color:#17253d;margin:0;font-weight:800}.q-panel-head button{border:0;background:transparent;color:#2b75d3;font-size:11px;font-weight:700;padding:0}.q-agenda-list{padding:3px 18px}.q-agenda-row{display:grid;grid-template-columns:58px minmax(0,1fr) auto;gap:13px;align-items:center;padding:14px 0;border-bottom:1px solid #edf0f4}.q-agenda-row:last-child{border-bottom:0}.q-agenda-date{width:52px;height:48px;border-radius:9px;background:#edf5ff;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#236bc2}.q-agenda-date strong{font-size:15px}.q-agenda-date span{font-size:8px;text-transform:uppercase;font-weight:700}.q-agenda-main{min-width:0}.q-agenda-main strong{display:block;font-size:12px;color:#25344c;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.q-agenda-main span{display:block;color:#8491a4;font-size:10px;margin-top:4px}.q-status{font-size:9px;font-weight:800;padding:5px 8px;border-radius:999px;white-space:nowrap}.q-status.done{background:#e9f8f0;color:#1d9a64}.q-status.wait{background:#fff4df;color:#c88513}.q-summary-list{padding:4px 18px 10px}.q-summary-list button{width:100%;display:flex;align-items:center;gap:11px;padding:14px 0;border:0;border-bottom:1px solid #edf0f4;background:transparent;text-align:left}.q-summary-list button:last-child{border-bottom:0}.q-summary-list button>svg{width:21px;height:21px;color:#2c76d3;background:#edf5ff;border-radius:8px;padding:4px;box-sizing:content-box}.q-summary-list button>span{flex:1;min-width:0}.q-summary-list strong{display:block;font-size:12px;color:#26364d}.q-summary-list small{display:block;font-size:10px;color:#8a96a8;margin-top:3px}.q-summary-list b{font-size:20px;color:#a1aab8;font-weight:400}.q-info-strip{margin-top:18px;border:1px solid #dbeaf9;background:#edf6ff;border-radius:12px;padding:13px 16px;display:flex;align-items:center;gap:11px}.q-info-icon{width:34px;height:34px;border-radius:10px;background:#fff;color:#2374d3;display:flex;align-items:center;justify-content:center}.q-info-icon svg{width:19px}.q-info-strip strong{display:block;font-size:11px;color:#24558f}.q-info-strip span{display:block;font-size:10px;color:#73869d;margin-top:2px}
- .q-mobile-dashboard,.q-bottom-nav,.q-quick-add{display:none!important}
-}
-@media(max-width:767px){
- body{background:#f5f8fc!important}.q-dashboard{display:block;padding:18px 14px 102px}.q-dashboard-hero,.q-stats-grid,.q-dashboard-columns,.q-info-strip{display:none}.q-mobile-dashboard{display:block}.q-mobile-hero{border-radius:16px;padding:20px 18px;display:flex;align-items:center;gap:13px;color:#fff;background:linear-gradient(120deg,#1769d2,#0e58b6);box-shadow:0 12px 28px rgba(23,105,210,.18);position:relative;overflow:hidden}.q-mobile-hero:after{content:"";position:absolute;right:-50px;top:-55px;width:150px;height:150px;border-radius:50%;border:1px solid rgba(255,255,255,.14)}.q-mobile-hero-icon{width:50px;height:50px;border-radius:14px;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;overflow:hidden;flex:none;position:relative;z-index:1}.q-mobile-hero-icon .qhero-logo-img{width:42px;height:42px}.q-mobile-hero>div:last-child{position:relative;z-index:1}.q-mobile-hero span{display:block;font-size:11px;opacity:.8}.q-mobile-hero strong{display:block;font-size:21px;line-height:1.15;margin:3px 0 5px}.q-mobile-hero p{margin:0;font-size:11px;line-height:1.4;color:rgba(255,255,255,.84)}.q-mobile-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:13px 0}.q-mobile-stats .qstat-card{padding:13px 11px;border-radius:13px;gap:9px;box-shadow:0 5px 16px rgba(22,43,77,.05)}.q-mobile-stats .qstat-icon{width:39px;height:39px;border-radius:11px}.q-mobile-stats .qstat-icon svg{width:19px;height:19px}.q-mobile-stats .qstat-title{font-size:9px}.q-mobile-stats .qstat-value{font-size:18px}.q-mobile-stats .qstat-note{font-size:9px}.q-mobile-panel{display:block!important;margin-top:2px}.q-panel-head{padding:14px 15px}.q-panel-head h3{font-size:14px}.q-panel-head button{font-size:10px}.q-agenda-list{padding:2px 14px}.q-agenda-row{grid-template-columns:48px minmax(0,1fr);gap:10px;padding:12px 0}.q-agenda-date{width:44px;height:43px}.q-agenda-date strong{font-size:13px}.q-agenda-main strong{font-size:11px}.q-agenda-main span{font-size:9px}.q-status{display:none}.q-mobile-bottom-space{height:12px}.q-bottom-nav{position:fixed;left:10px;right:10px;bottom:10px;height:66px;background:rgba(255,255,255,.96);border:1px solid #e3e9f1;border-radius:18px;box-shadow:0 12px 32px rgba(22,43,77,.14);display:grid;grid-template-columns:1fr 1fr 58px 1fr 1fr;align-items:center;z-index:80;backdrop-filter:blur(16px)}.q-bottom-nav button{border:0;background:transparent;color:#7c899b;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:9px;font-weight:700;height:58px}.q-bottom-nav button svg{width:20px;height:20px}.q-bottom-nav button.active{color:#1769d2}.q-bottom-plus{width:56px!important;height:56px!important;border-radius:50%!important;background:#1769d2!important;color:#fff!important;border:4px solid #f5f8fc!important;box-shadow:0 7px 18px rgba(23,105,210,.3)!important;transform:translateY(-15px)}.q-bottom-plus svg{width:25px!important;height:25px!important}.q-quick-add{position:fixed;left:50%;bottom:86px;transform:translateX(-50%);width:min(290px,calc(100vw - 28px));padding:9px;background:#fff;border:1px solid #e2e8f0;border-radius:15px;box-shadow:0 16px 38px rgba(22,43,77,.18);z-index:90;display:flex;flex-direction:column;gap:6px}.q-quick-add button{display:flex;align-items:center;gap:9px;border:0;background:#f5f8fc;border-radius:10px;padding:11px 12px;color:#29405d;font-weight:700;font-size:11px;text-align:left}.q-quick-add button svg{width:17px;height:17px;color:#1769d2}.q-bottom-nav-new,.pdkq-dashboard-mobile,.pdkq-dashboard-desktop{display:none!important}
- body > #root > .min-h-screen{display:block!important;min-height:100vh!important}.q-dashboard{max-width:none}.q-dashboard+.anything{display:none}
- body > #root > .min-h-screen > .md\:hidden{display:flex!important;background:#fff!important;color:#173b75!important;border-bottom:1px solid #e5ebf3!important;box-shadow:0 2px 12px rgba(22,43,77,.04)!important;padding:12px 14px!important;min-height:62px!important}
- body > #root > .min-h-screen > .md\:hidden h1{color:#173b75!important;font-size:16px!important;line-height:1.05}.md\:hidden button{color:inherit!important}
- body > #root > .min-h-screen > div:nth-child(2){display:none!important}
- body > #root > .min-h-screen > div.flex-1{padding:0!important;max-height:none!important;overflow:visible!important;background:#f5f8fc!important}
- body > #root > .min-h-screen > div.flex-1>.max-w-7xl{max-width:none!important}
-}
-</style>
-
-<style id="qurban-color-mobile-final">
-/* Final visual-only refinement: unified blue palette + mobile stability */
-:root{
-  --qr-blue:#1769d2;--qr-blue-dark:#0f56b5;--qr-blue-soft:#eaf2ff;
-  --qr-bg:#f5f8fc;--qr-ink:#17253d;--qr-text:#25344c;--qr-muted:#6f7f95;
-  --qr-border:#e2e8f0;--qr-white:#fff;--qr-success:#15966a;--qr-warning:#d58a12;
-}
-html,body{background:var(--qr-bg)!important;color:var(--qr-ink)!important}
-body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important}
-/* Keep text contrast clear throughout existing Tailwind UI without changing functionality. */
-.text-gray-900,.text-gray-800,.text-gray-700{color:var(--qr-ink)!important}
-.text-gray-600,.text-gray-500,.text-gray-400{color:var(--qr-muted)!important}
-.text-emerald-900,.text-emerald-800,.text-emerald-700,.text-emerald-600{color:var(--qr-blue-dark)!important}
-.text-emerald-500,.text-emerald-400{color:var(--qr-blue)!important}
-.bg-emerald-900,.bg-emerald-800,.bg-emerald-700,.bg-emerald-600,.bg-emerald-500{background:var(--qr-blue)!important;color:#fff!important}
-.hover\\:bg-emerald-700:hover,.hover\\:bg-emerald-600:hover{background:var(--qr-blue-dark)!important;color:#fff!important}
-.border-emerald-600,.border-emerald-500,.border-emerald-400{border-color:#9fc5f4!important}
-.bg-emerald-50{background:#eef5ff!important}.bg-emerald-100{background:#e3efff!important}
-.text-green-700,.text-green-600{color:#087b5b!important}.bg-green-50{background:#eaf8f2!important}
-/* Common interactive controls */
-button{font-family:inherit}
-button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid rgba(23,105,210,.18)!important;outline-offset:1px!important}
-input,select,textarea{color:#24364f!important;border-color:#d9e2ee!important}
-input::placeholder,textarea::placeholder{color:#91a0b2!important;opacity:1!important}
-/* Mobile: prevent clipping/overflow and make every content block fit the viewport. */
-@media(max-width:767px){
-  html,body,#root{width:100%!important;max-width:100%!important;min-width:0!important;overflow-x:hidden!important}
-  body{font-size:14px!important;background:#f5f8fc!important}
-  #root,.min-h-screen,.min-h-screen>*,.flex-1,.max-w-7xl{min-width:0!important;max-width:100%!important}
-  body > #root > .min-h-screen > div.flex-1{width:100%!important;padding:0!important;overflow-x:hidden!important}
-  body > #root > .min-h-screen > div.flex-1 > .max-w-7xl{width:100%!important;padding-left:14px!important;padding-right:14px!important;box-sizing:border-box!important}
-  /* Existing mobile top bar */
-  body > #root > .min-h-screen > .md\\:hidden{width:100%!important;box-sizing:border-box!important;min-width:0!important;overflow:hidden!important;background:#fff!important;color:#173b75!important;border-bottom:1px solid #e2e8f0!important;box-shadow:0 2px 12px rgba(23,43,75,.06)!important}
-  body > #root > .min-h-screen > .md\\:hidden *{min-width:0!important}
-  body > #root > .min-h-screen > .md\\:hidden h1{max-width:calc(100vw - 100px)!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;color:#173b75!important}
-  body > #root > .min-h-screen > .md\\:hidden button{flex:none!important}
-  /* Dashboard reference mobile */
-  .q-dashboard{width:100%!important;box-sizing:border-box!important;padding:14px 12px 104px!important;overflow:visible!important}
-  .q-mobile-hero{width:100%!important;box-sizing:border-box!important;min-height:142px!important;padding:17px 15px!important;border-radius:16px!important;background:linear-gradient(135deg,#1769d2 0%,#0f56b5 100%)!important;box-shadow:0 10px 24px rgba(23,105,210,.16)!important}
-  .q-mobile-hero-icon{width:46px!important;height:46px!important;border-radius:13px!important}
-  .q-mobile-hero-icon .qhero-logo-img{width:38px!important;height:38px!important}
-  .q-mobile-hero>div:last-child{min-width:0!important;flex:1!important}
-  .q-mobile-hero strong{font-size:20px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
-  .q-mobile-hero p{font-size:10.5px!important;max-width:100%!important}
-  .q-mobile-stats{width:100%!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important;margin:11px 0!important}
-  .q-mobile-stats .qstat-card{width:100%!important;min-width:0!important;box-sizing:border-box!important;padding:12px 10px!important;gap:8px!important;border-radius:13px!important;background:#fff!important;border:1px solid #e0e8f2!important}
-  .q-mobile-stats .qstat-icon{width:36px!important;height:36px!important;flex:0 0 36px!important;border-radius:10px!important}
-  .q-mobile-stats .qstat-copy{min-width:0!important;overflow:hidden!important}
-  .q-mobile-stats .qstat-title,.q-mobile-stats .qstat-value,.q-mobile-stats .qstat-note{white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
-  .q-mobile-stats .qstat-title{color:#68778e!important;font-size:8.5px!important}.q-mobile-stats .qstat-value{color:#17253d!important;font-size:17px!important}.q-mobile-stats .qstat-note{color:#8b99ab!important;font-size:8px!important}
-  .q-mobile-panel{width:100%!important;box-sizing:border-box!important;border-radius:14px!important;border:1px solid #e0e7f0!important;background:#fff!important;box-shadow:0 6px 18px rgba(22,43,77,.055)!important;overflow:hidden!important}
-  .q-panel-head{min-width:0!important;padding:13px 14px!important}.q-panel-head h3{color:#17253d!important;font-size:14px!important}.q-panel-head button{color:#1769d2!important;white-space:nowrap!important}
-  .q-agenda-list{padding:2px 13px!important}.q-agenda-row{grid-template-columns:44px minmax(0,1fr)!important;gap:9px!important;padding:11px 0!important;min-width:0!important}.q-agenda-date{width:42px!important;height:41px!important;background:#edf5ff!important;color:#1769d2!important}.q-agenda-main{min-width:0!important}.q-agenda-main strong{color:#25344c!important;font-size:10.5px!important;white-space:normal!important;display:-webkit-box!important;-webkit-line-clamp:2!important;-webkit-box-orient:vertical!important;overflow:hidden!important;line-height:1.35!important}.q-agenda-main span{color:#8491a4!important;font-size:8.5px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
-  .q-bottom-nav{left:8px!important;right:8px!important;bottom:8px!important;width:auto!important;height:64px!important;grid-template-columns:repeat(2,minmax(0,1fr)) 58px repeat(2,minmax(0,1fr))!important;background:rgba(255,255,255,.98)!important;border:1px solid #dfe7f0!important;border-radius:18px!important;box-shadow:0 12px 30px rgba(22,43,77,.15)!important;padding:0 4px!important;box-sizing:border-box!important}
-  .q-bottom-nav button{min-width:0!important;width:100%!important;height:56px!important;color:#718096!important;font-size:8px!important;overflow:hidden!important}.q-bottom-nav button svg{width:19px!important;height:19px!important}.q-bottom-nav button span{max-width:100%!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important}.q-bottom-nav button.active{color:#1769d2!important}
-  .q-bottom-plus{width:54px!important;height:54px!important;border:4px solid #f5f8fc!important;background:#1769d2!important;transform:translateY(-13px)!important;box-shadow:0 7px 18px rgba(23,105,210,.28)!important}
-  .q-quick-add{bottom:82px!important;max-width:calc(100vw - 28px)!important;box-sizing:border-box!important}
-  /* Tables/cards/forms on all mobile pages: no horizontal page breakage. */
-  .overflow-x-auto{width:100%!important;max-width:100%!important;overflow-x:auto!important;-webkit-overflow-scrolling:touch!important}
-  table{min-width:620px!important}
-  .grid{min-width:0!important}
-  .flex{min-width:0}
-  .flex-wrap{flex-wrap:wrap!important}
-  .flex-1{min-width:0!important}
-  .truncate{max-width:100%!important}
-  .whitespace-nowrap{max-width:100%!important}
-  .px-6{padding-left:14px!important;padding-right:14px!important}.py-6{padding-top:16px!important;padding-bottom:16px!important}
-  .text-2xl{font-size:20px!important}.text-xl{font-size:18px!important}
-  /* Buttons never push the viewport wider. */
-  button{max-width:100%!important}
-}
-@media(max-width:380px){
-  .q-dashboard{padding-left:10px!important;padding-right:10px!important}
-  .q-mobile-hero{padding:15px 13px!important}.q-mobile-hero strong{font-size:18px!important}
-  .q-mobile-stats{gap:7px!important}.q-mobile-stats .qstat-card{padding:10px 8px!important}.q-mobile-stats .qstat-icon{width:33px!important;height:33px!important;flex-basis:33px!important}.q-mobile-stats .qstat-value{font-size:16px!important}
-  .q-bottom-nav{left:5px!important;right:5px!important}.q-bottom-nav button{font-size:7.5px!important}.q-bottom-plus{width:51px!important;height:51px!important}
-}
-</style>
-
-<style id="qurban-native-mobile-final">
-/* Native-mobile visual layer only: no behavior/data changes */
-@media(max-width:767px){
-  :root{--nm-blue:#1769d2;--nm-blue-dark:#0f56b5;--nm-bg:#f5f8fc;--nm-card:#fff;--nm-ink:#172b4d;--nm-muted:#70809a;--nm-border:#e1e9f3}
-  html,body{background:var(--nm-bg)!important;color:var(--nm-ink)!important}
-  body{overflow-x:hidden!important;-webkit-font-smoothing:antialiased!important}
-  body > #root > .min-h-screen{min-height:100vh!important;background:var(--nm-bg)!important}
-  /* Native-style top app bar */
-  body > #root > .min-h-screen > .md\:hidden{
-    position:sticky!important;top:0!important;z-index:75!important;height:62px!important;min-height:62px!important;
-    display:flex!important;align-items:center!important;padding:9px 14px!important;background:rgba(255,255,255,.98)!important;
-    border:0!important;border-bottom:1px solid var(--nm-border)!important;box-shadow:0 2px 12px rgba(23,43,77,.055)!important;
-    backdrop-filter:blur(14px)!important
-  }
-  body > #root > .min-h-screen > .md\:hidden h1{font-size:16px!important;font-weight:800!important;color:var(--nm-ink)!important;letter-spacing:-.02em!important}
-  body > #root > .min-h-screen > .md\:hidden svg{color:var(--nm-blue)!important}
-  /* Page container */
-  body > #root > .min-h-screen > div.flex-1 > .max-w-7xl{padding:13px 12px 92px!important}
-  /* Cards across mobile pages */
-  .rounded-lg,.rounded-xl,.rounded-2xl{border-radius:14px!important}
-  .shadow,.shadow-sm,.shadow-md{box-shadow:0 5px 18px rgba(23,43,77,.055)!important}
-  .border{border-color:var(--nm-border)!important}
-  .bg-white{background:var(--nm-card)!important}
-  /* Primary controls */
-  .bg-emerald-900,.bg-emerald-800,.bg-emerald-700,.bg-emerald-600,.bg-emerald-500{background:var(--nm-blue)!important;color:#fff!important}
-  .text-emerald-900,.text-emerald-800,.text-emerald-700,.text-emerald-600,.text-emerald-500{color:var(--nm-blue)!important}
-  /* Inputs */
-  input,select,textarea{min-height:42px!important;border:1px solid #d8e2ef!important;border-radius:11px!important;background:#fff!important;color:var(--nm-ink)!important;font-size:13px!important}
-  input:focus,select:focus,textarea:focus{border-color:#7fb0eb!important;box-shadow:0 0 0 3px rgba(23,105,210,.10)!important}
-  /* Lists/cards */
-  table{background:#fff!important;border-radius:14px!important;overflow:hidden!important}
-  thead{background:#f2f6fb!important}
-  th{color:#52647e!important;font-size:10px!important;font-weight:800!important}
-  td{color:#30425c!important;font-size:11px!important}
-  /* Mobile bottom bar */
-  .q-bottom-nav{height:66px!important;bottom:9px!important;left:8px!important;right:8px!important;border-radius:19px!important;background:rgba(255,255,255,.985)!important;border:1px solid #dfe7f1!important;box-shadow:0 14px 34px rgba(23,43,77,.16)!important}
-  .q-bottom-nav button{color:#78869b!important;font-weight:700!important}
-  .q-bottom-nav button.active{color:var(--nm-blue)!important}
-  .q-bottom-plus{background:var(--nm-blue)!important;border-color:var(--nm-bg)!important;box-shadow:0 8px 20px rgba(23,105,210,.30)!important}
-  /* Avoid accidental horizontal expansion */
-  *{box-sizing:border-box!important}
-  img,svg{max-width:100%!important}
-  .overflow-hidden{max-width:100%!important}
-  .grid{width:100%!important}
-}
-</style>
-
-<style id="qurban-native-mobile-menu-only">
-@media(max-width:767px){
-  /* Native Android home: menu grid in the content area + fixed bottom navigation only. */
-  body > #root > .min-h-screen > .md\:hidden{display:none!important}
-  .q-dashboard-hero,.q-stats-grid,.q-info-strip,.q-mobile-panel,.q-mobile-bottom-space{display:none!important}
-  .q-mobile-dashboard,.q-mobile-hero,.q-mobile-stats{display:block!important}
-  .q-dashboard{padding:14px 12px 100px!important}
-  .q-mobile-dashboard{display:block!important}
-  .q-mobile-dashboard:before{content:"Rekap Data Qurban";display:block;font-size:17px;font-weight:800;color:#173b75;margin:14px 2px 10px}
-  .q-mobile-hero{background:linear-gradient(135deg,#087f5b 0%,#075b47 100%)!important;border-radius:20px!important;margin-bottom:12px!important}
-  .q-mobile-panel{display:none!important}
-  .q-mobile-stats .qstat-card{align-items:flex-start!important;flex-direction:column!important;min-height:132px!important;padding:13px!important}
-  .q-mobile-stats .qstat-title{font-size:11px!important;color:#25344c!important}
-  .q-mobile-stats .qstat-value{font-size:23px!important}
-  .q-mobile-stats .qstat-note{font-size:10px!important}
-  /* Keep the existing menu actions and handlers; present them as the central dashboard menu. */
-  .q-dashboard-columns{display:block!important}
-  .q-dashboard-columns > section:first-child{display:none!important}
-  .q-dashboard-columns > section:nth-child(2){display:block!important;margin:0!important}
-  .q-dashboard-columns > section:nth-child(2) .q-panel-head{display:none!important}
-  .q-dashboard-columns > section:nth-child(2) .q-summary-list{
-    display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;
-    gap:12px!important;padding:0!important;
-  }
-  .q-dashboard-columns > section:nth-child(2) .q-summary-list button{
-    min-width:0!important;min-height:112px!important;padding:15px 13px!important;
-    border:1px solid #e2e8f0!important;border-radius:17px!important;background:#fff!important;
-    box-shadow:0 4px 14px rgba(22,43,77,.06)!important;display:flex!important;
-    flex-direction:column!important;align-items:flex-start!important;justify-content:center!important;
-    gap:9px!important;text-align:left!important;
-  }
-  .q-dashboard-columns > section:nth-child(2) .q-summary-list button svg{
-    width:25px!important;height:25px!important;color:#1769d2!important;flex:none!important;
-  }
-  .q-dashboard-columns > section:nth-child(2) .q-summary-list button span{min-width:0!important;width:100%!important}
-  .q-dashboard-columns > section:nth-child(2) .q-summary-list button strong{
-    display:block!important;color:#17253d!important;font-size:14px!important;line-height:1.25!important;
-    overflow-wrap:anywhere!important;
-  }
-  .q-dashboard-columns > section:nth-child(2) .q-summary-list button small{
-    display:block!important;color:#6f7f95!important;font-size:10px!important;line-height:1.3!important;
-    white-space:normal!important;overflow-wrap:anywhere!important;
-  }
-  .q-dashboard-columns > section:nth-child(2) .q-summary-list button b{
-    position:absolute!important;right:14px!important;top:14px!important;color:#8a96a8!important;
-  }
-  .q-bottom-nav{display:grid!important}
-}
-</style>
-
-<style id="qurban-native-android-redesign">
-/* Native Android-inspired redesign — mobile visual layer only. */
-@media (max-width:767px){
- :root{--and-bg:#f3f6f4;--and-surface:#fff;--and-primary:#087f5b;--and-primary-dark:#06684b;--and-ink:#182b25;--and-muted:#6d7d76;--and-line:#e2e9e5;--and-radius:22px}
- html,body,#root{background:var(--and-bg)!important;color:var(--and-ink)!important;overflow-x:hidden!important;width:100%!important;max-width:100%!important}
- body{font-family:Roboto,"Arial",system-ui,sans-serif!important;-webkit-tap-highlight-color:transparent}
- body > #root > .min-h-screen{min-height:100dvh!important;background:var(--and-bg)!important;display:flex!important;flex-direction:column!important}
- body > #root > .min-h-screen > .md\:hidden{position:sticky!important;top:0!important;z-index:60!important;display:flex!important;align-items:center!important;gap:12px!important;min-height:68px!important;padding:10px 18px!important;background:var(--and-primary)!important;color:#fff!important;border:0!important;border-radius:0 0 22px 22px!important;box-shadow:0 5px 18px rgba(5,75,53,.18)!important}
- body > #root > .min-h-screen > .md\:hidden h1{color:#fff!important;font-size:18px!important;font-weight:800!important;letter-spacing:-.35px!important;max-width:calc(100vw - 112px)!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
- body > #root > .min-h-screen > .md\:hidden h1 span{color:rgba(255,255,255,.75)!important;font-size:10px!important}
- body > #root > .min-h-screen > .md\:hidden button{min-height:42px!important;border-radius:14px!important;background:rgba(255,255,255,.14)!important;color:#fff!important;border:1px solid rgba(255,255,255,.16)!important;box-shadow:none!important}
- body > #root > .min-h-screen > div:nth-child(2){display:none!important}
- body > #root > .min-h-screen > div.flex-1{flex:1 0 auto!important;width:100%!important;max-width:100%!important;min-width:0!important;padding:0!important;margin:0!important;background:var(--and-bg)!important;overflow:visible!important;max-height:none!important}
- body > #root > .min-h-screen > div.flex-1>.max-w-7xl{width:100%!important;max-width:100%!important;margin:0!important;padding:0 15px!important;box-sizing:border-box!important}
- .q-dashboard{width:100%!important;max-width:100%!important;padding:18px 15px 118px!important;margin:0!important;box-sizing:border-box!important}
- .q-mobile-hero{position:relative!important;isolation:isolate!important;display:flex!important;align-items:center!important;gap:14px!important;min-height:148px!important;padding:20px 18px!important;margin:0 0 16px!important;border-radius:26px!important;background:linear-gradient(135deg,#087f5b 0%,#075f48 100%)!important;box-shadow:0 10px 24px rgba(8,127,91,.18)!important;overflow:hidden!important}
- .q-mobile-hero:before{content:""!important;position:absolute!important;z-index:-1!important;width:190px!important;height:190px!important;right:-75px!important;top:-95px!important;border:1px solid rgba(255,255,255,.15)!important;border-radius:50%!important;box-shadow:0 0 0 24px rgba(255,255,255,.035),0 0 0 48px rgba(255,255,255,.025)!important}
- .q-mobile-hero:after{display:none!important}
- .q-mobile-hero-icon{width:54px!important;height:54px!important;flex:0 0 54px!important;border-radius:18px!important;background:rgba(255,255,255,.16)!important;border:1px solid rgba(255,255,255,.2)!important}
- .q-mobile-hero-icon .qhero-logo-img{width:44px!important;height:44px!important;border-radius:13px!important;object-fit:contain!important}
- .q-mobile-hero>div:last-child{min-width:0!important;flex:1!important}
- .q-mobile-hero span{font-size:11px!important;font-weight:600!important;letter-spacing:.3px!important;color:rgba(255,255,255,.78)!important}
- .q-mobile-hero strong{display:block!important;margin:4px 0 7px!important;font-size:23px!important;line-height:1.12!important;font-weight:800!important;letter-spacing:-.6px!important;color:#fff!important;white-space:normal!important;overflow-wrap:anywhere!important}
- .q-mobile-hero p{font-size:12px!important;line-height:1.45!important;color:rgba(255,255,255,.86)!important}
- .q-mobile-stats{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:11px!important;margin:0 0 18px!important}
- .q-mobile-stats .qstat-card{position:relative!important;display:flex!important;flex-direction:column!important;align-items:flex-start!important;gap:12px!important;min-width:0!important;min-height:132px!important;padding:15px!important;border:1px solid var(--and-line)!important;border-radius:22px!important;background:var(--and-surface)!important;box-shadow:0 4px 14px rgba(20,50,38,.045)!important}
- .q-mobile-stats .qstat-icon{width:42px!important;height:42px!important;flex:none!important;border-radius:15px!important;background:#e2f5ec!important;color:var(--and-primary)!important}
- .q-mobile-stats .qstat-icon svg{width:21px!important;height:21px!important}
- .q-mobile-stats .qstat-copy{width:100%!important;min-width:0!important}
- .q-mobile-stats .qstat-title{font-size:11px!important;line-height:1.35!important;font-weight:600!important;color:var(--and-muted)!important;overflow-wrap:anywhere!important}
- .q-mobile-stats .qstat-value{font-size:25px!important;line-height:1.1!important;font-weight:800!important;letter-spacing:-.6px!important;color:var(--and-ink)!important;overflow-wrap:anywhere!important}
- .q-mobile-stats .qstat-note{font-size:10px!important;color:#84928c!important}
- .q-mobile-panel{display:block!important;margin:0 0 15px!important;border:1px solid var(--and-line)!important;border-radius:23px!important;background:#fff!important;box-shadow:0 4px 14px rgba(20,50,38,.04)!important;overflow:hidden!important}
- .q-panel-head{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:8px!important;padding:17px 17px 14px!important;background:#fff!important;border-bottom:1px solid #edf1ee!important}
- .q-panel-head h3{font-size:15px!important;font-weight:800!important;letter-spacing:-.2px!important;color:var(--and-ink)!important}
- .q-panel-head button{font-size:11px!important;color:var(--and-primary)!important;font-weight:800!important;white-space:nowrap!important}
- .q-agenda-list{padding:3px 16px!important}
- .q-agenda-row{grid-template-columns:48px minmax(0,1fr)!important;gap:12px!important;padding:14px 0!important;border-bottom:1px solid #edf1ee!important}
- .q-agenda-date{width:46px!important;height:46px!important;border-radius:15px!important;background:#e5f5ed!important;color:var(--and-primary)!important}
- .q-agenda-date strong{font-size:15px!important;font-weight:800!important}.q-agenda-date span{font-size:9px!important}
- .q-agenda-main strong{font-size:12px!important;line-height:1.4!important;color:var(--and-ink)!important;white-space:normal!important;overflow-wrap:anywhere!important}
- .q-agenda-main span{font-size:10px!important;line-height:1.4!important;color:var(--and-muted)!important}
- .q-status{display:none!important}
- .q-summary-list{padding:2px 16px 8px!important}
- .q-summary-list button{gap:12px!important;padding:14px 0!important;border-bottom:1px solid #edf1ee!important}
- .q-summary-list button>svg{width:22px!important;height:22px!important;padding:7px!important;box-sizing:content-box!important;border-radius:13px!important;background:#e5f5ed!important;color:var(--and-primary)!important}
- .q-summary-list strong{font-size:12px!important;color:var(--and-ink)!important}.q-summary-list small{font-size:10px!important;color:var(--and-muted)!important}.q-summary-list b{font-size:21px!important;color:var(--and-primary)!important;font-weight:800!important}
- .q-info-strip{display:flex!important;align-items:center!important;gap:12px!important;margin:0 0 16px!important;padding:14px!important;border:1px solid #cfe9dc!important;border-radius:19px!important;background:#e8f7ef!important}
- .q-info-icon{flex:none!important;width:38px!important;height:38px!important;border-radius:13px!important;background:#fff!important;color:var(--and-primary)!important}
- .q-info-strip strong{font-size:12px!important;color:#086747!important}.q-info-strip span{font-size:10px!important;color:#567568!important;line-height:1.4!important}
- .q-bottom-nav{position:fixed!important;left:12px!important;right:12px!important;bottom:max(10px,env(safe-area-inset-bottom))!important;height:70px!important;padding:4px 5px!important;display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;align-items:center!important;gap:2px!important;border:1px solid rgba(220,231,224,.95)!important;border-radius:24px!important;background:rgba(255,255,255,.96)!important;box-shadow:0 8px 28px rgba(17,55,39,.15)!important;backdrop-filter:blur(20px)!important;z-index:100!important}
- .q-bottom-nav button{position:relative!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:4px!important;width:100%!important;min-width:0!important;height:58px!important;padding:4px 1px!important;border:0!important;border-radius:16px!important;background:transparent!important;color:#819087!important;font-size:10px!important;font-weight:700!important;white-space:nowrap!important}
- .q-bottom-nav button svg{width:21px!important;height:21px!important;flex:none!important}
- .q-bottom-nav button.active{color:var(--and-primary)!important;background:#e8f7ef!important}
- .q-bottom-plus{width:58px!important;height:58px!important;margin:0 auto!important;border:5px solid var(--and-bg)!important;border-radius:20px!important;background:var(--and-primary)!important;color:#fff!important;box-shadow:0 6px 15px rgba(8,127,91,.3)!important;transform:translateY(-13px)!important}
- .q-bottom-plus svg{width:25px!important;height:25px!important}
- .q-quick-add{position:fixed!important;left:50%!important;bottom:96px!important;transform:translateX(-50%)!important;width:min(320px,calc(100vw - 28px))!important;padding:10px!important;border:1px solid var(--and-line)!important;border-radius:22px!important;background:#fff!important;box-shadow:0 16px 40px rgba(17,55,39,.2)!important;z-index:110!important;display:flex!important;flex-direction:column!important;gap:7px!important}
- .q-quick-add button{display:flex!important;align-items:center!important;gap:11px!important;min-height:48px!important;padding:11px 13px!important;border:0!important;border-radius:14px!important;background:#f1f7f3!important;color:var(--and-ink)!important;font-size:12px!important;font-weight:700!important;text-align:left!important}
- .q-quick-add button svg{width:18px!important;height:18px!important;color:var(--and-primary)!important}
- /* Keep non-dashboard pages readable and app controls touch-friendly. */
- .q-dashboard button,body > #root > .min-h-screen > div.flex-1 button{touch-action:manipulation}
- body > #root > .min-h-screen > div.flex-1 input,body > #root > .min-h-screen > div.flex-1 select,body > #root > .min-h-screen > div.flex-1 textarea{width:100%;max-width:100%;min-width:0!important;min-height:44px!important;border-radius:13px!important;font-size:14px!important;background:#fff}
- body > #root > .min-h-screen > div.flex-1 table{min-width:620px}
- body > #root > .min-h-screen > div.flex-1 .overflow-x-auto{max-width:100%!important;overflow-x:auto!important;-webkit-overflow-scrolling:touch!important;border-radius:14px!important}
- body > #root > .min-h-screen > div.flex-1 button{max-width:100%;overflow-wrap:anywhere}
- .rounded-lg,.rounded-xl,.rounded-2xl{border-radius:17px!important}
-}
-@media(max-width:390px){
- .q-dashboard{padding:14px 11px 116px!important}
- .q-mobile-hero{padding:16px 14px!important;gap:11px!important;min-height:136px!important}
- .q-mobile-hero strong{font-size:20px!important}
- .q-mobile-stats{gap:8px!important}.q-mobile-stats .qstat-card{padding:12px!important;min-height:124px!important;border-radius:19px!important}.q-mobile-stats .qstat-value{font-size:22px!important}
- .q-bottom-nav{left:8px!important;right:8px!important;grid-template-columns:repeat(5,minmax(0,1fr))!important}
- .q-bottom-nav button{font-size:9px!important}.q-bottom-nav button svg{width:19px!important;height:19px!important}
- .q-bottom-plus{width:53px!important;height:53px!important;border-radius:18px!important}
-}
-</style>
-
-
-<style id="qurban-native-overlap-fix">
-/* Perbaikan khusus tabrakan/penumpukan elemen di layar mobile. */
-@media (max-width:767px){
-  *,*::before,*::after{box-sizing:border-box}
-  html,body,#root{min-width:0!important;max-width:100%!important;overflow-x:hidden!important}
-  body > #root > .min-h-screen{width:100%!important;min-width:0!important;overflow-x:clip!important}
-  body > #root > .min-h-screen > div.flex-1{min-width:0!important;flex-basis:auto!important;padding-bottom:calc(100px + env(safe-area-inset-bottom))!important}
-  body > #root > .min-h-screen > div.flex-1 > .max-w-7xl{min-width:0!important}
-  /* Reset accidental fixed/absolute positioning in page content; preserve the bottom bar. */
-  body > #root > .min-h-screen > div.flex-1 .grid{min-width:0!important}
-  body > #root > .min-h-screen > div.flex-1 .grid > *{min-width:0!important;max-width:100%!important}
-  body > #root > .min-h-screen > div.flex-1 h1,
-  body > #root > .min-h-screen > div.flex-1 h2,
-  body > #root > .min-h-screen > div.flex-1 h3,
-  body > #root > .min-h-screen > div.flex-1 p,
-  body > #root > .min-h-screen > div.flex-1 label,
-  body > #root > .min-h-screen > div.flex-1 span,
-  body > #root > .min-h-screen > div.flex-1 td,
-  body > #root > .min-h-screen > div.flex-1 th{min-width:0;overflow-wrap:anywhere}
-  body > #root > .min-h-screen > div.flex-1 .flex{min-width:0}
-  body > #root > .min-h-screen > div.flex-1 .flex > *{min-width:0;max-width:100%}
-  body > #root > .min-h-screen > div.flex-1 .overflow-hidden{min-width:0}
-  body > #root > .min-h-screen > div.flex-1 table{display:table!important;width:max-content!important;max-width:none!important;border-collapse:separate!important;border-spacing:0!important}
-  body > #root > .min-h-screen > div.flex-1 .overflow-x-auto{display:block!important;width:100%!important;overflow-x:auto!important;overflow-y:hidden!important;overscroll-behavior-x:contain}
-  .q-dashboard{position:relative!important;isolation:isolate!important;display:block!important;min-width:0!important;overflow:visible!important;padding-bottom:calc(126px + env(safe-area-inset-bottom))!important}
-  .q-mobile-dashboard{position:relative!important;display:block!important;min-width:0!important;width:100%!important}
-  .q-mobile-hero{width:100%!important;min-width:0!important;min-height:0!important;box-sizing:border-box!important}
-  .q-mobile-hero > div{min-width:0!important;max-width:100%!important}
-  .q-mobile-stats{width:100%!important;min-width:0!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;align-items:stretch!important}
-  .q-mobile-stats .qstat-card{min-width:0!important;width:100%!important;height:auto!important;min-height:124px!important;overflow-wrap:anywhere!important}
-  .q-mobile-stats .qstat-copy,.q-mobile-stats .qstat-title,.q-mobile-stats .qstat-value,.q-mobile-stats .qstat-note{min-width:0!important;max-width:100%!important;white-space:normal!important;overflow-wrap:anywhere!important}
-  .q-mobile-panel{position:relative!important;width:100%!important;min-width:0!important;height:auto!important;max-height:none!important}
-  .q-bottom-nav{left:10px!important;right:10px!important;bottom:max(8px,env(safe-area-inset-bottom))!important;width:auto!important;max-width:calc(100vw - 20px)!important;box-sizing:border-box!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;overflow:visible!important}
-  .q-bottom-nav button{min-width:0!important;max-width:100%!important;overflow:hidden!important;text-overflow:ellipsis!important}
-  .q-bottom-plus{position:relative!important;left:auto!important;right:auto!important;justify-self:center!important;align-self:center!important;transform:translateY(-8px)!important}
-  .q-quick-add{max-height:calc(100dvh - 130px)!important;overflow-y:auto!important;overscroll-behavior:contain}
-  input,select,textarea{box-sizing:border-box!important;min-width:0!important;max-width:100%!important}
-  img,svg,video,canvas{max-width:100%}
-}
-@media(max-width:390px){
-  .q-bottom-nav{left:7px!important;right:7px!important;max-width:calc(100vw - 14px)!important;padding-inline:3px!important;gap:0!important}
-  .q-bottom-nav button{font-size:8px!important;letter-spacing:-.2px!important}
-  .q-bottom-plus{width:49px!important;height:49px!important;transform:translateY(-7px)!important}
-  .q-dashboard{padding-left:10px!important;padding-right:10px!important}
-  .q-mobile-stats{gap:7px!important}
-}
-</style>
-
 </head>
 <body>
   <div id="root"></div>
@@ -1957,73 +1468,62 @@ function App() {
     const renderDashboard = () => {
         const totalGantingan = mustahiq.reduce((sum, item) => sum + parseInt(item.jumlahKupon || 0), 0);
         const totalDaging = hasil.reduce((sum, item) => sum + parseInt(item.total || 0), 0);
-        const totalSapi = Math.ceil(mudhohi.filter(m => !m.jenis || m.jenis === 'Sapi').length / 7);
-        const heroLogo = customConfigs?.kopLogo
-            ? React.createElement("img", { src: customConfigs.kopLogo, alt: "Logo Aplikasi", className: "qhero-logo-img" })
-            : React.createElement(Beef, { className: "w-9 h-9" });
-        const stat = (icon, title, value, note, tone) => React.createElement("div", { className: `qstat-card ${tone || ''}` },
-            React.createElement("div", { className: "qstat-icon" }, icon),
-            React.createElement("div", { className: "qstat-copy" },
-                React.createElement("div", { className: "qstat-title" }, title),
-                React.createElement("div", { className: "qstat-value" }, value),
-                React.createElement("div", { className: "qstat-note" }, note)));
-        const agendaPreview = agendas.slice(0, 4);
-        return React.createElement("div", { className: "q-dashboard" },
-            React.createElement("section", { className: "q-dashboard-hero" },
-                React.createElement("div", { className: "qhero-content" },
-                    React.createElement("div", { className: "qhero-icon" }, heroLogo),
-                    React.createElement("div", { className: "qhero-copy" },
-                        React.createElement("div", { className: "qhero-kicker" }, "Sistem Informasi Qurban"),
-                        React.createElement("h2", null, "Selamat Datang, Admin"),
-                        React.createElement("p", null, "Kelola seluruh rangkaian kegiatan qurban secara mudah, rapi, dan terintegrasi."))),
-                React.createElement("button", { onClick: () => setShowYearModal(true), className: "qhero-year" },
-                    React.createElement(Archive, { className: "w-4 h-4" }), activeYear, React.createElement("span", null, "›"))),
-            React.createElement("div", { className: "q-stats-grid" },
-                stat(React.createElement(Users, null), "Total Mudhohi", mudhohi.length, "Peserta terdaftar", "blue"),
-                stat(React.createElement(Beef, null), "Total Sapi", totalSapi, "Estimasi kelompok", "green"),
-                stat(React.createElement(Ticket, null), "Total Gantingan", totalGantingan, "Kupon mustahiq", "purple"),
-                stat(React.createElement(Scale, null), "Total Daging", `${totalDaging} Kg`, "Berdasarkan rekap", "orange")),
-            React.createElement("div", { className: "q-dashboard-columns" },
-                React.createElement("section", { className: "q-panel" },
-                    React.createElement("div", { className: "q-panel-head" },
-                        React.createElement("h3", null, "Agenda Kegiatan"),
-                        React.createElement("button", { onClick: () => setActiveTab('agenda') }, "Lihat Semua")),
-                    React.createElement("div", { className: "q-agenda-list" }, agendaPreview.map((agenda, i) => React.createElement("div", { className: "q-agenda-row", key: agenda.id },
-                        React.createElement("div", { className: "q-agenda-date" }, React.createElement("strong", null, String(i + 1).padStart(2, '0')), React.createElement("span", null, "Kegiatan")),
-                        React.createElement("div", { className: "q-agenda-main" }, React.createElement("strong", null, agenda.task), React.createElement("span", null, agenda.date)),
-                        React.createElement("span", { className: `q-status ${agenda.status === 'Selesai' ? 'done' : 'wait'}` }, agenda.status))))),
-                React.createElement("section", { className: "q-panel" },
-                    React.createElement("div", { className: "q-panel-head" },
-                        React.createElement("h3", null, "Ringkasan Qurban"),
-                        React.createElement("button", { onClick: () => setActiveTab('hasil') }, "Lihat Detail")),
-                    React.createElement("div", { className: "q-summary-list" },
-                        React.createElement("button", { onClick: () => setActiveTab('mudhohi') }, React.createElement(Users, null), React.createElement("span", null, React.createElement("strong", null, "Data Mudhohi"), React.createElement("small", null, `${mudhohi.length} peserta terdaftar`)), React.createElement("b", null, "›")),
-                        React.createElement("button", { onClick: () => setActiveTab('mustahiq') }, React.createElement(FileText, null), React.createElement("span", null, React.createElement("strong", null, "Data Mustahiq"), React.createElement("small", null, `${mustahiq.length} kategori penerima`)), React.createElement("b", null, "›")),
-                        React.createElement("button", { onClick: () => setActiveTab('hasil') }, React.createElement(Scale, null), React.createElement("span", null, React.createElement("strong", null, "Hasil Sembelih"), React.createElement("small", null, `${hasil.length} rekap hasil`)), React.createElement("b", null, "›")),
-                        React.createElement("button", { onClick: openAccountSettings }, React.createElement(Settings, null), React.createElement("span", null, React.createElement("strong", null, "Pengaturan"), React.createElement("small", null, "Akun admin dan petugas")), React.createElement("b", null, "›"))))),
-            React.createElement("section", { className: "q-info-strip" },
-                React.createElement("div", { className: "q-info-icon" }, React.createElement(CheckCircle2, null)),
-                React.createElement("div", null, React.createElement("strong", null, "Semua data tersimpan berdasarkan periode aktif"), React.createElement("span", null, `Periode saat ini: ${activeYear}`))),
-            React.createElement("section", { className: "q-mobile-dashboard" },
-                React.createElement("div", { className: "q-mobile-hero" },
-                    React.createElement("div", { className: "q-mobile-hero-icon" }, heroLogo),
-                    React.createElement("div", null, React.createElement("span", null, "Selamat Datang"), React.createElement("strong", null, "Admin"), React.createElement("p", null, "Kelola seluruh data qurban dengan mudah."))),
-                React.createElement("div", { className: "q-mobile-stats" },
-                    stat(React.createElement(Users, null), "Mudhohi", mudhohi.length, "Peserta", "blue"),
-                    stat(React.createElement(Beef, null), "Sapi", totalSapi, "Kelompok", "green"),
-                    stat(React.createElement(Ticket, null), "Gantingan", totalGantingan, "Kupon", "purple"),
-                    stat(React.createElement(Scale, null), "Daging", `${totalDaging} Kg`, "Rekap", "orange")),
-                React.createElement("div", { className: "q-mobile-panel q-panel" },
-                    React.createElement("div", { className: "q-panel-head" }, React.createElement("h3", null, "Agenda Kegiatan"), React.createElement("button", { onClick: () => setActiveTab('agenda') }, "Lihat Semua")),
-                    React.createElement("div", { className: "q-agenda-list" }, agendaPreview.slice(0, 3).map((agenda, i) => React.createElement("div", { className: "q-agenda-row", key: agenda.id }, React.createElement("div", { className: "q-agenda-date" }, React.createElement("strong", null, String(i + 1).padStart(2, '0')), React.createElement("span", null, "Qurban")), React.createElement("div", { className: "q-agenda-main" }, React.createElement("strong", null, agenda.task), React.createElement("span", null, agenda.date)), React.createElement("span", { className: `q-status ${agenda.status === 'Selesai' ? 'done' : 'wait'}` }, agenda.status))))),
-                React.createElement("div", { className: "q-mobile-bottom-space" })),
-            React.createElement("div", { className: "q-bottom-nav" },
-                React.createElement("button", { className: activeTab === 'dashboard' ? 'active' : '', onClick: () => setActiveTab('dashboard') }, React.createElement(Home, null), React.createElement("span", null, "Dashboard")),
-                React.createElement("button", { className: activeTab === 'mudhohi' ? 'active' : '', onClick: () => setActiveTab('mudhohi') }, React.createElement(Users, null), React.createElement("span", null, "Mudhohi")),
-                React.createElement("button", { className: "q-bottom-plus", onClick: () => setShowQuickAdd(!showQuickAdd), "aria-label": "Tambah data" }, React.createElement(Plus, null)),
-                React.createElement("button", { className: activeTab === 'dokumen' ? 'active' : '', onClick: () => setActiveTab('dokumen') }, React.createElement(FileText, null), React.createElement("span", null, "Laporan")),
-                React.createElement("button", { onClick: () => { window.location.href = 'logout.php'; } }, React.createElement(LogOut, null), React.createElement("span", null, "Keluar"))),
-            showQuickAdd ? React.createElement("div", { className: "q-quick-add" }, React.createElement("button", { onClick: () => { setShowQuickAdd(false); setActiveTab('mudhohi'); } }, React.createElement(Users, null), "Tambah Mudhohi"), React.createElement("button", { onClick: () => { setShowQuickAdd(false); setActiveTab('mustahiq'); } }, React.createElement(Users, null), "Tambah Mustahiq")) : null);
+        const menuCard = (icon, title, desc, onClick, tone) => React.createElement("button", { onClick, className: `pdkq-dashboard-menu ${tone || ''}` },
+            React.createElement("span", { className: "pdkq-dashboard-menu-icon" }, React.cloneElement(icon, { className: "w-7 h-7" })),
+            React.createElement("span", { className: "pdkq-dashboard-menu-copy" },
+                React.createElement("strong", null, title),
+                React.createElement("small", null, desc)),
+            React.createElement("span", { className: "pdkq-dashboard-chevron" }, "›"));
+        return (React.createElement("div", { className: "space-y-6 pdkq-dashboard-shell" },
+            React.createElement("section", { className: "pdkq-dashboard-desktop" },
+                React.createElement("div", { className: "flex flex-col sm:flex-row justify-between items-start sm:items-center border-b pb-2 gap-2" },
+                    React.createElement("h2", { className: "text-2xl font-bold text-gray-800" }, "Dashboard Statistik (", activeYear, ")"),
+                    React.createElement("button", { onClick: () => setShowYearModal(true), className: "flex items-center text-xs font-bold text-emerald-800 bg-emerald-100 hover:bg-emerald-200 px-3 py-1.5 rounded-lg border border-emerald-300 transition-colors shadow-sm" },
+                        React.createElement(Archive, { className: "w-3.5 h-3.5 mr-1.5 text-emerald-700" }), "Tahun Aktif: ", activeYear, " (Ganti / Tambah)")),
+                React.createElement("div", { className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-6" },
+                    React.createElement(StatCard, { icon: React.createElement(Users, { className: "w-8 h-8 text-blue-600" }), title: "Total Mudhohi", value: mudhohi.length, desc: "Peserta Terdaftar" }),
+                    React.createElement(StatCard, { icon: React.createElement(Beef, { className: "w-8 h-8 text-green-600" }), title: "Total Sapi", value: Math.ceil(mudhohi.filter(m => !m.jenis || m.jenis === 'Sapi').length / 7), desc: "Estimasi Kelompok" }),
+                    React.createElement(StatCard, { icon: React.createElement(FileText, { className: "w-8 h-8 text-yellow-600" }), title: "Total Gantingan", value: totalGantingan, desc: "Kupon Mustahiq" }),
+                    React.createElement(StatCard, { icon: React.createElement(Scale, { className: "w-8 h-8 text-purple-600" }), title: "Total Daging", value: `${totalDaging} Kg`, desc: "Berdasarkan Rekap" })),
+                React.createElement("div", { className: "bg-white p-6 rounded-xl shadow-sm border border-gray-100 mt-6" },
+                    React.createElement("div", { className: "flex justify-between items-center mb-4" },
+                        React.createElement("h3", { className: "text-lg font-bold text-gray-800" }, "Agenda Terdekat (Rencana Kerja)"),
+                        React.createElement("button", { onClick: () => setActiveTab('agenda'), className: "text-sm text-emerald-600 hover:underline font-medium" }, "Kelola Agenda →")),
+                    React.createElement("ul", { className: "space-y-3" }, agendas.map(agenda => React.createElement(AgendaItem, { key: agenda.id, date: agenda.date, task: agenda.task, status: agenda.status }))))),
+                React.createElement("button", { onClick: openAccountSettings, className: "pdkq-dashboard-desktop w-full mt-4 bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between text-left hover:border-emerald-300" },
+                    React.createElement("div", { className: "flex items-center gap-3" },
+                        React.createElement("div", { className: "w-10 h-10 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center" }, React.createElement(Settings, { className: "w-5 h-5" })),
+                        React.createElement("div", null, React.createElement("div", { className: "font-bold text-gray-800" }, "Pengaturan"), React.createElement("div", { className: "text-sm text-gray-500" }, "Atur akun admin dan akun petugas"))),
+                    React.createElement("span", { className: "text-xl text-gray-400" }, "›")),
+            React.createElement("section", { className: "pdkq-dashboard-mobile" },
+                React.createElement("div", { className: "pdkq-welcome-card" },
+                    React.createElement("div", { className: "pdkq-welcome-icon" }, React.createElement(Beef, { className: "w-8 h-8" })),
+                    React.createElement("div", null,
+                        React.createElement("h2", null, "Selamat Datang"),
+                        React.createElement("strong", null, "Admin"),
+                        React.createElement("p", null, "Kelola seluruh data dan proses qurban dengan mudah."))),
+                React.createElement("div", { className: "pdkq-menu-grid" },
+                    menuCard(React.createElement(Calendar), "Tahun / Arsip", "Kelola tahun dan arsip data", () => setShowYearModal(true), "green"),
+                    menuCard(React.createElement(Users), "Mudhohi", "Kelola data mudhohi", () => setActiveTab('mudhohi'), "blue"),
+                    menuCard(React.createElement(FileText), "Mustahiq", "Kelola data mustahiq", () => setActiveTab('mustahiq'), "orange"),
+                    menuCard(React.createElement(Settings), "Panitia", "Kelola data panitia", () => setActiveTab('panitia'), "purple"),
+                    menuCard(React.createElement(Calendar), "Agenda", "Kelola agenda kegiatan", () => setActiveTab('agenda'), "red"),
+                    menuCard(React.createElement(Beef), "Hasil Sembelih", "Kelola hasil sembelih", () => setActiveTab('hasil'), "cyan"),
+                    menuCard(React.createElement(Mail), "Surat", "Kelola surat dan laporan", () => setActiveTab('surat'), "blue"),
+                    menuCard(React.createElement(Settings), "Pengaturan", "Atur akun admin dan petugas", openAccountSettings, "slate")),
+                React.createElement(React.Fragment, null,
+                    React.createElement("div", { className: "pdkq-bottom-nav pdkq-bottom-nav-new" },
+                        React.createElement("button", { onClick: () => setActiveTab('home') }, React.createElement(Home, { className: "w-6 h-6" }), React.createElement("span", null, "Home")),
+                        React.createElement("button", { onClick: () => setActiveTab('mustahiq') }, React.createElement(Users, { className: "w-6 h-6" }), React.createElement("span", null, "Data Mustahiq")),
+                        React.createElement("button", { className: "pdkq-plus-button", onClick: () => setShowQuickAdd(!showQuickAdd), "aria-label": "Tambah data" }, React.createElement(Plus, { className: "w-8 h-8" })),
+                        React.createElement("button", { onClick: () => setActiveTab('dokumen') }, React.createElement(FileText, { className: "w-6 h-6" }), React.createElement("span", null, "Laporan")),
+                        React.createElement("button", { onClick: () => { window.location.href = 'logout.php'; } }, React.createElement(LogOut, { className: "w-6 h-6" }), React.createElement("span", null, "Keluar"))
+                    ),
+                    showQuickAdd ? React.createElement("div", { className: "pdkq-quick-add" },
+                        React.createElement("button", { onClick: () => { setShowQuickAdd(false); setActiveTab('mudhohi'); } }, React.createElement(Users, { className: "w-5 h-5" }), "Tambah Mudhohi"),
+                        React.createElement("button", { onClick: () => { setShowQuickAdd(false); setActiveTab('mustahiq'); } }, React.createElement(Users, { className: "w-5 h-5" }), "Tambah Mustahiq")
+                    ) : null
+                ))));
     };
     const renderAgenda = () => (React.createElement("div", { className: "space-y-6" },
         React.createElement("div", { className: "flex justify-between items-center border-b pb-2" },
@@ -2604,14 +2104,6 @@ function App() {
                 React.createElement(NavItem, { icon: React.createElement(Settings, null), label: "Pengaturan", active: activeTab === 'akun', onClick: () => { setActiveTab('akun'); setIsMobileMenuOpen(false); loadAccountData(); } }),
                 React.createElement(NavItem, { icon: React.createElement(LogOut, null), label: "Keluar", active: false, onClick: () => { window.location.href = 'logout.php'; } }))),
         React.createElement("div", { className: "flex-1 p-4 md:p-8 overflow-y-auto max-h-screen" },
-            React.createElement("div", { className: "q-topbar" },
-                React.createElement("div", { className: "q-topbar-brand" },
-                    customConfigs?.kopLogo ? React.createElement("img", { src: customConfigs.kopLogo, alt: "Logo Aplikasi" }) : React.createElement(Beef, null),
-                    React.createElement("div", null, React.createElement("strong", null, "PDKQu"), React.createElement("span", null, "Sistem Informasi Qurban"))),
-                React.createElement("div", { className: "q-topbar-user" },
-                    React.createElement("div", { className: "q-user-avatar" }, "A"),
-                    React.createElement("div", null, React.createElement("strong", null, "Admin"), React.createElement("span", null, "Administrator")),
-                    React.createElement("span", { className: "q-user-chevron" }, "⌄"))),
             React.createElement("div", { className: "max-w-7xl mx-auto" },
                 activeTab === 'dashboard' && renderDashboard(),
                 activeTab === 'agenda' && renderAgenda(),
