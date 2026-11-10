@@ -75,6 +75,25 @@ input, select, textarea {
   -webkit-overflow-scrolling: touch;
 }
 
+/* Cegah navigasi bawah handphone menutupi konten */
+@media (max-width: 767px) {
+  main.pdkq-main-canvas {
+    padding-bottom: calc(92px + env(safe-area-inset-bottom, 24px)) !important;
+    max-height: calc(100dvh - 61px) !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+  main.pdkq-main-canvas > div.max-w-7xl {
+    padding-bottom: 28px !important;
+  }
+  .pdkq-bottom-nav-spacer {
+    display: block !important;
+    width: 100% !important;
+    height: calc(84px + env(safe-area-inset-bottom, 20px)) !important;
+    content: "" !important;
+  }
+}
+
 /* Mobile Quick Menu grid */
 .pdkq-menu-grid {
   display: grid !important;
@@ -2385,7 +2404,7 @@ function App() {
                 )
             ),
             // Main Content Area
-            React.createElement("main", { className: "flex-1 p-4 md:p-8 overflow-y-auto max-h-[calc(100vh-61px)] flex flex-col justify-between" },
+            React.createElement("main", { className: "flex-1 p-4 pb-28 md:p-8 md:pb-8 overflow-y-auto max-h-[calc(100vh-61px)] flex flex-col justify-between pdkq-main-canvas" },
                 React.createElement("div", { className: "max-w-7xl mx-auto w-full" },
                     activeTab === 'dashboard' && renderDashboard(),
                     activeTab === 'agenda' && renderAgenda(),
@@ -2396,7 +2415,8 @@ function App() {
                     activeTab === 'mustahiq' && renderMustahiq(),
                     activeTab === 'hasil' && renderHasil(),
                     activeTab === 'dokumen' && renderDokumen(),
-                    activeTab === 'akun' && renderAccountSettings()),
+                    activeTab === 'akun' && renderAccountSettings(),
+                    React.createElement("div", { className: "pdkq-bottom-nav-spacer hidden md:hidden" })),
                 // Desktop Footer
                 React.createElement("footer", { className: "hidden md:flex justify-between items-center text-xs text-emerald-800/90 border-t border-slate-200 pt-6 mt-12 pb-2" },
                     React.createElement("div", { className: "font-semibold text-slate-500" }, "© 2026 PDKQu. Sistem Qurban"),
@@ -3109,7 +3129,7 @@ function DocCard({ icon, title, desc, onClick, onCustomize, highlight }) {
             React.createElement("button", { onClick: onClick, className: `flex-1 py-2.5 font-bold rounded-lg text-sm border transition-colors ${highlight ? 'bg-emerald-600 hover:bg-emerald-700 text-white border-transparent' : 'bg-gray-50 hover:bg-gray-100 text-blue-600 border-gray-200'}` }, "Generate Dokumen"))));
 }
 function Modal({ title, onClose, children }) {
-    return (React.createElement("div", { className: "fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 z-50 overflow-y-auto" },
+    return (React.createElement("div", { className: "fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-3 pb-24 sm:p-4 z-50 overflow-y-auto" },
         React.createElement("div", { className: "bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] flex flex-col overflow-hidden animate-in fade-in zoom-in duration-200" },
             React.createElement("div", { className: "flex justify-between items-center p-4 sm:p-5 border-b border-gray-100 bg-gray-50 flex-shrink-0" },
                 React.createElement("h3", { className: "font-bold text-base sm:text-lg text-gray-800 truncate pr-2" }, title),
