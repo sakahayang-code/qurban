@@ -577,6 +577,48 @@ function App() {
     const [kelompokSubTab, setKelompokSubTab] = useState('sapi');
     const [hasilSubTab, setHasilSubTab] = useState('sapi');
     const [docCustomizer, setDocCustomizer] = useState(null);
+    const [toast, setToast] = useState(null);
+    const showToast = (message, type = 'success') => {
+        setToast({ message, type });
+    };
+    useEffect(() => {
+        if (!toast) return;
+        const timer = setTimeout(() => setToast(null), 3500);
+        return () => clearTimeout(timer);
+    }, [toast]);
+
+    const [mudhohiJenisFilter, setMudhohiJenisFilter] = useState('semua');
+    const [mudhohiStatusFilter, setMudhohiStatusFilter] = useState('semua');
+    const [mudhohiKelompokFilter, setMudhohiKelompokFilter] = useState('semua');
+    const [mustahiqSearchTerm, setMustahiqSearchTerm] = useState('');
+    const [mustahiqKategoriFilter, setMustahiqKategoriFilter] = useState('semua');
+    const [assignModalKelompok, setAssignModalKelompok] = useState(null);
+
+    const exportToCSV = (filename, headers, rows) => {
+        try {
+            const processVal = (val) => {
+                let str = val === null || val === undefined ? '' : String(val);
+                str = str.replace(/"/g, '""');
+                if (str.search(/("|,|\n|\r)/g) >= 0) {
+                    str = `"${str}"`;
+                }
+                return str;
+            };
+            const csvContent = '\uFEFF' + [headers.map(processVal).join(','), ...rows.map(r => r.map(processVal).join(','))].join('\r\n');
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.setAttribute('href', url);
+            link.setAttribute('download', filename);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+            showToast(`Berhasil mengunduh ${filename}`, 'success');
+        } catch (err) {
+            showToast('Gagal mengekspor file: ' + err.message, 'error');
+        }
+    };
     const getKetuaName = () => {
         const ketua = panitia.find(p => p.jabatan.toLowerCase().includes('ketua panitia'));
         return ketua ? ketua.nama : 'H. Jenal Al Purqon, M.Pd.';
@@ -1259,10 +1301,203 @@ function App() {
         </div>
       `;
         }
+        else if (docType === 'Lembar Syiar Jagal (Kelompok Sapi)') {
+            const kelompokSapiMap = {};
+            mudhohi.filter(m => !m.jenis || m.jenis === 'Sapi').forEach(m => {
+                if (m.kelompok && m.kelompok !== 'Belum' && m.kelompok !== '-') {
+                    if (!kelompokSapiMap[m.kelompok]) kelompokSapiMap[m.kelompok] = [];
+                    kelompokSapiMap[m.kelompok].push(m);
+                }
+            });
+            const kelompokKeys = Object.keys(kelompokSapiMap).sort((a, b) => Number(a) - Number(b));
+            printContent = `
+        <div style="font-family: 'Times New Roman', Times, serif; padding: 30px; max-width: 800px; margin: auto; line-height: 1.5; color: #000;">
+          ${renderKopSurat(config)}
+          <div style="text-align: center; margin-bottom: 20px;">
+            <h2 style="margin: 0; font-size: 18px; font-weight: bold; text-transform: uppercase;">LEMBAR SYIAR & AKAD PENYEMBELIHAN SAPI QURBAN</h2>
+            <h4 style="margin: 4px 0 0 0; font-size: 13px; font-weight: normal;">PANDUAN PEMBACAAN NAMA-NAMA MUDHOHI SAAT PENYEMBELIHAN (1 SAPI = 7 ORANG)</h4>
+          </div>
+          ${kelompokKeys.length === 0 ? '<p style="text-align: center; color: #666; font-style: italic;">Belum ada kelompok sapi yang terdaftar.</p>' : kelompokKeys.map(k => `
+            <div style="margin-bottom: 25px; border: 2px solid #000; padding: 12px; page-break-inside: avoid; border-radius: 6px;">
+              <div style="display: flex; justify-content: space-between; border-bottom: 1.5px solid #000; padding-bottom: 6px; margin-bottom: 8px;">
+                <strong style="font-size: 16px;">HEWAN SAPI KELOMPOK #${k}</strong>
+                <span>Status: <strong>${kelompokSapiMap[k].length} / 7 Peserta</strong></span>
+              </div>
+              <p style="margin: 0 0 8px 0; font-size: 12px; font-style: italic;">"Bismillahi Allahu Akbar, Allahumma haadzihi minka wa laka, 'an fulan bin fulan..."</p>
+              <table style="width: 100%; border-collapse: collapse; font-size: 13px;" border="1">
+                <thead>
+                  <tr style="background: #f2f2f2;">
+                    <th style="padding: 4px; width: 30px; text-align: center;">No</th>
+                    <th style="padding: 4px; text-align: left;">Nama Mudhohi</th>
+                    <th style="padding: 4px; text-align: left;">Bin / Binti</th>
+                    <th style="padding: 4px; text-align: center; width: 60px;">RT</th>
+                    <th style="padding: 4px; text-align: center; width: 90px;">Status</th>
+                    <th style="padding: 4px; text-align: center; width: 100px;">Paraf Jagal</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${kelompokSapiMap[k].map((p, idx) => `
+                    <tr>
+                      <td style="padding: 4px; text-align: center;">${idx + 1}</td>
+                      <td style="padding: 4px; font-weight: bold;">${p.nama}</td>
+                      <td style="padding: 4px;">${p.bin || p.binti || '-'}</td>
+                      <td style="padding: 4px; text-align: center;">RT ${p.rt}</td>
+                      <td style="padding: 4px; text-align: center;">${p.status}</td>
+                      <td style="padding: 4px; text-align: center;">[ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ]</td>
+                    </tr>
+                  `).join('')}
+                  ${Array.from({ length: Math.max(0, 7 - kelompokSapiMap[k].length) }).map((_, idx) => `
+                    <tr style="color: #777; font-style: italic;">
+                      <td style="padding: 4px; text-align: center;">${kelompokSapiMap[k].length + idx + 1}</td>
+                      <td style="padding: 4px;">(Slot Kosong)</td>
+                      <td style="padding: 4px;">-</td>
+                      <td style="padding: 4px; text-align: center;">-</td>
+                      <td style="padding: 4px; text-align: center;">-</td>
+                      <td style="padding: 4px; text-align: center;">-</td>
+                    </tr>
+                  `).join('')}
+                </tbody>
+              </table>
+            </div>
+          `).join('')}
+          <div style="margin-top: 30px; display: flex; justify-content: space-between; page-break-inside: avoid;">
+            <div style="text-align: center; width: 45%;">
+              <p style="margin: 0;">Koordinator Penyembelihan / Jagal,</p>
+              <div style="height: 60px;"></div>
+              <p style="margin: 0; font-weight: bold; text-decoration: underline;">( Tim Jagal Syar'i )</p>
+            </div>
+            <div style="text-align: center; width: 45%;">
+              <p style="margin: 0;">Ketua Panitia Qurban,</p>
+              <div style="height: 60px;"></div>
+              <p style="margin: 0; font-weight: bold; text-decoration: underline;">( ${ketuaName} )</p>
+            </div>
+          </div>
+        </div>
+      `;
+        }
+        else if (docType === 'Tanda Terima Kupon Mustahiq') {
+            const totalKupon = mustahiq.reduce((sum, item) => sum + parseInt(item.jumlahKupon || 0), 0);
+            printContent = `
+        <div style="font-family: 'Times New Roman', Times, serif; padding: 35px; max-width: 800px; margin: auto; line-height: 1.5; color: #000;">
+          ${renderKopSurat(config)}
+          <div style="text-align: center; margin-bottom: 20px;">
+            <h2 style="margin: 0; font-size: 18px; font-weight: bold;">BERITA ACARA & TANDA TERIMA DISTRIBUSI KUPON DAGING QURBAN</h2>
+            <h4 style="margin: 4px 0 0 0; font-size: 13px; font-weight: normal;">TAHUN ${config.headerSub}</h4>
+          </div>
+          <p style="text-align: justify; margin-bottom: 15px;">Telah diserahkan kupon / gantingan pengambilan daging qurban kepada masing-masing perwakilan RT, Lembaga, dan Panitia dengan rincian penerimaan sebagai berikut:</p>
+          <table style="width: 100%; border-collapse: collapse; font-size: 13px;" border="1">
+            <thead>
+              <tr style="background: #f2f2f2;">
+                <th style="padding: 6px; width: 35px; text-align: center;">No</th>
+                <th style="padding: 6px; text-align: left;">Kategori</th>
+                <th style="padding: 6px; text-align: left;">Nama Target / Wilayah</th>
+                <th style="padding: 6px; text-align: center; width: 80px;">Jml Kupon</th>
+                <th style="padding: 6px; text-align: left; width: 150px;">Nama Penerima</th>
+                <th style="padding: 6px; text-align: center; width: 100px;">Tanda Tangan</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${mustahiq.map((m, idx) => `
+                <tr>
+                  <td style="padding: 6px; text-align: center;">${idx + 1}</td>
+                  <td style="padding: 6px;">${m.kategori}</td>
+                  <td style="padding: 6px; font-weight: bold;">${m.nama_rt}</td>
+                  <td style="padding: 6px; text-align: center; font-weight: bold;">${m.jumlahKupon}</td>
+                  <td style="padding: 6px;">&nbsp;</td>
+                  <td style="padding: 6px; text-align: center;">&nbsp;</td>
+                </tr>
+              `).join('')}
+              <tr style="background: #f9f9f9; font-weight: bold;">
+                <td colspan="3" style="padding: 6px; text-align: right;">TOTAL KUPON DISERAHKAN :</td>
+                <td style="padding: 6px; text-align: center;">${totalKupon}</td>
+                <td colspan="2"></td>
+              </tr>
+            </tbody>
+          </table>
+          <div style="margin-top: 40px; display: flex; justify-content: space-between; page-break-inside: avoid;">
+            <div style="text-align: center; width: 45%;">
+              <p style="margin: 0;">Seksi Distribusi Kupon,</p>
+              <div style="height: 60px;"></div>
+              <p style="margin: 0; font-weight: bold; text-decoration: underline;">( Koordinator Distribusi )</p>
+            </div>
+            <div style="text-align: center; width: 45%;">
+              <p style="margin: 0;">Ketua Panitia Qurban,</p>
+              <div style="height: 60px;"></div>
+              <p style="margin: 0; font-weight: bold; text-decoration: underline;">( ${ketuaName} )</p>
+            </div>
+          </div>
+        </div>
+      `;
+        }
+        else if (docType === 'Rekapitulasi Timbangan Daging') {
+            const totalDaging = hasil.reduce((s, h) => s + (parseInt(h.daging) || 0), 0);
+            const totalJeroan = hasil.reduce((s, h) => s + (parseInt(h.jeroan) || 0), 0);
+            const totalTulang = hasil.reduce((s, h) => s + (parseInt(h.tulang) || 0), 0);
+            const totalAll = hasil.reduce((s, h) => s + (parseInt(h.total) || 0), 0);
+            printContent = `
+        <div style="font-family: 'Times New Roman', Times, serif; padding: 35px; max-width: 800px; margin: auto; line-height: 1.5; color: #000;">
+          ${renderKopSurat(config)}
+          <div style="text-align: center; margin-bottom: 20px;">
+            <h2 style="margin: 0; font-size: 18px; font-weight: bold;">BERITA ACARA REKAPITULASI HASIL TIMBANGAN HEWAN QURBAN</h2>
+            <h4 style="margin: 4px 0 0 0; font-size: 13px; font-weight: normal;">TAHUN ${config.headerSub}</h4>
+          </div>
+          <p style="text-align: justify; margin-bottom: 15px;">Berikut adalah hasil penimbangan daging bersih, jeroan, dan tulang dari seluruh hewan qurban yang telah disembelih:</p>
+          <table style="width: 100%; border-collapse: collapse; font-size: 13px;" border="1">
+            <thead>
+              <tr style="background: #f2f2f2;">
+                <th style="padding: 6px; width: 35px; text-align: center;">No</th>
+                <th style="padding: 6px; text-align: left;">Jenis Hewan</th>
+                <th style="padding: 6px; text-align: center;">Urutan Ke-</th>
+                <th style="padding: 6px; text-align: right;">Daging (Kg)</th>
+                <th style="padding: 6px; text-align: right;">Jeroan (Kg)</th>
+                <th style="padding: 6px; text-align: right;">Tulang (Kg)</th>
+                <th style="padding: 6px; text-align: right;">Total (Kg)</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${hasil.map((h, idx) => `
+                <tr>
+                  <td style="padding: 6px; text-align: center;">${idx + 1}</td>
+                  <td style="padding: 6px; font-weight: bold;">${h.jenis || 'Sapi'}</td>
+                  <td style="padding: 6px; text-align: center;">#${h.nomor || h.sapi}</td>
+                  <td style="padding: 6px; text-align: right;">${h.daging}</td>
+                  <td style="padding: 6px; text-align: right;">${h.jeroan}</td>
+                  <td style="padding: 6px; text-align: right;">${h.tulang}</td>
+                  <td style="padding: 6px; text-align: right; font-weight: bold;">${h.total}</td>
+                </tr>
+              `).join('')}
+              <tr style="background: #f0f0f0; font-weight: bold;">
+                <td colspan="3" style="padding: 6px; text-align: right;">TOTAL KESELURUHAN (Kg) :</td>
+                <td style="padding: 6px; text-align: right;">${totalDaging}</td>
+                <td style="padding: 6px; text-align: right;">${totalJeroan}</td>
+                <td style="padding: 6px; text-align: right;">${totalTulang}</td>
+                <td style="padding: 6px; text-align: right; color: #04583d;">${totalAll} Kg</td>
+              </tr>
+            </tbody>
+          </table>
+          <div style="margin-top: 40px; display: flex; justify-content: space-between; page-break-inside: avoid;">
+            <div style="text-align: center; width: 45%;">
+              <p style="margin: 0;">Seksi Penimbangan & Pemotongan,</p>
+              <div style="height: 60px;"></div>
+              <p style="margin: 0; font-weight: bold; text-decoration: underline;">( Koordinator Timbangan )</p>
+            </div>
+            <div style="text-align: center; width: 45%;">
+              <p style="margin: 0;">Ketua Panitia Qurban,</p>
+              <div style="height: 60px;"></div>
+              <p style="margin: 0; font-weight: bold; text-decoration: underline;">( ${ketuaName} )</p>
+            </div>
+          </div>
+        </div>
+      `;
+        }
         const printWindow = window.open('', '_blank');
-        printWindow.document.write(`<html><head><title>${docType}</title></head><body>${printContent}</body></html>`);
-        printWindow.document.close();
-        printWindow.print();
+        if (printWindow) {
+            printWindow.document.write(`<html><head><title>${docType}</title></head><body>${printContent}</body></html>`);
+            printWindow.document.close();
+            printWindow.print();
+        } else {
+            alert('Pop-up terblokir oleh browser. Izinkan pop-up untuk mencetak dokumen.');
+        }
     };
     const loadAccountData = async () => {
         setAccountLoading(true); setAccountError(''); setAccountMessage('');
@@ -1820,57 +2055,301 @@ function App() {
                             React.createElement("button", { onClick: () => setPanitia(panitia.filter(item => item.id !== p.id)), title: "Hapus Panitia", className: "text-red-500 hover:text-red-700 p-1.5 bg-red-50 rounded" },
                                 React.createElement(Trash2, { className: "w-4 h-4" }))))))))))));
     const renderMudhohi = () => {
-        const filtered = mudhohi.filter(m => m.nama.toLowerCase().includes(searchTerm.toLowerCase()));
+        const totalMudhohi = mudhohi.length;
+        const totalSapi = mudhohi.filter(m => !m.jenis || m.jenis === 'Sapi').length;
+        const totalDomba = mudhohi.filter(m => m.jenis === 'Domba').length;
+        const totalLunas = mudhohi.filter(m => m.status === 'Lunas').length;
+        const totalBelum = totalMudhohi - totalLunas;
+
+        const availableKelompokList = Array.from(new Set(
+            mudhohi
+                .filter(m => (!m.jenis || m.jenis === 'Sapi') && m.kelompok && m.kelompok !== '-' && m.kelompok !== 'Belum')
+                .map(m => String(m.kelompok))
+        )).sort((a, b) => Number(a) - Number(b));
+
+        const filtered = mudhohi.filter(m => {
+            const q = searchTerm.toLowerCase();
+            const matchSearch = (m.nama || '').toLowerCase().includes(q) ||
+                                (m.bin || m.binti || '').toLowerCase().includes(q) ||
+                                String(m.rt || '').includes(q) ||
+                                String(m.noDaftar || '').includes(q);
+            const matchJenis = mudhohiJenisFilter === 'semua' || (m.jenis || 'Sapi') === mudhohiJenisFilter;
+            const matchStatus = mudhohiStatusFilter === 'semua' || m.status === mudhohiStatusFilter;
+            const matchKelompok = mudhohiKelompokFilter === 'semua' || (
+                mudhohiKelompokFilter === 'belum' 
+                    ? (!m.kelompok || m.kelompok === 'Belum' || m.kelompok === '-')
+                    : String(m.kelompok) === String(mudhohiKelompokFilter)
+            );
+            return matchSearch && matchJenis && matchStatus && matchKelompok;
+        });
+
+        const handleExportMudhohiCSV = () => {
+            const headers = ['No', 'No Registrasi', 'Nama Lengkap', 'Bin / Binti', 'Asal RT', 'Pilihan Qurban', 'Kelompok Sapi', 'Status Pembayaran'];
+            const rows = filtered.map((m, idx) => [
+                idx + 1,
+                m.noDaftar || (idx + 1),
+                m.nama,
+                m.bin || m.binti || '-',
+                `RT ${String(m.rt).padStart(2, '0')}`,
+                m.jenis || 'Sapi',
+                m.kelompok || '-',
+                m.status || 'Belum Lunas'
+            ]);
+            exportToCSV(`daftar_mudhohi_${activeYear.replace(/[^a-zA-Z0-9]/g, '_')}.csv`, headers, rows);
+        };
+
         return (React.createElement("div", { className: "space-y-6" },
-            React.createElement("div", { className: "flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b pb-2" },
-                React.createElement("h2", { className: "text-2xl font-bold text-gray-800" }, "Daftar Mudhohi (Peserta)"),
+            // Header & Action Bar
+            React.createElement("div", { className: "flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b pb-3" },
+                React.createElement("div", null,
+                    React.createElement("h2", { className: "text-2xl font-bold text-gray-800" }, "Daftar Mudhohi (Peserta)"),
+                    React.createElement("p", { className: "text-xs text-gray-500 mt-0.5" }, "Kelola pendaftaran mudhohi, surat akad wakalah, dan alokasi hewan.")
+                ),
                 React.createElement("div", { className: "flex flex-wrap items-center gap-2" },
-                    React.createElement("button", { onClick: handlePrintAllWakalah, className: "bg-blue-50 hover:bg-blue-100 text-blue-800 border border-blue-300 px-3 py-2 rounded-lg flex items-center text-sm font-bold shadow-sm transition-colors" },
+                    React.createElement("button", {
+                        type: "button",
+                        onClick: handleExportMudhohiCSV,
+                        title: "Unduh data mudhohi ke file CSV / Excel",
+                        className: "bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 px-3 py-2 rounded-lg flex items-center text-xs sm:text-sm font-bold shadow-xs transition-colors"
+                    },
+                        React.createElement(Download, { className: "w-4 h-4 mr-1.5 text-slate-600" }),
+                        " Ekspor CSV"),
+                    React.createElement("button", {
+                        type: "button",
+                        onClick: handlePrintAllWakalah,
+                        className: "bg-blue-50 hover:bg-blue-100 text-blue-800 border border-blue-300 px-3 py-2 rounded-lg flex items-center text-xs sm:text-sm font-bold shadow-xs transition-colors"
+                    },
                         React.createElement(FileText, { className: "w-4 h-4 mr-1.5 text-blue-700" }),
-                        " Cetak Semua Wakalah"),
-                    React.createElement("button", { onClick: handlePrintAllKuponMudhohi, className: "bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 px-3 py-2 rounded-lg flex items-center text-sm font-bold shadow-sm transition-colors" },
+                        " Cetak Wakalah"),
+                    React.createElement("button", {
+                        type: "button",
+                        onClick: handlePrintAllKuponMudhohi,
+                        className: "bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 px-3 py-2 rounded-lg flex items-center text-xs sm:text-sm font-bold shadow-xs transition-colors"
+                    },
                         React.createElement(Ticket, { className: "w-4 h-4 mr-1.5 text-emerald-700" }),
-                        " Cetak Semua Kupon"),
-                    React.createElement("button", { onClick: () => setShowAddMudhohi(true), className: "bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg flex items-center shadow-sm" },
-                        React.createElement(Plus, { className: "w-4 h-4 mr-2" }),
-                        " Tambah Mudhohi"))),
-            React.createElement("div", { className: "bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden" },
-                React.createElement("div", { className: "p-4 border-b border-gray-100 flex items-center bg-gray-50" },
-                    React.createElement(Search, { className: "w-5 h-5 text-gray-400 mr-2" }),
-                    React.createElement("input", { type: "text", placeholder: "Cari nama peserta...", className: "bg-transparent border-none focus:ring-0 w-full text-gray-700 outline-none", value: searchTerm, onChange: (e) => setSearchTerm(e.target.value) })),
-                React.createElement("div", { className: "overflow-x-auto w-full" },
-                    React.createElement("table", { className: "w-full text-left min-w-[620px]" },
-                        React.createElement("thead", { className: "bg-gray-50 text-gray-600 border-b" },
-                            React.createElement("tr", null,
-                                React.createElement("th", { className: "p-4" }, "No"),
-                                React.createElement("th", { className: "p-4" }, "Nama Lengkap"),
-                                React.createElement("th", { className: "p-4" }, "Bin/Binti"),
-                                React.createElement("th", { className: "p-4" }, "RT"),
-                                React.createElement("th", { className: "p-4" }, "Jenis Qurban"),
-                                React.createElement("th", { className: "p-4" }, "Kelp"),
-                                React.createElement("th", { className: "p-4 text-center" }, "Status"),
-                                React.createElement("th", { className: "p-4 text-right" }, "Aksi"))),
-                        React.createElement("tbody", { className: "divide-y divide-gray-100" }, filtered.map((m, idx) => (React.createElement("tr", { key: m.id, className: "hover:bg-gray-50" },
-                            React.createElement("td", { className: "p-4 text-gray-700" }, idx + 1),
-                            React.createElement("td", { className: "p-4 font-medium text-gray-900" }, m.nama),
-                            React.createElement("td", { className: "p-4 text-gray-600" }, m.bin || m.binti || '-'),
-                            React.createElement("td", { className: "p-4 text-gray-600" },
-                                "RT ",
-                                m.rt.toString().padStart(2, '0')),
-                            React.createElement("td", { className: "p-4" },
-                                React.createElement("span", { className: `px-2 py-1 rounded-md text-xs font-semibold ${m.jenis === 'Domba' ? 'bg-amber-100 text-amber-800' : 'bg-emerald-100 text-emerald-800'}` }, m.jenis || 'Sapi')),
-                            React.createElement("td", { className: "p-4 font-bold text-emerald-700" }, m.kelompok),
-                            React.createElement("td", { className: "p-4 text-center" },
-                                React.createElement("span", { className: `px-2 py-1 rounded-md text-xs font-semibold ${m.status === 'Lunas' ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'}` }, m.status)),
-                            React.createElement("td", { className: "p-4 flex justify-end items-center gap-2" },
-                                React.createElement("button", { onClick: () => handlePrintWakalah(m), title: "Cetak Surat Wakalah", className: "text-emerald-600 hover:text-emerald-800 p-1.5 bg-emerald-50 hover:bg-emerald-100 rounded transition-colors" },
-                                    React.createElement(FileText, { className: "w-4 h-4" })),
-                                React.createElement("button", { onClick: () => handlePrintKuponMudhohi(m), title: "Cetak Kupon Mudhohi", className: "text-blue-600 hover:text-blue-800 p-1.5 bg-blue-50 hover:bg-blue-100 rounded transition-colors" },
-                                    React.createElement(Ticket, { className: "w-4 h-4" })),
-                                React.createElement("button", { onClick: () => setEditingMudhohi(m), title: "Edit Data", className: "text-indigo-500 hover:text-indigo-700 p-1.5 bg-indigo-50 hover:bg-indigo-100 rounded transition-colors" },
-                                    React.createElement(Edit, { className: "w-4 h-4" })),
-                                React.createElement("button", { onClick: () => setMudhohi(mudhohi.filter(item => item.id !== m.id)), title: "Hapus Data", className: "text-red-500 hover:text-red-700 p-1.5 bg-red-50 hover:bg-red-100 rounded transition-colors" },
-                                    React.createElement(Trash2, { className: "w-4 h-4" }))))))))))));
+                        " Cetak Kupon"),
+                    React.createElement("button", {
+                        type: "button",
+                        onClick: () => setShowAddMudhohi(true),
+                        className: "bg-[#04583d] hover:bg-[#034530] text-white px-3.5 py-2 rounded-lg flex items-center text-xs sm:text-sm font-bold shadow-sm transition-colors"
+                    },
+                        React.createElement(Plus, { className: "w-4 h-4 mr-1.5" }),
+                        " Tambah Mudhohi")
+                )
+            ),
+            // Quick Stat Badges
+            React.createElement("div", { className: "grid grid-cols-2 sm:grid-cols-5 gap-2.5 sm:gap-3" },
+                React.createElement("div", { className: "bg-white p-3 rounded-xl border border-slate-200/80 shadow-xs flex items-center justify-between" },
+                    React.createElement("div", null,
+                        React.createElement("span", { className: "text-[11px] font-semibold text-slate-400 uppercase tracking-wider block" }, "Total Peserta"),
+                        React.createElement("span", { className: "text-lg font-black text-slate-800" }, totalMudhohi)),
+                    React.createElement("span", { className: "w-8 h-8 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center font-bold text-xs" },
+                        React.createElement(Users, { className: "w-4 h-4" }))
+                ),
+                React.createElement("div", { className: "bg-white p-3 rounded-xl border border-emerald-200 shadow-xs flex items-center justify-between" },
+                    React.createElement("div", null,
+                        React.createElement("span", { className: "text-[11px] font-semibold text-emerald-600 uppercase tracking-wider block" }, "Peserta Sapi"),
+                        React.createElement("span", { className: "text-lg font-black text-emerald-700" }, totalSapi)),
+                    React.createElement("span", { className: "w-8 h-8 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold text-xs" },
+                        React.createElement(Beef, { className: "w-4 h-4" }))
+                ),
+                React.createElement("div", { className: "bg-white p-3 rounded-xl border border-amber-200 shadow-xs flex items-center justify-between" },
+                    React.createElement("div", null,
+                        React.createElement("span", { className: "text-[11px] font-semibold text-amber-600 uppercase tracking-wider block" }, "Peserta Domba"),
+                        React.createElement("span", { className: "text-lg font-black text-amber-700" }, totalDomba)),
+                    React.createElement("span", { className: "w-8 h-8 rounded-lg bg-amber-50 text-amber-700 flex items-center justify-center font-bold text-xs" }, "🐑")
+                ),
+                React.createElement("div", { className: "bg-white p-3 rounded-xl border border-green-200 shadow-xs flex items-center justify-between" },
+                    React.createElement("div", null,
+                        React.createElement("span", { className: "text-[11px] font-semibold text-green-600 uppercase tracking-wider block" }, "Lunas"),
+                        React.createElement("span", { className: "text-lg font-black text-green-700" }, totalLunas)),
+                    React.createElement("span", { className: "w-8 h-8 rounded-lg bg-green-50 text-green-700 flex items-center justify-center font-bold text-xs" }, "✓")
+                ),
+                React.createElement("div", { className: "bg-white p-3 rounded-xl border border-rose-200 shadow-xs flex items-center justify-between col-span-2 sm:col-span-1" },
+                    React.createElement("div", null,
+                        React.createElement("span", { className: "text-[11px] font-semibold text-rose-500 uppercase tracking-wider block" }, "Belum Lunas"),
+                        React.createElement("span", { className: "text-lg font-black text-rose-600" }, totalBelum)),
+                    React.createElement("span", { className: "w-8 h-8 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center font-bold text-xs" }, "!")
+                )
+            ),
+            // Multi-criteria Filter Bar & Search
+            React.createElement("div", { className: "bg-white rounded-xl shadow-xs border border-slate-200/80 p-3.5 space-y-3" },
+                React.createElement("div", { className: "flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between" },
+                    // Search bar
+                    React.createElement("div", { className: "flex-1 flex items-center bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm focus-within:ring-2 focus-within:ring-emerald-500/20 focus-within:border-emerald-500 transition-all" },
+                        React.createElement(Search, { className: "w-4 h-4 text-slate-400 mr-2 flex-shrink-0" }),
+                        React.createElement("input", {
+                            type: "text",
+                            placeholder: "Cari nama, bin/binti, atau RT...",
+                            className: "bg-transparent border-none outline-none w-full text-slate-800 placeholder-slate-400 text-sm",
+                            value: searchTerm,
+                            onChange: (e) => setSearchTerm(e.target.value)
+                        }),
+                        searchTerm ? React.createElement("button", {
+                            type: "button",
+                            onClick: () => setSearchTerm(''),
+                            className: "text-slate-400 hover:text-slate-600 ml-1"
+                        }, React.createElement(X, { className: "w-3.5 h-3.5" })) : null
+                    ),
+                    // Filter Pills Row
+                    React.createElement("div", { className: "flex flex-wrap items-center gap-2 text-xs" },
+                        // Jenis Filter
+                        React.createElement("div", { className: "flex items-center bg-slate-100 p-0.5 rounded-lg border border-slate-200" },
+                            React.createElement("button", {
+                                type: "button",
+                                onClick: () => setMudhohiJenisFilter('semua'),
+                                className: `px-2.5 py-1 rounded-md font-semibold transition-all ${mudhohiJenisFilter === 'semua' ? 'bg-white text-slate-800 shadow-xs' : 'text-slate-600 hover:text-slate-900'}`
+                            }, "Semua Jenis"),
+                            React.createElement("button", {
+                                type: "button",
+                                onClick: () => setMudhohiJenisFilter('Sapi'),
+                                className: `px-2.5 py-1 rounded-md font-semibold transition-all ${mudhohiJenisFilter === 'Sapi' ? 'bg-[#04583d] text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'}`
+                            }, "Sapi"),
+                            React.createElement("button", {
+                                type: "button",
+                                onClick: () => setMudhohiJenisFilter('Domba'),
+                                className: `px-2.5 py-1 rounded-md font-semibold transition-all ${mudhohiJenisFilter === 'Domba' ? 'bg-amber-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'}`
+                            }, "Domba")
+                        ),
+                        // Status Filter
+                        React.createElement("div", { className: "flex items-center bg-slate-100 p-0.5 rounded-lg border border-slate-200" },
+                            React.createElement("button", {
+                                type: "button",
+                                onClick: () => setMudhohiStatusFilter('semua'),
+                                className: `px-2.5 py-1 rounded-md font-semibold transition-all ${mudhohiStatusFilter === 'semua' ? 'bg-white text-slate-800 shadow-xs' : 'text-slate-600 hover:text-slate-900'}`
+                            }, "Semua Status"),
+                            React.createElement("button", {
+                                type: "button",
+                                onClick: () => setMudhohiStatusFilter('Lunas'),
+                                className: `px-2.5 py-1 rounded-md font-semibold transition-all ${mudhohiStatusFilter === 'Lunas' ? 'bg-green-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'}`
+                            }, "Lunas"),
+                            React.createElement("button", {
+                                type: "button",
+                                onClick: () => setMudhohiStatusFilter('Belum Lunas'),
+                                className: `px-2.5 py-1 rounded-md font-semibold transition-all ${mudhohiStatusFilter === 'Belum Lunas' ? 'bg-rose-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'}`
+                            }, "Belum")
+                        ),
+                        // Kelompok Sapi Dropdown Filter
+                        React.createElement("select", {
+                            value: mudhohiKelompokFilter,
+                            onChange: (e) => setMudhohiKelompokFilter(e.target.value),
+                            className: "bg-slate-100 hover:bg-slate-200/80 border border-slate-200 rounded-lg px-2.5 py-1 font-semibold text-slate-700 outline-none cursor-pointer"
+                        },
+                            React.createElement("option", { value: "semua" }, "Semua Kelompok"),
+                            availableKelompokList.map(k => React.createElement("option", { key: k, value: k }, `Kelompok #${k}`)),
+                            React.createElement("option", { value: "belum" }, "Belum Ada Kelompok")
+                        ),
+                        // Reset button if any filter active
+                        (searchTerm || mudhohiJenisFilter !== 'semua' || mudhohiStatusFilter !== 'semua' || mudhohiKelompokFilter !== 'semua') ?
+                            React.createElement("button", {
+                                type: "button",
+                                onClick: () => { setSearchTerm(''); setMudhohiJenisFilter('semua'); setMudhohiStatusFilter('semua'); setMudhohiKelompokFilter('semua'); },
+                                className: "text-slate-500 hover:text-rose-600 px-2 py-1 font-bold underline"
+                            }, "Reset") : null
+                    )
+                )
+            ),
+            // Mudhohi Table
+            React.createElement("div", { className: "bg-white rounded-xl shadow-xs border border-slate-200/80 overflow-hidden" },
+                filtered.length === 0 ? (
+                    React.createElement("div", { className: "p-12 text-center" },
+                        React.createElement(Users, { className: "w-12 h-12 text-slate-300 mx-auto mb-3" }),
+                        React.createElement("h3", { className: "text-base font-bold text-slate-700" }, "Tidak ada data mudhohi ditemukan"),
+                        React.createElement("p", { className: "text-xs text-slate-400 mt-1" }, "Coba ubah kata kunci pencarian atau reset filter yang dipilih."),
+                        React.createElement("button", {
+                            type: "button",
+                            onClick: () => { setSearchTerm(''); setMudhohiJenisFilter('semua'); setMudhohiStatusFilter('semua'); setMudhohiKelompokFilter('semua'); },
+                            className: "mt-4 px-4 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 rounded-lg text-xs font-bold border border-emerald-300 transition-colors"
+                        }, "Reset Filter")
+                    )
+                ) : (
+                    React.createElement("div", { className: "overflow-x-auto w-full" },
+                        React.createElement("table", { className: "w-full text-left min-w-[640px]" },
+                            React.createElement("thead", { className: "bg-slate-50 text-slate-600 text-xs uppercase tracking-wider border-b border-slate-200" },
+                                React.createElement("tr", null,
+                                    React.createElement("th", { className: "p-3.5 text-center w-12" }, "No"),
+                                    React.createElement("th", { className: "p-3.5" }, "Nama Lengkap"),
+                                    React.createElement("th", { className: "p-3.5" }, "Bin / Binti"),
+                                    React.createElement("th", { className: "p-3.5 text-center" }, "RT"),
+                                    React.createElement("th", { className: "p-3.5" }, "Jenis Qurban"),
+                                    React.createElement("th", { className: "p-3.5 text-center" }, "Kelompok"),
+                                    React.createElement("th", { className: "p-3.5 text-center" }, "Status"),
+                                    React.createElement("th", { className: "p-3.5 text-right" }, "Aksi")
+                                )
+                            ),
+                            React.createElement("tbody", { className: "divide-y divide-slate-100 text-sm" },
+                                filtered.map((m, idx) => (
+                                    React.createElement("tr", { key: m.id, className: "hover:bg-slate-50/70 transition-colors" },
+                                        React.createElement("td", { className: "p-3.5 text-center text-slate-500 text-xs font-bold" }, idx + 1),
+                                        React.createElement("td", { className: "p-3.5 font-bold text-slate-800" }, m.nama),
+                                        React.createElement("td", { className: "p-3.5 text-slate-600" }, m.bin || m.binti || '-'),
+                                        React.createElement("td", { className: "p-3.5 text-center text-slate-600 font-semibold text-xs" },
+                                            `RT ${String(m.rt || 0).padStart(2, '0')}`
+                                        ),
+                                        React.createElement("td", { className: "p-3.5" },
+                                            React.createElement("span", {
+                                                className: `px-2.5 py-1 rounded-md text-xs font-bold inline-flex items-center gap-1 ${m.jenis === 'Domba' ? 'bg-amber-100 text-amber-800' : 'bg-emerald-100 text-emerald-800'}`
+                                            },
+                                                m.jenis === 'Domba' ? '🐑 Domba' : '🐄 Sapi'
+                                            )
+                                        ),
+                                        React.createElement("td", { className: "p-3.5 text-center" },
+                                            m.jenis === 'Domba' ? (
+                                                React.createElement("span", { className: "text-slate-400 text-xs italic" }, "Mandiri")
+                                            ) : (
+                                                m.kelompok && m.kelompok !== '-' && m.kelompok !== 'Belum' ? (
+                                                    React.createElement("span", { className: "px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200" },
+                                                        `Kelompok #${m.kelompok}`
+                                                    )
+                                                ) : (
+                                                    React.createElement("span", { className: "px-2 py-0.5 rounded text-xs font-bold bg-slate-100 text-slate-500" }, "Belum Ada")
+                                                )
+                                            )
+                                        ),
+                                        React.createElement("td", { className: "p-3.5 text-center" },
+                                            React.createElement("span", {
+                                                className: `px-2.5 py-1 rounded-md text-xs font-bold ${m.status === 'Lunas' ? 'bg-green-100 text-green-700' : 'bg-rose-100 text-rose-700'}`
+                                            }, m.status || 'Belum Lunas')
+                                        ),
+                                        React.createElement("td", { className: "p-3.5 flex justify-end items-center gap-1.5" },
+                                            React.createElement("button", {
+                                                type: "button",
+                                                onClick: () => handlePrintWakalah(m),
+                                                title: "Cetak Surat Akad Wakalah",
+                                                className: "text-emerald-700 hover:text-emerald-900 p-1.5 bg-emerald-50 hover:bg-emerald-100 rounded-lg transition-colors"
+                                            }, React.createElement(FileText, { className: "w-4 h-4" })),
+                                            React.createElement("button", {
+                                                type: "button",
+                                                onClick: () => handlePrintKuponMudhohi(m),
+                                                title: "Cetak Kupon Mudhohi",
+                                                className: "text-blue-600 hover:text-blue-800 p-1.5 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors"
+                                            }, React.createElement(Ticket, { className: "w-4 h-4" })),
+                                            React.createElement("button", {
+                                                type: "button",
+                                                onClick: () => setEditingMudhohi(m),
+                                                title: "Sunting Data Mudhohi",
+                                                className: "text-indigo-600 hover:text-indigo-800 p-1.5 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition-colors"
+                                            }, React.createElement(Edit, { className: "w-4 h-4" })),
+                                            React.createElement("button", {
+                                                type: "button",
+                                                onClick: () => {
+                                                    if (window.confirm(`Hapus data mudhohi "${m.nama}"?`)) {
+                                                        setMudhohi(mudhohi.filter(item => item.id !== m.id));
+                                                        showToast(`Data ${m.nama} berhasil dihapus.`, 'info');
+                                                    }
+                                                },
+                                                title: "Hapus Mudhohi",
+                                                className: "text-rose-600 hover:text-rose-800 p-1.5 bg-rose-50 hover:bg-rose-100 rounded-lg transition-colors"
+                                            }, React.createElement(Trash2, { className: "w-4 h-4" }))
+                                        )
+                                    )
+                                ))
+                            )
+                        )
+                    )
+                )
+            )
+        ));
     };
     const renderKelompok = () => {
         const kelompokSapiMap = {};
@@ -1881,162 +2360,690 @@ function App() {
                 kelompokSapiMap[m.kelompok].push(m);
             }
         });
+        const kelompokKeys = Object.keys(kelompokSapiMap).sort((a, b) => Number(a) - Number(b));
         const daftarDomba = mudhohi.filter(m => m.jenis === 'Domba');
+        const pesertaSapiTotal = mudhohi.filter(m => !m.jenis || m.jenis === 'Sapi').length;
+        const pesertaSapiBelum = mudhohi.filter(m => (!m.jenis || m.jenis === 'Sapi') && (!m.kelompok || m.kelompok === '-' || m.kelompok === 'Belum'));
+        const kelompokPenuh = kelompokKeys.filter(k => kelompokSapiMap[k].length === 7).length;
+        const totalSlotSisa = kelompokKeys.reduce((acc, k) => acc + Math.max(0, 7 - kelompokSapiMap[k].length), 0);
+
+        const handleExportKelompokCSV = () => {
+            const headers = ['Kelompok Sapi', 'Slot Ke-', 'Nama Mudhohi', 'Bin / Binti', 'Asal RT', 'Status Pembayaran'];
+            const rows = [];
+            kelompokKeys.forEach(k => {
+                kelompokSapiMap[k].forEach((p, idx) => {
+                    rows.push([
+                        `Kelompok #${k}`,
+                        idx + 1,
+                        p.nama,
+                        p.bin || p.binti || '-',
+                        `RT ${String(p.rt || 0).padStart(2, '0')}`,
+                        p.status || 'Belum Lunas'
+                    ]);
+                });
+            });
+            exportToCSV(`kelompok_sapi_${activeYear.replace(/[^a-zA-Z0-9]/g, '_')}.csv`, headers, rows);
+        };
+
+        const handleExportDombaCSV = () => {
+            const headers = ['No', 'Nama Lengkap', 'Bin / Binti', 'Asal RT', 'Status Pembayaran'];
+            const rows = daftarDomba.map((d, idx) => [
+                idx + 1,
+                d.nama,
+                d.bin || d.binti || '-',
+                `RT ${String(d.rt || 0).padStart(2, '0')}`,
+                d.status || 'Belum Lunas'
+            ]);
+            exportToCSV(`peserta_domba_${activeYear.replace(/[^a-zA-Z0-9]/g, '_')}.csv`, headers, rows);
+        };
+
         return (React.createElement("div", { className: "space-y-6" },
-            React.createElement("div", { className: "flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b pb-2" },
-                React.createElement("h2", { className: "text-2xl font-bold text-gray-800" }, "Distribusi Kelompok Hewan"),
-                React.createElement("div", { className: "flex space-x-2 bg-gray-100 p-1 rounded-lg" },
-                    React.createElement("button", { onClick: () => setKelompokSubTab('sapi'), className: `px-4 py-1.5 rounded-md text-sm font-bold transition-all ${kelompokSubTab === 'sapi' ? 'bg-emerald-600 text-white shadow-sm' : 'text-gray-600 hover:text-gray-900'}` }, "Kelompok Sapi"),
-                    React.createElement("button", { onClick: () => setKelompokSubTab('domba'), className: `px-4 py-1.5 rounded-md text-sm font-bold transition-all ${kelompokSubTab === 'domba' ? 'bg-emerald-600 text-white shadow-sm' : 'text-gray-600 hover:text-gray-900'}` }, "Kelompok Domba"))),
-            kelompokSubTab === 'sapi' ? (React.createElement("div", { className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" }, Object.keys(kelompokSapiMap).length === 0 ? (React.createElement("p", { className: "text-gray-500 italic col-span-full py-8 text-center bg-white rounded-xl border" }, "Belum ada peserta kelompok sapi terdaftar.")) : (Object.keys(kelompokSapiMap).map(k => (React.createElement("div", { key: k, className: "bg-white border border-emerald-100 rounded-xl shadow-sm overflow-hidden" },
-                React.createElement("div", { className: "bg-emerald-600 text-white p-4 flex justify-between items-center" },
-                    React.createElement("h3", { className: "font-bold flex items-center" },
-                        React.createElement(Beef, { className: "w-5 h-5 mr-2" }),
-                        " Kelompok Sapi #",
-                        k),
-                    React.createElement("span", { className: "bg-emerald-800 px-2 py-1 rounded text-xs font-bold" },
-                        kelompokSapiMap[k].length,
-                        " / 7 Peserta")),
-                React.createElement("ul", { className: "divide-y divide-gray-100 p-2" },
-                    kelompokSapiMap[k].map((p, i) => (React.createElement("li", { key: i, className: "p-2 flex items-center space-x-3 text-sm" },
-                        React.createElement("span", { className: "w-6 h-6 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-xs" }, i + 1),
-                        React.createElement("span", { className: "font-medium text-gray-800 truncate" }, p.nama)))),
-                    Array.from({ length: 7 - kelompokSapiMap[k].length }).map((_, i) => (React.createElement("li", { key: `empty-${i}`, className: "p-2 flex items-center space-x-3 text-sm text-gray-400" },
-                        React.createElement("span", { className: "w-6 h-6 rounded-full bg-gray-100 flex items-center justify-center font-bold text-xs border border-dashed border-gray-300" }),
-                        React.createElement("span", { className: "italic" }, "Slot Kosong"))))))))))) : (React.createElement("div", { className: "bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden" },
-                React.createElement("div", { className: "p-4 bg-amber-50 border-b border-amber-100 text-amber-900 font-medium text-sm" }, "Daftar peserta qurban hewan Domba / Kambing (Perorangan / Mandiri)"),
-                React.createElement("div", { className: "overflow-x-auto w-full" },
-                    React.createElement("table", { className: "w-full text-left min-w-[500px]" },
-                        React.createElement("thead", { className: "bg-gray-50 text-gray-600 border-b" },
-                            React.createElement("tr", null,
-                                React.createElement("th", { className: "p-4" }, "No"),
-                                React.createElement("th", { className: "p-4" }, "Nama Lengkap"),
-                                React.createElement("th", { className: "p-4" }, "Bin / Binti"),
-                                React.createElement("th", { className: "p-4" }, "Asal RT"),
-                                React.createElement("th", { className: "p-4 text-center" }, "Status"))),
-                        React.createElement("tbody", { className: "divide-y divide-gray-100" }, daftarDomba.length === 0 ? (React.createElement("tr", null,
-                            React.createElement("td", { colSpan: "5", className: "p-8 text-center text-gray-500 italic" }, "Belum ada peserta qurban domba terdaftar."))) : (daftarDomba.map((d, idx) => (React.createElement("tr", { key: d.id, className: "hover:bg-gray-50" },
-                            React.createElement("td", { className: "p-4 text-gray-700" }, idx + 1),
-                            React.createElement("td", { className: "p-4 font-bold text-gray-900" }, d.nama),
-                            React.createElement("td", { className: "p-4 text-gray-600" }, d.bin || d.binti || '-'),
-                            React.createElement("td", { className: "p-4 text-gray-600" },
-                                "RT ",
-                                d.rt.toString().padStart(2, '0')),
-                            React.createElement("td", { className: "p-4 text-center" },
-                                React.createElement("span", { className: "px-2 py-1 bg-green-100 text-green-700 rounded-md text-xs font-semibold" }, d.status)))))))))))));
+            // Header & Subtabs
+            React.createElement("div", { className: "flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b pb-3" },
+                React.createElement("div", null,
+                    React.createElement("h2", { className: "text-2xl font-bold text-gray-800" }, "Distribusi Kelompok Hewan"),
+                    React.createElement("p", { className: "text-xs text-gray-500 mt-0.5" }, "Pengelompokan 7 orang per ekor sapi & inventarisasi qurban domba.")
+                ),
+                React.createElement("div", { className: "flex flex-wrap items-center gap-2" },
+                    kelompokSubTab === 'sapi' ? (
+                        React.createElement(React.Fragment, null,
+                            React.createElement("button", {
+                                type: "button",
+                                onClick: handleExportKelompokCSV,
+                                className: "bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 px-3 py-1.5 rounded-lg flex items-center text-xs font-bold shadow-xs transition-colors"
+                            },
+                                React.createElement(Download, { className: "w-3.5 h-3.5 mr-1 text-slate-600" }),
+                                " Ekspor CSV"),
+                            React.createElement("button", {
+                                type: "button",
+                                onClick: () => handlePrintDokumenKhusus('Lembar Syiar Jagal (Kelompok Sapi)'),
+                                className: "bg-blue-50 hover:bg-blue-100 text-blue-800 border border-blue-300 px-3 py-1.5 rounded-lg flex items-center text-xs font-bold shadow-xs transition-colors"
+                            },
+                                React.createElement(Printer, { className: "w-3.5 h-3.5 mr-1 text-blue-700" }),
+                                " Cetak Syiar Jagal")
+                        )
+                    ) : (
+                        React.createElement("button", {
+                            type: "button",
+                            onClick: handleExportDombaCSV,
+                            className: "bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 px-3 py-1.5 rounded-lg flex items-center text-xs font-bold shadow-xs transition-colors"
+                        },
+                            React.createElement(Download, { className: "w-3.5 h-3.5 mr-1 text-slate-600" }),
+                            " Ekspor CSV Domba")
+                    ),
+                    React.createElement("div", { className: "flex space-x-1 bg-slate-100 p-1 rounded-lg border border-slate-200" },
+                        React.createElement("button", {
+                            onClick: () => setKelompokSubTab('sapi'),
+                            className: `px-3.5 py-1.5 rounded-md text-xs sm:text-sm font-bold transition-all flex items-center gap-1.5 ${kelompokSubTab === 'sapi' ? 'bg-[#04583d] text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'}`
+                        },
+                            React.createElement(Beef, { className: "w-4 h-4" }),
+                            `Kelompok Sapi (${kelompokKeys.length})`
+                        ),
+                        React.createElement("button", {
+                            onClick: () => setKelompokSubTab('domba'),
+                            className: `px-3.5 py-1.5 rounded-md text-xs sm:text-sm font-bold transition-all flex items-center gap-1.5 ${kelompokSubTab === 'domba' ? 'bg-amber-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'}`
+                        },
+                            React.createElement("span", null, "🐑"),
+                            `Domba (${daftarDomba.length})`
+                        )
+                    )
+                )
+            ),
+            // Unassigned Sapi Warning Banner
+            (kelompokSubTab === 'sapi' && pesertaSapiBelum.length > 0) ? (
+                React.createElement("div", { className: "bg-amber-50 border border-amber-300 rounded-xl p-3.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-xs" },
+                    React.createElement("div", { className: "flex items-center gap-3" },
+                        React.createElement("span", { className: "w-8 h-8 rounded-lg bg-amber-200 text-amber-800 flex items-center justify-center font-bold text-sm flex-shrink-0" }, "!"),
+                        React.createElement("div", null,
+                            React.createElement("strong", { className: "text-amber-900 text-sm block" },
+                                `${pesertaSapiBelum.length} Peserta Sapi Belum Memiliki Kelompok`
+                            ),
+                            React.createElement("span", { className: "text-amber-700 text-xs" },
+                                `Peserta: ${pesertaSapiBelum.map(p => p.nama).slice(0, 3).join(', ')}${pesertaSapiBelum.length > 3 ? ` dan ${pesertaSapiBelum.length - 3} lainnya` : ''}.`
+                            )
+                        )
+                    ),
+                    React.createElement("button", {
+                        type: "button",
+                        onClick: () => {
+                            const nextGroupNum = kelompokKeys.length > 0 ? (Math.max(...kelompokKeys.map(Number)) + 1) : 1;
+                            setAssignModalKelompok(nextGroupNum);
+                        },
+                        className: "px-3.5 py-1.5 bg-amber-600 hover:bg-amber-700 text-white rounded-lg text-xs font-bold transition-colors flex-shrink-0 shadow-xs"
+                    }, "+ Buat Kelompok Baru")
+                )
+            ) : null,
+            // Sapi Content
+            kelompokSubTab === 'sapi' ? (
+                React.createElement("div", { className: "space-y-5" },
+                    // Summary Strip
+                    React.createElement("div", { className: "grid grid-cols-2 sm:grid-cols-4 gap-3" },
+                        React.createElement("div", { className: "bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs" },
+                            React.createElement("span", { className: "text-[11px] font-semibold text-slate-400 uppercase tracking-wider block" }, "Total Hewan Sapi"),
+                            React.createElement("span", { className: "text-xl font-black text-slate-800" }, `${kelompokKeys.length} Ekor`)
+                        ),
+                        React.createElement("div", { className: "bg-white p-3.5 rounded-xl border border-emerald-200 shadow-xs" },
+                            React.createElement("span", { className: "text-[11px] font-semibold text-emerald-600 uppercase tracking-wider block" }, "Mudhohi Sapi"),
+                            React.createElement("span", { className: "text-xl font-black text-emerald-700" }, `${pesertaSapiTotal} Orang`)
+                        ),
+                        React.createElement("div", { className: "bg-white p-3.5 rounded-xl border border-green-200 shadow-xs" },
+                            React.createElement("span", { className: "text-[11px] font-semibold text-green-600 uppercase tracking-wider block" }, "Kelompok Penuh (7/7)"),
+                            React.createElement("span", { className: "text-xl font-black text-green-700" }, `${kelompokPenuh} Sapi`)
+                        ),
+                        React.createElement("div", { className: "bg-white p-3.5 rounded-xl border border-amber-200 shadow-xs" },
+                            React.createElement("span", { className: "text-[11px] font-semibold text-amber-600 uppercase tracking-wider block" }, "Slot Kosong"),
+                            React.createElement("span", { className: "text-xl font-black text-amber-700" }, `${totalSlotSisa} Slot`)
+                        )
+                    ),
+                    // Groups Grid
+                    React.createElement("div", { className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5" },
+                        kelompokKeys.length === 0 ? (
+                            React.createElement("div", { className: "col-span-full bg-white p-12 text-center rounded-2xl border border-dashed border-slate-300 text-slate-400" },
+                                React.createElement(Beef, { className: "w-12 h-12 text-slate-300 mx-auto mb-3" }),
+                                React.createElement("p", { className: "font-bold text-slate-700" }, "Belum ada kelompok sapi yang dibentuk."),
+                                React.createElement("p", { className: "text-xs text-slate-400 mt-1" }, "Tambahkan peserta sapi pada menu Data Mudhohi dan tentukan nomor kelompoknya.")
+                            )
+                        ) : (
+                            kelompokKeys.map(k => {
+                                const members = kelompokSapiMap[k];
+                                const isFull = members.length === 7;
+                                const emptyCount = Math.max(0, 7 - members.length);
+                                return React.createElement("div", {
+                                    key: k,
+                                    className: "bg-white border border-slate-200/90 rounded-2xl shadow-xs overflow-hidden flex flex-col transition-all hover:shadow-md"
+                                },
+                                    // Card Header
+                                    React.createElement("div", {
+                                        className: `p-4 flex justify-between items-center text-white ${isFull ? 'bg-[#04583d]' : 'bg-emerald-800'}`
+                                    },
+                                        React.createElement("div", { className: "flex items-center space-x-2" },
+                                            React.createElement(Beef, { className: "w-5 h-5 text-emerald-300" }),
+                                            React.createElement("h3", { className: "font-black text-base tracking-tight" }, `Kelompok Sapi #${k}`)
+                                        ),
+                                        React.createElement("span", {
+                                            className: `px-2.5 py-0.5 rounded-full text-xs font-black shadow-xs ${isFull ? 'bg-amber-400 text-slate-900' : 'bg-emerald-950/60 text-emerald-200 border border-emerald-600/50'}`
+                                        },
+                                            isFull ? "7 / 7 Penuh" : `${members.length} / 7 Peserta`
+                                        )
+                                    ),
+                                    // Members List
+                                    React.createElement("ul", { className: "divide-y divide-slate-100 p-2.5 flex-1 space-y-1" },
+                                        members.map((p, i) => (
+                                            React.createElement("li", {
+                                                key: p.id,
+                                                className: "p-2 rounded-xl flex items-center justify-between hover:bg-slate-50 transition-colors text-sm"
+                                            },
+                                                React.createElement("div", { className: "flex items-center space-x-2.5 min-w-0 flex-1 pr-2" },
+                                                    React.createElement("span", {
+                                                        className: "w-6 h-6 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center font-black text-xs flex-shrink-0"
+                                                    }, i + 1),
+                                                    React.createElement("div", { className: "min-w-0 flex-1" },
+                                                        React.createElement("p", { className: "font-bold text-slate-800 truncate leading-tight" }, p.nama),
+                                                        React.createElement("p", { className: "text-[11px] text-slate-400 truncate" },
+                                                            `${p.bin || p.binti || '-'} • RT ${String(p.rt || 0).padStart(2, '0')}`
+                                                        )
+                                                    )
+                                                ),
+                                                React.createElement("button", {
+                                                    type: "button",
+                                                    onClick: () => {
+                                                        if (window.confirm(`Keluarkan "${p.nama}" dari Kelompok #${k}?`)) {
+                                                            setMudhohi(prev => prev.map(item => item.id === p.id ? { ...item, kelompok: 'Belum' } : item));
+                                                            showToast(`${p.nama} dikeluarkan dari Kelompok #${k}`, 'info');
+                                                        }
+                                                    },
+                                                    title: "Keluarkan dari kelompok ini",
+                                                    className: "text-slate-300 hover:text-rose-500 p-1 rounded-lg transition-colors flex-shrink-0"
+                                                }, React.createElement(X, { className: "w-3.5 h-3.5" }))
+                                            )
+                                        )),
+                                        // Empty Slots
+                                        Array.from({ length: emptyCount }).map((_, i) => (
+                                            React.createElement("li", {
+                                                key: `empty-${i}`,
+                                                className: "p-2 rounded-xl flex items-center justify-between border border-dashed border-slate-200 bg-slate-50/50 text-sm"
+                                            },
+                                                React.createElement("div", { className: "flex items-center space-x-2.5 text-slate-400" },
+                                                    React.createElement("span", {
+                                                        className: "w-6 h-6 rounded-full bg-slate-200/60 text-slate-500 flex items-center justify-center font-bold text-xs"
+                                                    }, members.length + i + 1),
+                                                    React.createElement("span", { className: "italic text-xs font-medium" }, "Slot Kosong")
+                                                ),
+                                                React.createElement("button", {
+                                                    type: "button",
+                                                    onClick: () => setAssignModalKelompok(k),
+                                                    className: "text-xs font-bold text-emerald-700 hover:text-emerald-900 bg-emerald-100 hover:bg-emerald-200 px-2 py-1 rounded-md transition-colors"
+                                                }, "+ Isi Slot")
+                                            )
+                                        ))
+                                    ),
+                                    // Card Footer
+                                    React.createElement("div", { className: "p-2.5 bg-slate-50 border-t border-slate-100 flex justify-between items-center text-xs" },
+                                        React.createElement("span", { className: "text-slate-400" }, `Kapasitas Syar'i: 7 Orang`),
+                                        React.createElement("button", {
+                                            type: "button",
+                                            onClick: () => setAssignModalKelompok(k),
+                                            className: "font-bold text-emerald-700 hover:text-emerald-900"
+                                        }, "Kelola Anggota")
+                                    )
+                                );
+                            })
+                        )
+                    )
+                )
+            ) : (
+                // Domba Content
+                React.createElement("div", { className: "bg-white rounded-2xl shadow-xs border border-slate-200/80 overflow-hidden" },
+                    React.createElement("div", { className: "p-4 bg-amber-50 border-b border-amber-200 text-amber-900 flex justify-between items-center text-sm font-semibold" },
+                        React.createElement("span", null, "Daftar Peserta Qurban Hewan Domba / Kambing (1 Ekor = 1 Mudhohi)"),
+                        React.createElement("span", { className: "px-2.5 py-1 bg-amber-200/80 text-amber-900 font-bold rounded-lg text-xs" },
+                            `Total: ${daftarDomba.length} Ekor`
+                        )
+                    ),
+                    React.createElement("div", { className: "overflow-x-auto w-full" },
+                        React.createElement("table", { className: "w-full text-left min-w-[500px]" },
+                            React.createElement("thead", { className: "bg-slate-50 text-slate-600 border-b border-slate-200 text-xs uppercase tracking-wider" },
+                                React.createElement("tr", null,
+                                    React.createElement("th", { className: "p-3.5 text-center w-12" }, "No"),
+                                    React.createElement("th", { className: "p-3.5" }, "Nama Lengkap"),
+                                    React.createElement("th", { className: "p-3.5" }, "Bin / Binti"),
+                                    React.createElement("th", { className: "p-3.5 text-center" }, "Asal RT"),
+                                    React.createElement("th", { className: "p-3.5 text-center" }, "Status")
+                                )
+                            ),
+                            React.createElement("tbody", { className: "divide-y divide-slate-100 text-sm" },
+                                daftarDomba.length === 0 ? (
+                                    React.createElement("tr", null,
+                                        React.createElement("td", { colSpan: "5", className: "p-8 text-center text-slate-400 italic" }, "Belum ada peserta qurban domba terdaftar.")
+                                    )
+                                ) : (
+                                    daftarDomba.map((d, idx) => (
+                                        React.createElement("tr", { key: d.id, className: "hover:bg-slate-50 transition-colors" },
+                                            React.createElement("td", { className: "p-3.5 text-center text-slate-500 font-bold text-xs" }, idx + 1),
+                                            React.createElement("td", { className: "p-3.5 font-bold text-slate-800" }, d.nama),
+                                            React.createElement("td", { className: "p-3.5 text-slate-600" }, d.bin || d.binti || '-'),
+                                            React.createElement("td", { className: "p-3.5 text-center text-slate-600 font-semibold text-xs" },
+                                                `RT ${String(d.rt || 0).padStart(2, '0')}`
+                                            ),
+                                            React.createElement("td", { className: "p-3.5 text-center" },
+                                                React.createElement("span", {
+                                                    className: `px-2.5 py-1 rounded-md text-xs font-bold ${d.status === 'Lunas' ? 'bg-green-100 text-green-700' : 'bg-rose-100 text-rose-700'}`
+                                                }, d.status || 'Belum Lunas')
+                                            )
+                                        )
+                                    ))
+                                )
+                            )
+                        )
+                    )
+                )
+            )
+        ));
     };
-    const renderMustahiq = () => (React.createElement("div", { className: "space-y-6" },
-        React.createElement("div", { className: "flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b pb-2" },
-            React.createElement("h2", { className: "text-2xl font-bold text-gray-800" }, "Data Mustahiq & Alokasi Gantingan"),
-            React.createElement("div", { className: "flex flex-wrap items-center gap-2" },
-                React.createElement("button", { onClick: () => setShowPrintKuponModal(true), className: "bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 px-3.5 py-2 rounded-lg flex items-center text-sm font-bold shadow-sm transition-colors" },
-                    React.createElement(Ticket, { className: "w-4 h-4 mr-1.5 text-emerald-700" }),
-                    " Cetak Kupon per Kategori"),
-                React.createElement("button", { onClick: () => setShowAddMustahiq(true), className: "bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg flex items-center shadow-sm" },
-                    React.createElement(Plus, { className: "w-4 h-4 mr-2" }),
-                    " Tambah Mustahiq"))),
-        React.createElement("div", { className: "bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden" },
-            React.createElement("div", { className: "overflow-x-auto w-full" },
-                React.createElement("table", { className: "w-full text-left min-w-[560px]" },
-                    React.createElement("thead", { className: "bg-emerald-50 text-emerald-800 border-b border-emerald-100" },
-                        React.createElement("tr", null,
-                            React.createElement("th", { className: "p-4 font-bold" }, "Kategori"),
-                            React.createElement("th", { className: "p-4 font-bold" }, "Nama Target / RT"),
-                            React.createElement("th", { className: "p-4 font-bold" }, "Alamat / Keterangan"),
-                            React.createElement("th", { className: "p-4 font-bold text-center" }, "Jumlah Kupon"),
-                            React.createElement("th", { className: "p-4 text-right font-bold" }, "Aksi"))),
-                    React.createElement("tbody", { className: "divide-y divide-gray-100" },
-                        mustahiq.map(m => (React.createElement("tr", { key: m.id, className: "hover:bg-gray-50" },
-                            React.createElement("td", { className: "p-4 font-medium text-gray-700" }, m.kategori),
-                            React.createElement("td", { className: "p-4 font-bold text-emerald-700" }, m.nama_rt),
-                            React.createElement("td", { className: "p-4 text-gray-600" }, m.alamat),
-                            React.createElement("td", { className: "p-4 text-center font-bold text-gray-900" }, m.jumlahKupon),
-                            React.createElement("td", { className: "p-4 flex justify-end items-center gap-2" },
-                                React.createElement("button", { onClick: () => handlePrintKuponMustahiq(m), title: `Cetak ${m.jumlahKupon} Kupon`, className: "text-emerald-600 hover:text-emerald-800 p-1.5 bg-emerald-50 hover:bg-emerald-100 rounded transition-colors" },
-                                    React.createElement(Ticket, { className: "w-4 h-4" })),
-                                React.createElement("button", { onClick: () => setEditingMustahiq(m), title: "Edit", className: "text-indigo-500 hover:text-indigo-700 p-1.5 bg-indigo-50 rounded" },
-                                    React.createElement(Edit, { className: "w-4 h-4" })),
-                                React.createElement("button", { onClick: () => setMustahiq(mustahiq.filter(item => item.id !== m.id)), title: "Hapus", className: "text-red-500 hover:text-red-700 p-1.5 bg-red-50 rounded" },
-                                    React.createElement(Trash2, { className: "w-4 h-4" })))))),
-                        React.createElement("tr", { className: "bg-gray-100 border-t-2 border-gray-200" },
-                            React.createElement("td", { colSpan: "3", className: "p-4 text-right font-bold text-gray-800" }, "TOTAL KESELURUHAN KUPON :"),
-                            React.createElement("td", { className: "p-4 text-center font-black text-emerald-700 text-lg" }, mustahiq.reduce((sum, item) => sum + parseInt(item.jumlahKupon || 0), 0)),
-                            React.createElement("td", null))))))));
+    const renderMustahiq = () => {
+        const totalGantingan = mustahiq.reduce((sum, item) => sum + parseInt(item.jumlahKupon || 0), 0);
+        const totalWarga = mustahiq.filter(m => m.kategori === 'Warga').reduce((sum, item) => sum + parseInt(item.jumlahKupon || 0), 0);
+        const totalInstansi = mustahiq.filter(m => m.kategori === 'Instansi').reduce((sum, item) => sum + parseInt(item.jumlahKupon || 0), 0);
+        const totalPanitia = mustahiq.filter(m => m.kategori === 'Panitia').reduce((sum, item) => sum + parseInt(item.jumlahKupon || 0), 0);
+
+        const availableKategori = Array.from(new Set(mustahiq.map(m => m.kategori || 'Warga')));
+
+        const filteredMustahiq = mustahiq.filter(m => {
+            const q = mustahiqSearchTerm.toLowerCase();
+            const matchSearch = (m.nama_rt || '').toLowerCase().includes(q) ||
+                                (m.alamat || '').toLowerCase().includes(q) ||
+                                (m.kategori || '').toLowerCase().includes(q);
+            const matchKat = mustahiqKategoriFilter === 'semua' || (m.kategori || 'Warga') === mustahiqKategoriFilter;
+            return matchSearch && matchKat;
+        });
+
+        const handleExportMustahiqCSV = () => {
+            const headers = ['No', 'Kategori', 'Nama Target / RT', 'Alamat / Keterangan', 'Alokasi Kupon (Gantingan)'];
+            const rows = filteredMustahiq.map((m, idx) => [
+                idx + 1,
+                m.kategori || 'Warga',
+                m.nama_rt,
+                m.alamat || '-',
+                m.jumlahKupon || 0
+            ]);
+            exportToCSV(`alokasi_kupon_mustahiq_${activeYear.replace(/[^a-zA-Z0-9]/g, '_')}.csv`, headers, rows);
+        };
+
+        return (React.createElement("div", { className: "space-y-6" },
+            // Header & Actions
+            React.createElement("div", { className: "flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b pb-3" },
+                React.createElement("div", null,
+                    React.createElement("h2", { className: "text-2xl font-bold text-gray-800" }, "Data Mustahiq & Alokasi Gantingan"),
+                    React.createElement("p", { className: "text-xs text-gray-500 mt-0.5" }, "Distribusi kupon daging qurban per RT, DKM, dan panitia.")
+                ),
+                React.createElement("div", { className: "flex flex-wrap items-center gap-2" },
+                    React.createElement("button", {
+                        type: "button",
+                        onClick: handleExportMustahiqCSV,
+                        className: "bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 px-3 py-2 rounded-lg flex items-center text-xs sm:text-sm font-bold shadow-xs transition-colors"
+                    },
+                        React.createElement(Download, { className: "w-4 h-4 mr-1.5 text-slate-600" }),
+                        " Ekspor CSV"),
+                    React.createElement("button", {
+                        type: "button",
+                        onClick: () => handlePrintDokumenKhusus('Tanda Terima Kupon Mustahiq'),
+                        className: "bg-blue-50 hover:bg-blue-100 text-blue-800 border border-blue-300 px-3 py-2 rounded-lg flex items-center text-xs sm:text-sm font-bold shadow-xs transition-colors"
+                    },
+                        React.createElement(FileText, { className: "w-4 h-4 mr-1.5 text-blue-700" }),
+                        " Tanda Terima"),
+                    React.createElement("button", {
+                        type: "button",
+                        onClick: () => setShowPrintKuponModal(true),
+                        className: "bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 px-3 py-2 rounded-lg flex items-center text-xs sm:text-sm font-bold shadow-xs transition-colors"
+                    },
+                        React.createElement(Ticket, { className: "w-4 h-4 mr-1.5 text-emerald-700" }),
+                        " Cetak Kupon Kategori"),
+                    React.createElement("button", {
+                        type: "button",
+                        onClick: () => setShowAddMustahiq(true),
+                        className: "bg-[#04583d] hover:bg-[#034530] text-white px-3.5 py-2 rounded-lg flex items-center text-xs sm:text-sm font-bold shadow-sm transition-colors"
+                    },
+                        React.createElement(Plus, { className: "w-4 h-4 mr-1.5" }),
+                        " Tambah Mustahiq")
+                )
+            ),
+            // KPI Summary Strip
+            React.createElement("div", { className: "grid grid-cols-2 sm:grid-cols-4 gap-3" },
+                React.createElement("div", { className: "bg-white p-3.5 rounded-xl border border-emerald-200 shadow-xs" },
+                    React.createElement("span", { className: "text-[11px] font-semibold text-emerald-600 uppercase tracking-wider block" }, "Total Kupon"),
+                    React.createElement("span", { className: "text-2xl font-black text-emerald-800" }, `${totalGantingan} Kupon`)
+                ),
+                React.createElement("div", { className: "bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs" },
+                    React.createElement("span", { className: "text-[11px] font-semibold text-slate-400 uppercase tracking-wider block" }, "Kupon Warga"),
+                    React.createElement("span", { className: "text-xl font-black text-slate-800" }, `${totalWarga} Kupon`)
+                ),
+                React.createElement("div", { className: "bg-white p-3.5 rounded-xl border border-blue-200 shadow-xs" },
+                    React.createElement("span", { className: "text-[11px] font-semibold text-blue-600 uppercase tracking-wider block" }, "Instansi / Lembaga"),
+                    React.createElement("span", { className: "text-xl font-black text-blue-800" }, `${totalInstansi} Kupon`)
+                ),
+                React.createElement("div", { className: "bg-white p-3.5 rounded-xl border border-amber-200 shadow-xs" },
+                    React.createElement("span", { className: "text-[11px] font-semibold text-amber-600 uppercase tracking-wider block" }, "Panitia & Khusus"),
+                    React.createElement("span", { className: "text-xl font-black text-amber-800" }, `${totalPanitia} Kupon`)
+                )
+            ),
+            // Filter Bar
+            React.createElement("div", { className: "bg-white rounded-xl shadow-xs border border-slate-200/80 p-3.5 space-y-3" },
+                React.createElement("div", { className: "flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between" },
+                    // Search
+                    React.createElement("div", { className: "flex-1 flex items-center bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm focus-within:ring-2 focus-within:ring-emerald-500/20 focus-within:border-emerald-500 transition-all" },
+                        React.createElement(Search, { className: "w-4 h-4 text-slate-400 mr-2 flex-shrink-0" }),
+                        React.createElement("input", {
+                            type: "text",
+                            placeholder: "Cari nama target / RT / alamat...",
+                            className: "bg-transparent border-none outline-none w-full text-slate-800 placeholder-slate-400 text-sm",
+                            value: mustahiqSearchTerm,
+                            onChange: (e) => setMustahiqSearchTerm(e.target.value)
+                        }),
+                        mustahiqSearchTerm ? React.createElement("button", {
+                            type: "button",
+                            onClick: () => setMustahiqSearchTerm(''),
+                            className: "text-slate-400 hover:text-slate-600 ml-1"
+                        }, React.createElement(X, { className: "w-3.5 h-3.5" })) : null
+                    ),
+                    // Category pills
+                    React.createElement("div", { className: "flex flex-wrap items-center gap-1.5 text-xs" },
+                        React.createElement("button", {
+                            type: "button",
+                            onClick: () => setMustahiqKategoriFilter('semua'),
+                            className: `px-3 py-1.5 rounded-lg font-bold transition-all ${mustahiqKategoriFilter === 'semua' ? 'bg-[#04583d] text-white shadow-xs' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`
+                        }, "Semua"),
+                        availableKategori.map(k => (
+                            React.createElement("button", {
+                                key: k,
+                                type: "button",
+                                onClick: () => setMustahiqKategoriFilter(k),
+                                className: `px-3 py-1.5 rounded-lg font-bold transition-all ${mustahiqKategoriFilter === k ? 'bg-[#04583d] text-white shadow-xs' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`
+                            }, k)
+                        ))
+                    )
+                )
+            ),
+            // Table
+            React.createElement("div", { className: "bg-white rounded-xl shadow-xs border border-slate-200/80 overflow-hidden" },
+                filteredMustahiq.length === 0 ? (
+                    React.createElement("div", { className: "p-12 text-center" },
+                        React.createElement(Heart, { className: "w-12 h-12 text-slate-300 mx-auto mb-3" }),
+                        React.createElement("h3", { className: "text-base font-bold text-slate-700" }, "Tidak ada data mustahiq yang cocok"),
+                        React.createElement("p", { className: "text-xs text-slate-400 mt-1" }, "Coba ubah kata kunci pencarian atau kategori filter."),
+                        React.createElement("button", {
+                            type: "button",
+                            onClick: () => { setMustahiqSearchTerm(''); setMustahiqKategoriFilter('semua'); },
+                            className: "mt-4 px-4 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 rounded-lg text-xs font-bold border border-emerald-300 transition-colors"
+                        }, "Reset Filter")
+                    )
+                ) : (
+                    React.createElement("div", { className: "overflow-x-auto w-full" },
+                        React.createElement("table", { className: "w-full text-left min-w-[560px]" },
+                            React.createElement("thead", { className: "bg-emerald-50/70 text-emerald-900 border-b border-emerald-100 text-xs uppercase tracking-wider" },
+                                React.createElement("tr", null,
+                                    React.createElement("th", { className: "p-3.5 font-black text-center w-12" }, "No"),
+                                    React.createElement("th", { className: "p-3.5 font-black" }, "Kategori"),
+                                    React.createElement("th", { className: "p-3.5 font-black" }, "Nama Target / RT"),
+                                    React.createElement("th", { className: "p-3.5 font-black" }, "Alamat / Keterangan"),
+                                    React.createElement("th", { className: "p-3.5 font-black text-center" }, "Alokasi Kupon"),
+                                    React.createElement("th", { className: "p-3.5 font-black text-right" }, "Aksi")
+                                )
+                            ),
+                            React.createElement("tbody", { className: "divide-y divide-slate-100 text-sm" },
+                                filteredMustahiq.map((m, idx) => (
+                                    React.createElement("tr", { key: m.id, className: "hover:bg-slate-50 transition-colors" },
+                                        React.createElement("td", { className: "p-3.5 text-center text-slate-400 font-bold text-xs" }, idx + 1),
+                                        React.createElement("td", { className: "p-3.5 font-medium text-slate-600" },
+                                            React.createElement("span", {
+                                                className: `px-2.5 py-0.5 rounded-full text-xs font-bold ${
+                                                    m.kategori === 'Warga' ? 'bg-blue-100 text-blue-700' :
+                                                    m.kategori === 'Instansi' ? 'bg-purple-100 text-purple-700' :
+                                                    'bg-slate-100 text-slate-700'
+                                                }`
+                                            }, m.kategori || 'Warga')
+                                        ),
+                                        React.createElement("td", { className: "p-3.5 font-bold text-emerald-800" }, m.nama_rt),
+                                        React.createElement("td", { className: "p-3.5 text-slate-600 text-xs" }, m.alamat || '-'),
+                                        React.createElement("td", { className: "p-3.5 text-center font-black text-slate-800" },
+                                            React.createElement("span", { className: "px-2.5 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-lg text-sm font-black" },
+                                                `${m.jumlahKupon} Kupon`
+                                            )
+                                        ),
+                                        React.createElement("td", { className: "p-3.5 flex justify-end items-center gap-1.5" },
+                                            React.createElement("button", {
+                                                type: "button",
+                                                onClick: () => handlePrintKuponMustahiq(m),
+                                                title: `Cetak ${m.jumlahKupon} Kupon`,
+                                                className: "text-emerald-700 hover:text-emerald-900 p-1.5 bg-emerald-50 hover:bg-emerald-100 rounded-lg transition-colors"
+                                            }, React.createElement(Ticket, { className: "w-4 h-4" })),
+                                            React.createElement("button", {
+                                                type: "button",
+                                                onClick: () => setEditingMustahiq(m),
+                                                title: "Sunting Data Mustahiq",
+                                                className: "text-indigo-600 hover:text-indigo-800 p-1.5 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition-colors"
+                                            }, React.createElement(Edit, { className: "w-4 h-4" })),
+                                            React.createElement("button", {
+                                                type: "button",
+                                                onClick: () => {
+                                                    if (window.confirm(`Hapus data mustahiq "${m.nama_rt}"?`)) {
+                                                        setMustahiq(mustahiq.filter(item => item.id !== m.id));
+                                                        showToast(`Data ${m.nama_rt} berhasil dihapus.`, 'info');
+                                                    }
+                                                },
+                                                title: "Hapus Mustahiq",
+                                                className: "text-rose-600 hover:text-rose-800 p-1.5 bg-rose-50 hover:bg-rose-100 rounded-lg transition-colors"
+                                            }, React.createElement(Trash2, { className: "w-4 h-4" }))
+                                        )
+                                    )
+                                )),
+                                React.createElement("tr", { className: "bg-slate-100/90 border-t-2 border-slate-300 font-bold" },
+                                    React.createElement("td", { colSpan: "4", className: "p-3.5 text-right text-slate-700 uppercase tracking-wide text-xs" }, "Total Kupon Tampil :"),
+                                    React.createElement("td", { className: "p-3.5 text-center font-black text-emerald-800 text-base" },
+                                        `${filteredMustahiq.reduce((sum, item) => sum + parseInt(item.jumlahKupon || 0), 0)} Kupon`
+                                    ),
+                                    React.createElement("td", null)
+                                )
+                            )
+                        )
+                    )
+                )
+            )
+        ));
+    };
     const renderHasil = () => {
         const hasilSapi = hasil.filter(item => (item.jenis || 'Sapi') === 'Sapi');
         const hasilDomba = hasil.filter(item => item.jenis === 'Domba');
-        const totalDagingSapi = hasilSapi.reduce((sum, item) => sum + parseInt(item.total || 0), 0);
-        const totalDagingDomba = hasilDomba.reduce((sum, item) => sum + parseInt(item.total || 0), 0);
         const activeList = hasilSubTab === 'sapi' ? hasilSapi : hasilDomba;
+
+        const totalDagingMurni = activeList.reduce((sum, item) => sum + parseInt(item.daging || 0), 0);
+        const totalJeroan = activeList.reduce((sum, item) => sum + parseInt(item.jeroan || 0), 0);
+        const totalTulang = activeList.reduce((sum, item) => sum + parseInt(item.tulang || 0), 0);
+        const totalBerat = activeList.reduce((sum, item) => sum + parseInt(item.total || 0), 0);
+        const rataRataPerEkor = activeList.length > 0 ? (totalBerat / activeList.length).toFixed(1) : 0;
+
+        const handleExportHasilCSV = () => {
+            const headers = ['No', 'Jenis Hewan', 'Urutan Hewan Ke-', 'Daging Murni (Kg)', 'Jeroan (Kg)', 'Tulang (Kg)', 'Total Berat (Kg)'];
+            const rows = activeList.map((s, idx) => [
+                idx + 1,
+                s.jenis || 'Sapi',
+                s.nomor || s.sapi || (idx + 1),
+                s.daging || 0,
+                s.jeroan || 0,
+                s.tulang || 0,
+                s.total || 0
+            ]);
+            exportToCSV(`timbangan_${hasilSubTab}_${activeYear.replace(/[^a-zA-Z0-9]/g, '_')}.csv`, headers, rows);
+        };
+
         return (React.createElement("div", { className: "space-y-6" },
-            React.createElement("div", { className: "flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b pb-2" },
-                React.createElement("h2", { className: "text-2xl font-bold text-gray-800" }, "Pencatatan Hasil Sembelih"),
-                React.createElement("div", { className: "flex flex-wrap items-center gap-2" },
-                    React.createElement("div", { className: "flex space-x-1 bg-gray-100 p-1 rounded-lg" },
-                        React.createElement("button", { onClick: () => setHasilSubTab('sapi'), className: `px-3.5 py-1.5 rounded-md text-sm font-bold transition-all flex items-center ${hasilSubTab === 'sapi' ? 'bg-emerald-600 text-white shadow-sm' : 'text-gray-600 hover:text-gray-900'}` },
-                            React.createElement(Beef, { className: "w-4 h-4 mr-1.5" }),
-                            " Sapi (",
-                            hasilSapi.length,
-                            ")"),
-                        React.createElement("button", { onClick: () => setHasilSubTab('domba'), className: `px-3.5 py-1.5 rounded-md text-sm font-bold transition-all flex items-center ${hasilSubTab === 'domba' ? 'bg-amber-600 text-white shadow-sm' : 'text-gray-600 hover:text-gray-900'}` },
-                            React.createElement("span", { className: "mr-1.5 text-base leading-none" }, "\uD83D\uDC0F"),
-                            " Domba (",
-                            hasilDomba.length,
-                            ")")),
-                    React.createElement("button", { onClick: () => setShowAddHasil(true), className: "bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-1.5 rounded-lg flex items-center text-sm font-bold shadow-sm transition-colors" },
-                        React.createElement(Plus, { className: "w-4 h-4 mr-1.5" }),
-                        " Input Timbangan"))),
-            React.createElement("div", { className: `p-4 rounded-xl border flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 ${hasilSubTab === 'sapi' ? 'bg-emerald-50 border-emerald-200 text-emerald-900' : 'bg-amber-50 border-amber-200 text-amber-900'}` },
+            // Header & Subtabs
+            React.createElement("div", { className: "flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b pb-3" },
                 React.createElement("div", null,
-                    React.createElement("h3", { className: "font-bold text-base flex items-center" },
-                        hasilSubTab === 'sapi' ? React.createElement(Beef, { className: "w-5 h-5 mr-2 text-emerald-700" }) : React.createElement("span", { className: "text-lg mr-2" }, "\uD83D\uDC0F"),
-                        "Data Timbangan Hewan ",
-                        hasilSubTab === 'sapi' ? 'Sapi' : 'Domba / Kambing'),
-                    React.createElement("p", { className: "text-xs opacity-80 mt-0.5" }, "Data dicatat per ekor hewan sembelihan dan terpisah agar rincian timbangan tertib & akurat.")),
-                React.createElement("div", { className: "flex items-center space-x-3 bg-white px-3.5 py-2 rounded-lg border shadow-sm text-sm" },
-                    React.createElement("span", { className: "text-xs text-gray-500 font-semibold uppercase" }, "Total Timbangan:"),
-                    React.createElement("span", { className: `font-black text-base ${hasilSubTab === 'sapi' ? 'text-emerald-700' : 'text-amber-700'}` },
-                        hasilSubTab === 'sapi' ? totalDagingSapi : totalDagingDomba,
-                        " Kg"))),
-            activeList.length === 0 ? (React.createElement("div", { className: "bg-white p-12 text-center rounded-xl border border-dashed border-gray-300 text-gray-400" },
-                React.createElement(Scale, { className: "w-12 h-12 mx-auto mb-2 opacity-30" }),
-                React.createElement("p", { className: "font-medium text-gray-500" },
-                    "Belum ada data timbangan untuk hewan ",
-                    hasilSubTab === 'sapi' ? 'sapi' : 'domba',
-                    "."),
-                React.createElement("p", { className: "text-xs text-gray-400 mt-1" }, "Klik tombol \"Input Timbangan\" di atas untuk menambahkan hasil penimbangan."))) : (React.createElement("div", { className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" }, activeList.map(s => (React.createElement("div", { key: s.id, className: `bg-white p-6 rounded-xl shadow-sm border transition-colors ${hasilSubTab === 'sapi' ? 'border-gray-200 hover:border-emerald-300' : 'border-gray-200 hover:border-amber-300'}` },
-                React.createElement("div", { className: "flex justify-between items-center mb-4 pb-3 border-b border-gray-100" },
-                    React.createElement("h3", { className: "text-lg font-black text-gray-800 flex items-center" },
-                        s.jenis === 'Domba' ? (React.createElement("span", { className: "text-xl mr-2" }, "\uD83D\uDC0F")) : (React.createElement(Beef, { className: "w-6 h-6 text-emerald-600 mr-2" })),
-                        s.jenis === 'Domba' ? 'Domba' : 'Sapi',
-                        " #",
-                        s.nomor || s.sapi),
-                    React.createElement("div", { className: "flex gap-2" },
-                        React.createElement("button", { onClick: () => setEditingHasil(s), title: "Edit Data", className: "text-indigo-500 hover:bg-indigo-50 p-1.5 rounded transition-colors" },
-                            React.createElement(Edit, { className: "w-4 h-4" })),
-                        React.createElement("button", { onClick: () => setHasil(hasil.filter(item => item.id !== s.id)), title: "Hapus Data", className: "text-red-500 hover:bg-red-50 p-1.5 rounded transition-colors" },
-                            React.createElement(Trash2, { className: "w-4 h-4" })))),
-                React.createElement("div", { className: "space-y-2.5 text-sm" },
-                    React.createElement("div", { className: "flex justify-between" },
-                        React.createElement("span", { className: "text-gray-600 font-medium" }, "Daging Murni"),
-                        React.createElement("span", { className: "font-bold text-gray-900" },
-                            s.daging,
-                            " Kg")),
-                    React.createElement("div", { className: "flex justify-between" },
-                        React.createElement("span", { className: "text-gray-600 font-medium" }, "Jeroan"),
-                        React.createElement("span", { className: "font-bold text-gray-900" },
-                            s.jeroan,
-                            " Kg")),
-                    React.createElement("div", { className: "flex justify-between" },
-                        React.createElement("span", { className: "text-gray-600 font-medium" }, "Tulang"),
-                        React.createElement("span", { className: "font-bold text-gray-900" },
-                            s.tulang,
-                            " Kg")),
-                    React.createElement("div", { className: `pt-3 mt-2 border-t border-gray-100 flex justify-between font-black text-base ${s.jenis === 'Domba' ? 'text-amber-700' : 'text-emerald-700'}` },
-                        React.createElement("span", null, "Total Berat (Kg)"),
-                        React.createElement("span", null,
-                            s.total,
-                            " Kg"))))))))));
+                    React.createElement("h2", { className: "text-2xl font-bold text-gray-800" }, "Pencatatan Hasil Sembelih & Timbangan"),
+                    React.createElement("p", { className: "text-xs text-gray-500 mt-0.5" }, "Rekapitulasi bobot daging bersih, jeroan, dan tulang per ekor.")
+                ),
+                React.createElement("div", { className: "flex flex-wrap items-center gap-2" },
+                    React.createElement("button", {
+                        type: "button",
+                        onClick: handleExportHasilCSV,
+                        className: "bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 px-3 py-1.5 rounded-lg flex items-center text-xs font-bold shadow-xs transition-colors"
+                    },
+                        React.createElement(Download, { className: "w-3.5 h-3.5 mr-1 text-slate-600" }),
+                        " Ekspor CSV"),
+                    React.createElement("button", {
+                        type: "button",
+                        onClick: () => handlePrintDokumenKhusus('Rekapitulasi Timbangan Daging'),
+                        className: "bg-blue-50 hover:bg-blue-100 text-blue-800 border border-blue-300 px-3 py-1.5 rounded-lg flex items-center text-xs font-bold shadow-xs transition-colors"
+                    },
+                        React.createElement(Printer, { className: "w-3.5 h-3.5 mr-1 text-blue-700" }),
+                        " Cetak Berita Acara"),
+                    React.createElement("button", {
+                        type: "button",
+                        onClick: () => setShowAddHasil(true),
+                        className: "bg-[#04583d] hover:bg-[#034530] text-white px-3 py-1.5 rounded-lg flex items-center text-xs font-bold shadow-xs transition-colors"
+                    },
+                        React.createElement(Plus, { className: "w-3.5 h-3.5 mr-1" }),
+                        " Input Timbangan")
+                )
+            ),
+            // Subtab Switcher
+            React.createElement("div", { className: "flex space-x-1 bg-slate-100 p-1 rounded-xl border border-slate-200 w-fit" },
+                React.createElement("button", {
+                    type: "button",
+                    onClick: () => setHasilSubTab('sapi'),
+                    className: `px-4 py-2 rounded-lg text-xs sm:text-sm font-bold transition-all flex items-center gap-1.5 ${hasilSubTab === 'sapi' ? 'bg-[#04583d] text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'}`
+                },
+                    React.createElement(Beef, { className: "w-4 h-4" }),
+                    `Timbangan Sapi (${hasilSapi.length})`
+                ),
+                React.createElement("button", {
+                    type: "button",
+                    onClick: () => setHasilSubTab('domba'),
+                    className: `px-4 py-2 rounded-lg text-xs sm:text-sm font-bold transition-all flex items-center gap-1.5 ${hasilSubTab === 'domba' ? 'bg-amber-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'}`
+                },
+                    React.createElement("span", null, "🐑"),
+                    `Timbangan Domba (${hasilDomba.length})`
+                )
+            ),
+            // Analytics Metric Cards
+            React.createElement("div", { className: "grid grid-cols-2 sm:grid-cols-5 gap-3" },
+                React.createElement("div", { className: "bg-white p-3.5 rounded-xl border border-emerald-300 shadow-xs" },
+                    React.createElement("span", { className: "text-[11px] font-semibold text-emerald-600 uppercase tracking-wider block" }, "Total Berat"),
+                    React.createElement("span", { className: "text-2xl font-black text-emerald-800" }, `${totalBerat} Kg`)
+                ),
+                React.createElement("div", { className: "bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs" },
+                    React.createElement("span", { className: "text-[11px] font-semibold text-slate-500 uppercase tracking-wider block" }, "Daging Murni"),
+                    React.createElement("span", { className: "text-lg font-black text-slate-800" }, `${totalDagingMurni} Kg`),
+                    totalBerat > 0 ? React.createElement("span", { className: "text-[10px] text-emerald-600 font-bold block" }, `${Math.round((totalDagingMurni / totalBerat) * 100)}% dari total`) : null
+                ),
+                React.createElement("div", { className: "bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs" },
+                    React.createElement("span", { className: "text-[11px] font-semibold text-slate-500 uppercase tracking-wider block" }, "Jeroan"),
+                    React.createElement("span", { className: "text-lg font-black text-slate-800" }, `${totalJeroan} Kg`),
+                    totalBerat > 0 ? React.createElement("span", { className: "text-[10px] text-amber-600 font-bold block" }, `${Math.round((totalJeroan / totalBerat) * 100)}% dari total`) : null
+                ),
+                React.createElement("div", { className: "bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs" },
+                    React.createElement("span", { className: "text-[11px] font-semibold text-slate-500 uppercase tracking-wider block" }, "Tulang"),
+                    React.createElement("span", { className: "text-lg font-black text-slate-800" }, `${totalTulang} Kg`),
+                    totalBerat > 0 ? React.createElement("span", { className: "text-[10px] text-slate-500 font-bold block" }, `${Math.round((totalTulang / totalBerat) * 100)}% dari total`) : null
+                ),
+                React.createElement("div", { className: "bg-white p-3.5 rounded-xl border border-blue-200 shadow-xs col-span-2 sm:col-span-1" },
+                    React.createElement("span", { className: "text-[11px] font-semibold text-blue-600 uppercase tracking-wider block" }, "Rata-rata / Ekor"),
+                    React.createElement("span", { className: "text-xl font-black text-blue-800" }, `${rataRataPerEkor} Kg`)
+                )
+            ),
+            // Timbangan Cards Grid
+            activeList.length === 0 ? (
+                React.createElement("div", { className: "bg-white p-12 text-center rounded-2xl border border-dashed border-slate-300 text-slate-400" },
+                    React.createElement(Scale, { className: "w-12 h-12 mx-auto mb-2 opacity-30" }),
+                    React.createElement("p", { className: "font-bold text-slate-700" },
+                        `Belum ada data timbangan untuk hewan ${hasilSubTab === 'sapi' ? 'sapi' : 'domba'}.`
+                    ),
+                    React.createElement("p", { className: "text-xs text-slate-400 mt-1" },
+                        "Klik tombol \"Input Timbangan\" di atas untuk menambahkan hasil penimbangan hewan."
+                    )
+                )
+            ) : (
+                React.createElement("div", { className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5" },
+                    activeList.map(s => {
+                        const totalItem = (parseInt(s.daging) || 0) + (parseInt(s.jeroan) || 0) + (parseInt(s.tulang) || 0);
+                        const pctDaging = totalItem > 0 ? Math.round(((parseInt(s.daging) || 0) / totalItem) * 100) : 0;
+                        const pctJeroan = totalItem > 0 ? Math.round(((parseInt(s.jeroan) || 0) / totalItem) * 100) : 0;
+                        const pctTulang = totalItem > 0 ? Math.max(0, 100 - pctDaging - pctJeroan) : 0;
+                        return React.createElement("div", {
+                            key: s.id,
+                            className: "bg-white p-5 rounded-2xl shadow-xs border border-slate-200 hover:border-emerald-300 hover:shadow-md transition-all flex flex-col justify-between"
+                        },
+                            React.createElement("div", null,
+                                React.createElement("div", { className: "flex justify-between items-center mb-4 pb-3 border-b border-slate-100" },
+                                    React.createElement("h3", { className: "text-base font-black text-slate-800 flex items-center" },
+                                        s.jenis === 'Domba' ? (
+                                            React.createElement("span", { className: "text-lg mr-2" }, "🐑")
+                                        ) : (
+                                            React.createElement(Beef, { className: "w-5 h-5 text-emerald-600 mr-2" })
+                                        ),
+                                        `${s.jenis === 'Domba' ? 'Domba' : 'Sapi'} #${s.nomor || s.sapi}`
+                                    ),
+                                    React.createElement("div", { className: "flex gap-1" },
+                                        React.createElement("button", {
+                                            type: "button",
+                                            onClick: () => setEditingHasil(s),
+                                            title: "Sunting Data Timbangan",
+                                            className: "text-indigo-600 hover:bg-indigo-50 p-1.5 rounded-lg transition-colors"
+                                        }, React.createElement(Edit, { className: "w-4 h-4" })),
+                                        React.createElement("button", {
+                                            type: "button",
+                                            onClick: () => {
+                                                if (window.confirm(`Hapus data timbangan ${s.jenis || 'Sapi'} #${s.nomor || s.sapi}?`)) {
+                                                    setHasil(hasil.filter(item => item.id !== s.id));
+                                                    showToast(`Data timbangan #${s.nomor || s.sapi} dihapus.`, 'info');
+                                                }
+                                            },
+                                            title: "Hapus Data Timbangan",
+                                            className: "text-rose-600 hover:bg-rose-50 p-1.5 rounded-lg transition-colors"
+                                        }, React.createElement(Trash2, { className: "w-4 h-4" }))
+                                    )
+                                ),
+                                // Stacked Visual Breakdown Bar
+                                React.createElement("div", { className: "space-y-1 mb-4" },
+                                    React.createElement("div", { className: "h-2.5 w-full bg-slate-100 rounded-full overflow-hidden flex" },
+                                        React.createElement("div", { style: { width: `${pctDaging}%` }, className: "bg-emerald-600", title: `Daging: ${pctDaging}%` }),
+                                        React.createElement("div", { style: { width: `${pctJeroan}%` }, className: "bg-amber-500", title: `Jeroan: ${pctJeroan}%` }),
+                                        React.createElement("div", { style: { width: `${pctTulang}%` }, className: "bg-slate-400", title: `Tulang: ${pctTulang}%` })
+                                    ),
+                                    React.createElement("div", { className: "flex justify-between text-[10px] text-slate-400" },
+                                        React.createElement("span", { className: "text-emerald-700 font-semibold" }, `Daging ${pctDaging}%`),
+                                        React.createElement("span", { className: "text-amber-700 font-semibold" }, `Jeroan ${pctJeroan}%`),
+                                        React.createElement("span", { className: "text-slate-600 font-semibold" }, `Tulang ${pctTulang}%`)
+                                    )
+                                ),
+                                // Weight items list
+                                React.createElement("div", { className: "space-y-2 text-sm" },
+                                    React.createElement("div", { className: "flex justify-between items-center text-slate-600" },
+                                        React.createElement("span", { className: "font-medium" }, "Daging Murni"),
+                                        React.createElement("span", { className: "font-bold text-slate-800" }, `${s.daging} Kg`)
+                                    ),
+                                    React.createElement("div", { className: "flex justify-between items-center text-slate-600" },
+                                        React.createElement("span", { className: "font-medium" }, "Jeroan"),
+                                        React.createElement("span", { className: "font-bold text-slate-800" }, `${s.jeroan} Kg`)
+                                    ),
+                                    React.createElement("div", { className: "flex justify-between items-center text-slate-600" },
+                                        React.createElement("span", { className: "font-medium" }, "Tulang"),
+                                        React.createElement("span", { className: "font-bold text-slate-800" }, `${s.tulang} Kg`)
+                                    )
+                                )
+                            ),
+                            // Card Total
+                            React.createElement("div", {
+                                className: `pt-3 mt-3 border-t border-slate-100 flex justify-between items-center font-black text-base ${s.jenis === 'Domba' ? 'text-amber-700' : 'text-emerald-700'}`
+                            },
+                                React.createElement("span", null, "Total Berat:"),
+                                React.createElement("span", { className: "text-lg" }, `${s.total} Kg`)
+                            )
+                        );
+                    })
+                )
+            )
+        ));
     };
     const renderSurat = () => (React.createElement("div", { className: "space-y-6" },
         React.createElement("div", { className: "flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b pb-2" },
@@ -2290,9 +3297,60 @@ function App() {
                     React.createElement(Printer, { className: "w-4 h-4 mr-2" }),
                     " Cetak Surat Ucapan"))))));
     const renderDokumen = () => (React.createElement("div", { className: "space-y-6" },
-        React.createElement("h2", { className: "text-2xl font-bold text-gray-800 border-b pb-2" }, "LPJ"),
-        React.createElement("div", { className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" },
-            React.createElement(DocCard, { icon: React.createElement(FileCheck, null), title: "Laporan Pertanggungjawaban (LPJ)", desc: "Kompilasi otomatis data mudhohi, mustahiq, keuangan, dan hasil sembelih.", onClick: () => handlePrintDokumenKhusus('Buku LPJ Lengkap'), highlight: true }))));
+        React.createElement("div", { className: "border-b pb-3 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2" },
+            React.createElement("div", null,
+                React.createElement("h2", { className: "text-2xl font-bold text-gray-800" }, "Laporan Pertanggungjawaban (LPJ) & Administrasi"),
+                React.createElement("p", { className: "text-xs text-gray-500 mt-0.5" }, "Kompilasi dokumen resmi syariah, berita acara penyerahan, dan buku laporan pertanggungjawaban.")
+            )
+        ),
+        React.createElement("div", { className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5" },
+            React.createElement(DocCard, {
+                icon: React.createElement(FileCheck, null),
+                title: "Buku LPJ Lengkap",
+                desc: "Laporan Pertanggungjawaban lengkap memuat pendahuluan, susunan panitia, data mudhohi, mustahiq, hasil timbangan, serta lembar pengesahan ketua & penasihat.",
+                onClick: () => handlePrintDokumenKhusus('Buku LPJ Lengkap'),
+                onCustomize: () => setDocCustomizer('Buku LPJ Lengkap'),
+                highlight: true
+            }),
+            React.createElement(DocCard, {
+                icon: React.createElement(Beef, null),
+                title: "Lembar Syiar Jagal (Kelompok Sapi)",
+                desc: "Panduan pembacaan akad dan nama 7 mudhohi per kelompok sapi bagi juru sembelih (jagal) syar'i saat penyembelihan di lokasi.",
+                onClick: () => handlePrintDokumenKhusus('Lembar Syiar Jagal (Kelompok Sapi)'),
+                highlight: false
+            }),
+            React.createElement(DocCard, {
+                icon: React.createElement(Ticket, null),
+                title: "Berita Acara & Tanda Terima Kupon",
+                desc: "Lembar serah terima dan tanda tangan penerimaan alokasi kupon/gantingan daging qurban untuk seluruh perwakilan RT dan lembaga.",
+                onClick: () => handlePrintDokumenKhusus('Tanda Terima Kupon Mustahiq'),
+                highlight: false
+            }),
+            React.createElement(DocCard, {
+                icon: React.createElement(Scale, null),
+                title: "Rekapitulasi Timbangan & Daging",
+                desc: "Dokumen resmi penimbangan berat daging murni, jeroan, dan tulang dari seluruh hewan sembelihan yang disahkan koordinator timbangan.",
+                onClick: () => handlePrintDokumenKhusus('Rekapitulasi Timbangan Daging'),
+                highlight: false
+            }),
+            React.createElement(DocCard, {
+                icon: React.createElement(Mail, null),
+                title: "Surat Edaran Pendaftaran",
+                desc: "Cetak ulang berkas surat edaran resmi pembukaan pendaftaran ibadah qurban bagi warga lingkungan untuk lampiran arsip LPJ.",
+                onClick: () => handlePrintDokumenKhusus('Surat Edaran', suratEdaranDB[0]),
+                onCustomize: () => setDocCustomizer('Surat Edaran'),
+                highlight: false
+            }),
+            React.createElement(DocCard, {
+                icon: React.createElement(Users, null),
+                title: "Surat Tugas Kepanitiaan",
+                desc: "Lampiran surat tugas legalitas dan struktur panitia pelaksana Hari Raya Idul Adha dari Ketua RW / DKM.",
+                onClick: () => handlePrintDokumenKhusus('Surat Tugas', suratTugasDB[0]),
+                onCustomize: () => setDocCustomizer('Surat Tugas'),
+                highlight: false
+            })
+        )
+    ));
     return (React.createElement("div", { className: "min-h-screen bg-[#f0f4f8] flex flex-col font-sans relative" },
         // Top Sticky Header (Desktop & Mobile)
         React.createElement("header", { className: "bg-[#04583d] text-white px-4 md:px-7 py-3 flex justify-between items-center shadow-md sticky top-0 z-40 select-none" },
@@ -2416,7 +3474,7 @@ function App() {
                     activeTab === 'hasil' && renderHasil(),
                     activeTab === 'dokumen' && renderDokumen(),
                     activeTab === 'akun' && renderAccountSettings(),
-                    React.createElement("div", { className: "pdkq-bottom-nav-spacer hidden md:hidden" })),
+                    React.createElement("div", { className: "pdkq-bottom-nav-spacer block md:hidden" })),
                 // Desktop Footer
                 React.createElement("footer", { className: "hidden md:flex justify-between items-center text-xs text-emerald-800/90 border-t border-slate-200 pt-6 mt-12 pb-2" },
                     React.createElement("div", { className: "font-semibold text-slate-500" }, "© 2026 PDKQu. Sistem Qurban"),
@@ -2805,7 +3863,77 @@ function App() {
                         React.createElement("label", { className: "block font-bold mb-1" }, "Periode / Tahun"),
                         React.createElement("input", { type: "text", value: customConfigs.headerSub, onChange: e => setCustomConfigs({ ...customConfigs, headerSub: e.target.value }), className: "w-full border rounded p-2" })))),
                 React.createElement("div", { className: "flex justify-end gap-2 pt-4" },
-                    React.createElement("button", { type: "button", onClick: () => setDocCustomizer(null), className: "px-4 py-2 bg-emerald-600 text-white rounded font-medium" }, "Terapkan Pengaturan")))))));
+                    React.createElement("button", { type: "button", onClick: () => setDocCustomizer(null), className: "px-4 py-2 bg-emerald-600 text-white rounded font-medium" }, "Terapkan Pengaturan"))))),
+        assignModalKelompok && (React.createElement(Modal, {
+            title: `Pilih Peserta untuk Kelompok Sapi #${assignModalKelompok}`,
+            onClose: () => setAssignModalKelompok(null)
+        },
+            React.createElement("div", { className: "space-y-4 text-sm" },
+                React.createElement("p", { className: "text-xs text-slate-600" },
+                    `Pilih peserta qurban sapi yang akan dimasukkan ke dalam Kelompok Sapi #${assignModalKelompok}:`
+                ),
+                React.createElement("div", { className: "max-h-72 overflow-y-auto space-y-2 pr-1" },
+                    mudhohi.filter(m => (!m.jenis || m.jenis === 'Sapi') && String(m.kelompok) !== String(assignModalKelompok)).length === 0 ? (
+                        React.createElement("p", { className: "text-xs text-slate-400 italic py-6 text-center" }, "Tidak ada peserta sapi lain yang dapat dialokasikan.")
+                    ) : (
+                        mudhohi.filter(m => (!m.jenis || m.jenis === 'Sapi') && String(m.kelompok) !== String(assignModalKelompok)).map(m => (
+                            React.createElement("div", {
+                                key: m.id,
+                                className: "flex items-center justify-between p-3 rounded-xl border border-slate-200 hover:border-emerald-500 bg-white hover:bg-emerald-50/40 transition-colors"
+                            },
+                                React.createElement("div", { className: "min-w-0 flex-1 pr-2" },
+                                    React.createElement("h4", { className: "font-bold text-sm text-slate-800 truncate" }, m.nama),
+                                    React.createElement("p", { className: "text-xs text-slate-500" },
+                                        `Bin/Binti: ${m.bin || m.binti || '-'} • RT ${String(m.rt || 0).padStart(2, '0')} • Status: ${m.kelompok && m.kelompok !== '-' && m.kelompok !== 'Belum' ? `Kelompok #${m.kelompok}` : 'Belum Ada Kelompok'}`
+                                    )
+                                ),
+                                React.createElement("button", {
+                                    type: "button",
+                                    onClick: () => {
+                                        setMudhohi(prev => prev.map(item => item.id === m.id ? { ...item, kelompok: assignModalKelompok } : item));
+                                        showToast(`Berhasil menempatkan ${m.nama} ke Kelompok Sapi #${assignModalKelompok}`, 'success');
+                                        setAssignModalKelompok(null);
+                                    },
+                                    className: "px-3 py-1.5 bg-[#04583d] hover:bg-[#034530] text-white rounded-lg text-xs font-bold transition-colors flex-shrink-0"
+                                }, "Pilih")
+                            )
+                        ))
+                    )
+                ),
+                React.createElement("div", { className: "flex justify-end pt-2 border-t border-slate-100" },
+                    React.createElement("button", {
+                        type: "button",
+                        onClick: () => setAssignModalKelompok(null),
+                        className: "px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-medium transition-colors"
+                    }, "Batal")
+                )
+            )
+        )),
+        toast && (React.createElement("div", {
+            className: "fixed top-4 right-4 left-4 sm:left-auto z-50 max-w-sm w-auto bg-white border border-emerald-500 shadow-xl rounded-2xl p-3.5 flex items-center gap-3 animate-in fade-in slide-in-from-top-4 duration-300"
+        },
+            React.createElement("div", {
+                className: `w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 ${
+                    toast.type === 'error' ? 'bg-rose-100 text-rose-600' :
+                    toast.type === 'info' ? 'bg-blue-100 text-blue-600' :
+                    'bg-emerald-100 text-emerald-700'
+                }`
+            },
+                React.createElement(CheckCircle2, { className: "w-5 h-5" })
+            ),
+            React.createElement("div", { className: "flex-1 min-w-0" },
+                React.createElement("p", { className: "text-[10px] font-bold text-slate-400 uppercase tracking-wider" },
+                    toast.type === 'error' ? 'Pemberitahuan' : toast.type === 'info' ? 'Informasi' : 'Berhasil'
+                ),
+                React.createElement("p", { className: "text-xs font-bold text-slate-800 break-words" }, toast.message)
+            ),
+            React.createElement("button", {
+                type: "button",
+                onClick: () => setToast(null),
+                className: "text-slate-400 hover:text-slate-600 p-1 rounded-lg"
+            }, React.createElement(X, { className: "w-4 h-4" }))
+        ))
+    ));
 }
 function PDKQuLogoBadge({ className = "w-10 h-10" }) {
     return React.createElement("svg", {
