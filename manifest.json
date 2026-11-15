@@ -1,0 +1,65 @@
+{
+  "id": "/?source=pwa",
+  "name": "PDKQu - Sistem Manajemen Qurban",
+  "short_name": "PDKQu",
+  "description": "Aplikasi Manajemen Panitia Qurban Modern, Cepat & Terintegrasi",
+  "start_url": "index.php?source=pwa",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "any",
+  "background_color": "#f0f4f8",
+  "theme_color": "#04583d",
+  "categories": ["productivity", "utilities"],
+  "lang": "id",
+  "dir": "ltr",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Daftar Mudhohi",
+      "short_name": "Mudhohi",
+      "description": "Buka daftar peserta mudhohi qurban",
+      "url": "index.php#mudhohi",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Kelompok Hewan",
+      "short_name": "Kelompok",
+      "description": "Buka pembagian kelompok sapi dan hewan",
+      "url": "index.php#kelompok",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Daftar Mustahiq",
+      "short_name": "Mustahiq",
+      "description": "Buka data penerima dan status kupon daging",
+      "url": "index.php#mustahiq",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}

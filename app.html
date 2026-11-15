@@ -2,8 +2,20 @@
 <html lang="id">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Sistem Informasi Qurban</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>PDKQu - Sistem Informasi & Manajemen Qurban</title>
+
+  <!-- Progressive Web App (PWA) Meta & Icons -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#04583d">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="PDKQu">
+  <link rel="icon" type="image/svg+xml" href="icons/icon.svg">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+
   <script src="https://cdn.tailwindcss.com"></script>
 
 <style id="pdkq-reference-theme">
@@ -167,7 +179,7 @@ input, select, textarea {
   <div id="root"></div>
   <script type="module">
 import React, { useState, useEffect } from 'https://esm.sh/react@18.3.1';
-import { Users, FileText, Home, Printer, Scale, Plus, X, Search, Menu, Beef, Calendar, Settings, Trash2, Edit, Camera, Layers, FileCheck, CheckCircle2, Sliders, Mail, Eye, Upload, Image as ImageIcon, Archive, Ticket, LogOut, ChevronRight, ChevronDown, BarChart3, Clock, Heart, ArrowRight, User, Download, ShieldCheck, Database } from 'https://esm.sh/lucide-react@0.468.0?deps=react@18.3.1';
+import { Users, FileText, Home, Printer, Scale, Plus, X, Search, Menu, Beef, Calendar, Settings, Trash2, Edit, Camera, Layers, FileCheck, CheckCircle2, Sliders, Mail, Eye, Upload, Image as ImageIcon, Archive, Ticket, LogOut, ChevronRight, ChevronDown, BarChart3, Clock, Heart, ArrowRight, User, Download, ShieldCheck, Database, Smartphone } from 'https://esm.sh/lucide-react@0.468.0?deps=react@18.3.1';
 const INITIAL_AGENDA = [
     { id: 1, task: 'Pembentukan Panitia Qurban', date: 'Maret 2026', status: 'Selesai', media: true },
     { id: 2, task: 'Pendaftaran & Pengelompokan Mudhohi', date: 'Mei 2026', status: 'Selesai', media: true },
@@ -268,6 +280,49 @@ function App() {
         '1447 H / 2026 M'
     ]);
     const [showYearModal, setShowYearModal] = useState(false);
+    // PWA & Mobile Installation state
+    const [deferredPrompt, setDeferredPrompt] = useState(null);
+    const [showPwaBanner, setShowPwaBanner] = useState(() => {
+        try {
+            return localStorage.getItem('pdkq_pwa_banner_dismissed') !== 'true';
+        } catch (e) {
+            return true;
+        }
+    });
+    const [isStandalone, setIsStandalone] = useState(false);
+
+    useEffect(() => {
+        if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
+            setIsStandalone(true);
+        }
+        const handlePrompt = (e) => {
+            e.preventDefault();
+            setDeferredPrompt(e);
+        };
+        window.addEventListener('beforeinstallprompt', handlePrompt);
+        return () => window.removeEventListener('beforeinstallprompt', handlePrompt);
+    }, []);
+
+    const handleInstallClick = async () => {
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            const choice = await deferredPrompt.userChoice;
+            if (choice && choice.outcome === 'accepted') {
+                setShowPwaBanner(false);
+            }
+            setDeferredPrompt(null);
+        } else {
+            alert("Petunjuk Pemasangan PDKQu di Layar HP:\n\n• Android (Chrome / Edge):\nKetuk menu titik tiga (⋮) di pojok kanan atas browser, lalu pilih 'Pasang Aplikasi' atau 'Tambahkan ke Layar Utama'.\n\n• iPhone / iPad (Safari):\nKetuk tombol Bagikan (Share / ikon kotak berpanah atas), gulir ke bawah lalu pilih 'Tambah ke Layar Utama' (Add to Home Screen).");
+        }
+    };
+
+    const handleDismissPwa = () => {
+        setShowPwaBanner(false);
+        try {
+            localStorage.setItem('pdkq_pwa_banner_dismissed', 'true');
+        } catch (e) {}
+    };
+
     const [accountData, setAccountData] = useState(null);
     const [accountLoading, setAccountLoading] = useState(false);
     const [accountSaving, setAccountSaving] = useState(false);
@@ -1932,6 +1987,46 @@ function App() {
             ),
             // Mobile Dashboard View (visible only on mobile)
             React.createElement("section", { className: "md:hidden space-y-4" },
+                // PWA Install Banner (matches mockup)
+                (!isStandalone && showPwaBanner) && React.createElement("div", {
+                    className: "bg-gradient-to-r from-[#04583d] via-[#056b4a] to-[#04583d] text-white rounded-2xl p-4 shadow-md border border-emerald-600/40 relative overflow-hidden"
+                },
+                    React.createElement("div", { className: "flex items-start justify-between gap-3 relative z-10" },
+                        React.createElement("div", { className: "flex items-center gap-3" },
+                            React.createElement("div", { className: "w-11 h-11 rounded-xl bg-amber-400 text-emerald-950 flex items-center justify-center font-black text-lg shadow flex-shrink-0" },
+                                React.createElement(Smartphone, { className: "w-6 h-6 text-emerald-950" })
+                            ),
+                            React.createElement("div", null,
+                                React.createElement("div", { className: "flex items-center gap-2" },
+                                    React.createElement("h4", { className: "font-black text-white text-sm tracking-wide" }, "Pasang PDKQu di HP"),
+                                    React.createElement("span", { className: "bg-amber-400 text-emerald-950 text-[10px] font-black px-1.5 py-0.5 rounded uppercase" }, "PWA")
+                                ),
+                                React.createElement("p", { className: "text-emerald-100 text-xs mt-0.5 leading-snug" }, "Akses cepat tanpa browser, responsif & siap offline.")
+                            )
+                        ),
+                        React.createElement("button", {
+                            type: "button",
+                            onClick: handleDismissPwa,
+                            className: "text-emerald-200 hover:text-white p-1 -mr-1 -mt-1 text-base leading-none",
+                            title: "Tutup"
+                        }, "✕")
+                    ),
+                    React.createElement("div", { className: "mt-3 flex items-center gap-2 relative z-10" },
+                        React.createElement("button", {
+                            type: "button",
+                            onClick: handleInstallClick,
+                            className: "flex-1 bg-amber-400 hover:bg-amber-300 text-emerald-950 font-black text-xs py-2 px-3 rounded-lg shadow transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+                        },
+                            React.createElement(Download, { className: "w-3.5 h-3.5" }),
+                            "Pasang Sekarang"
+                        ),
+                        React.createElement("button", {
+                            type: "button",
+                            onClick: handleDismissPwa,
+                            className: "px-3 py-2 text-xs font-semibold text-emerald-200 hover:text-white rounded-lg transition-colors cursor-pointer"
+                        }, "Nanti")
+                    )
+                ),
                 // Mobile Welcome Card
                 React.createElement("div", { className: "bg-[#e8f5e9] border border-[#c8e6c9] rounded-2xl p-4 flex items-center gap-3.5 relative overflow-hidden shadow-xs" },
                     React.createElement("div", { className: "w-12 h-12 rounded-xl bg-emerald-600 text-white flex items-center justify-center flex-shrink-0 shadow-sm" },
@@ -4313,6 +4408,15 @@ function MudhohiModal({ editingMudhohi, onClose, onSave, defaultNo }) {
 }
 import { createRoot } from 'https://esm.sh/react-dom@18.3.1/client';
 createRoot(document.getElementById('root')).render(React.createElement(App));
+
+// Progressive Web App (PWA) Service Worker Registration
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js')
+      .then((reg) => console.log('[PDKQu PWA] Service Worker aktif dengan scope:', reg.scope))
+      .catch((err) => console.warn('[PDKQu PWA] Registrasi Service Worker gagal:', err));
+  });
+}
 
   </script>
 </body>

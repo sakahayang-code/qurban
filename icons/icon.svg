@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <linearGradient id="emeraldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#059669" />
+      <stop offset="50%" stop-color="#04583d" />
+      <stop offset="100%" stop-color="#03442e" />
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fde047" />
+      <stop offset="100%" stop-color="#eab308" />
+    </linearGradient>
+  </defs>
+  <circle cx="256" cy="256" r="240" fill="url(#emeraldGrad)" />
+  <circle cx="256" cy="256" r="215" fill="none" stroke="url(#goldGrad)" stroke-width="8" stroke-dasharray="12 8" opacity="0.6" />
+  <circle cx="256" cy="256" r="200" fill="none" stroke="url(#goldGrad)" stroke-width="4" />
+  
+  <!-- Crescent moon -->
+  <path d="M 270 130 A 110 110 0 1 0 380 240 A 130 130 0 0 1 270 130 Z" fill="url(#goldGrad)" />
+  
+  <!-- Islamic Star -->
+  <polygon points="325,185 332,204 353,205 336,218 342,238 325,225 308,238 314,218 297,205 318,204" fill="#ffffff" />
+  
+  <!-- PDKQu Badge Banner -->
+  <rect x="90" y="340" width="332" height="84" rx="24" fill="#03442e" stroke="url(#goldGrad)" stroke-width="4" />
+  <text x="256" y="398" font-family="system-ui, -apple-system, sans-serif" font-size="44" font-weight="900" fill="#ffffff" text-anchor="middle" letter-spacing="3">PDKQu</text>
+  <text x="256" y="450" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="600" fill="#fde047" text-anchor="middle" letter-spacing="4">QURBAN 1447 H</text>
+</svg>
