@@ -1,5 +1,5 @@
 {
-  "id": "/?source=pwa",
+  "id": "index.php?source=pwa",
   "name": "PDKQu - Sistem Manajemen Qurban",
   "short_name": "PDKQu",
   "description": "Aplikasi Manajemen Panitia Qurban Modern, Cepat & Terintegrasi",
@@ -11,6 +11,7 @@
   "background_color": "#f0f4f8",
   "theme_color": "#04583d",
   "categories": ["productivity", "utilities"],
+  "prefer_related_applications": false,
   "lang": "id",
   "dir": "ltr",
   "icons": [

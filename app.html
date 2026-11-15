@@ -16,6 +16,24 @@
   <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
   <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 
+  <!-- Early PWA Prompt & Install Detector -->
+  <script>
+    window.pdkqPwaPrompt = null;
+    window.pdkqPwaInstalled = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || window.navigator.standalone === true;
+    window.addEventListener('beforeinstallprompt', function(e) {
+      e.preventDefault();
+      window.pdkqPwaPrompt = e;
+      window.dispatchEvent(new CustomEvent('pdkq-pwa-ready', { detail: e }));
+      console.log('[PDKQu PWA] beforeinstallprompt ditangkap awal');
+    });
+    window.addEventListener('appinstalled', function() {
+      window.pdkqPwaInstalled = true;
+      window.pdkqPwaPrompt = null;
+      window.dispatchEvent(new CustomEvent('pdkq-pwa-installed'));
+      console.log('[PDKQu PWA] Aplikasi PDKQu berhasil dipasang');
+    });
+  </script>
+
   <script src="https://cdn.tailwindcss.com"></script>
 
 <style id="pdkq-reference-theme">
@@ -281,7 +299,7 @@ function App() {
     ]);
     const [showYearModal, setShowYearModal] = useState(false);
     // PWA & Mobile Installation state
-    const [deferredPrompt, setDeferredPrompt] = useState(null);
+    const [deferredPrompt, setDeferredPrompt] = useState(() => window.pdkqPwaPrompt || null);
     const [showPwaBanner, setShowPwaBanner] = useState(() => {
         try {
             return localStorage.getItem('pdkq_pwa_banner_dismissed') !== 'true';
@@ -289,30 +307,68 @@ function App() {
             return true;
         }
     });
-    const [isStandalone, setIsStandalone] = useState(false);
+    const [isStandalone, setIsStandalone] = useState(() => {
+        return Boolean(window.pdkqPwaInstalled || (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || window.navigator.standalone === true);
+    });
+    const [showInstallModal, setShowInstallModal] = useState(false);
+    const [installPlatformTab, setInstallPlatformTab] = useState(() => {
+        const ua = (navigator.userAgent || '').toLowerCase();
+        if (/iphone|ipad|ipod/.test(ua)) return 'ios';
+        if (/android/.test(ua)) return 'android';
+        return 'desktop';
+    });
 
     useEffect(() => {
-        if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
-            setIsStandalone(true);
+        if (window.pdkqPwaPrompt) {
+            setDeferredPrompt(window.pdkqPwaPrompt);
         }
-        const handlePrompt = (e) => {
+        const handlePromptReady = (e) => {
+            setDeferredPrompt(e.detail || window.pdkqPwaPrompt);
+        };
+        const handleBeforeInstall = (e) => {
             e.preventDefault();
+            window.pdkqPwaPrompt = e;
             setDeferredPrompt(e);
         };
-        window.addEventListener('beforeinstallprompt', handlePrompt);
-        return () => window.removeEventListener('beforeinstallprompt', handlePrompt);
+        const handleAppInstalled = () => {
+            setIsStandalone(true);
+            setDeferredPrompt(null);
+            setShowPwaBanner(false);
+            if (window.pdkqPwaPrompt) window.pdkqPwaPrompt = null;
+            showToast('Alhamdulillah, aplikasi PDKQu berhasil dipasang di perangkat Anda!');
+        };
+
+        window.addEventListener('pdkq-pwa-ready', handlePromptReady);
+        window.addEventListener('beforeinstallprompt', handleBeforeInstall);
+        window.addEventListener('appinstalled', handleAppInstalled);
+        window.addEventListener('pdkq-pwa-installed', handleAppInstalled);
+        return () => {
+            window.removeEventListener('pdkq-pwa-ready', handlePromptReady);
+            window.removeEventListener('beforeinstallprompt', handleBeforeInstall);
+            window.removeEventListener('appinstalled', handleAppInstalled);
+            window.removeEventListener('pdkq-pwa-installed', handleAppInstalled);
+        };
     }, []);
 
     const handleInstallClick = async () => {
-        if (deferredPrompt) {
-            deferredPrompt.prompt();
-            const choice = await deferredPrompt.userChoice;
-            if (choice && choice.outcome === 'accepted') {
-                setShowPwaBanner(false);
+        const promptEvent = deferredPrompt || window.pdkqPwaPrompt;
+        if (promptEvent) {
+            try {
+                await promptEvent.prompt();
+                const choice = await promptEvent.userChoice;
+                if (choice && choice.outcome === 'accepted') {
+                    setIsStandalone(true);
+                    setShowPwaBanner(false);
+                    showToast('PDKQu berhasil dipasang ke Layar Utama!');
+                }
+                setDeferredPrompt(null);
+                window.pdkqPwaPrompt = null;
+            } catch (err) {
+                console.warn('[PDKQu PWA] Gagal membuka prompt otomatis, menampilkan petunjuk:', err);
+                setShowInstallModal(true);
             }
-            setDeferredPrompt(null);
         } else {
-            alert("Petunjuk Pemasangan PDKQu di Layar HP:\n\n• Android (Chrome / Edge):\nKetuk menu titik tiga (⋮) di pojok kanan atas browser, lalu pilih 'Pasang Aplikasi' atau 'Tambahkan ke Layar Utama'.\n\n• iPhone / iPad (Safari):\nKetuk tombol Bagikan (Share / ikon kotak berpanah atas), gulir ke bawah lalu pilih 'Tambah ke Layar Utama' (Add to Home Screen).");
+            setShowInstallModal(true);
         }
     };
 
@@ -3477,6 +3533,17 @@ function App() {
                         React.createElement(User, { className: "w-3.5 h-3.5" })),
                     React.createElement("span", null, "Admin"),
                     React.createElement(ChevronDown, { className: "w-3.5 h-3.5 text-emerald-200" })),
+                // PWA Install Button in Header
+                (!isStandalone) && React.createElement("button", {
+                    type: "button",
+                    onClick: handleInstallClick,
+                    title: "Pasang Aplikasi PDKQu di Layar HP / Desktop",
+                    className: "flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-400 hover:bg-amber-300 text-emerald-950 font-black text-xs shadow-md transition-all active:scale-95 cursor-pointer border border-amber-300"
+                },
+                    React.createElement(Download, { className: "w-3.5 h-3.5" }),
+                    React.createElement("span", { className: "hidden xs:inline" }, "Pasang App"),
+                    React.createElement("span", { className: "xs:hidden" }, "Pasang")
+                ),
                 // Mobile Hamburger Button
                 React.createElement("button", {
                     type: "button",
@@ -3527,6 +3594,7 @@ function App() {
                 React.createElement(NavItem, { icon: React.createElement(Scale, null), label: "Hasil Sembelih", active: activeTab === 'hasil', onClick: () => { setActiveTab('hasil'); setIsMobileMenuOpen(false); } }),
                 React.createElement("div", { className: "my-2 border-b border-emerald-800" }),
                 React.createElement(NavItem, { icon: React.createElement(Settings, null), label: "Pengaturan", active: activeTab === 'akun', onClick: () => { setActiveTab('akun'); setIsMobileMenuOpen(false); loadAccountData(); } }),
+                (!isStandalone) && React.createElement(NavItem, { icon: React.createElement(Smartphone, null), label: "Pasang Aplikasi (PWA)", active: false, onClick: () => { setIsMobileMenuOpen(false); handleInstallClick(); } }),
                 React.createElement(NavItem, { icon: React.createElement(LogOut, null), label: "Logout", active: false, onClick: () => { window.location.href = 'logout.php'; } }))
         ),
         // Body Layout: Sidebar + Main Content
@@ -3541,6 +3609,7 @@ function App() {
                     React.createElement(NavItem, { icon: React.createElement(Ticket, null), label: "Data Cantingan", active: false, onClick: () => { setActiveTab('mustahiq'); } }),
                     React.createElement(NavItem, { icon: React.createElement(BarChart3, null), label: "Laporan", chevron: true, active: activeTab === 'dokumen', onClick: () => { setActiveTab('dokumen'); } }),
                     React.createElement(NavItem, { icon: React.createElement(Settings, null), label: "Pengaturan", active: activeTab === 'akun', onClick: () => { setActiveTab('akun'); loadAccountData(); } }),
+                    (!isStandalone) && React.createElement(NavItem, { icon: React.createElement(Smartphone, null), label: "Pasang Aplikasi (PWA)", active: false, onClick: handleInstallClick }),
                     React.createElement(NavItem, { icon: React.createElement(LogOut, null), label: "Logout", active: false, onClick: () => { window.location.href = 'logout.php'; } }),
                     // Submenu / Extra items
                     React.createElement("div", { className: "pt-2 mt-2 border-t border-emerald-700/60" },
@@ -4027,7 +4096,18 @@ function App() {
                 onClick: () => setToast(null),
                 className: "text-slate-400 hover:text-slate-600 p-1 rounded-lg"
             }, React.createElement(X, { className: "w-4 h-4" }))
-        ))
+        )),
+        showInstallModal && React.createElement(PwaInstallModal, {
+            onClose: () => setShowInstallModal(false),
+            deferredPrompt: deferredPrompt,
+            activePlatform: installPlatformTab,
+            setActivePlatform: setInstallPlatformTab,
+            onInstalled: () => {
+                setIsStandalone(true);
+                setShowPwaBanner(false);
+                showToast('PDKQu berhasil dipasang ke Layar Utama!');
+            }
+        })
     ));
 }
 function PDKQuLogoBadge({ className = "w-10 h-10" }) {
@@ -4406,6 +4486,156 @@ function MudhohiModal({ editingMudhohi, onClose, onSave, defaultNo }) {
                 React.createElement("button", { type: "button", onClick: onClose, className: "px-4 py-2 bg-gray-100 rounded" }, "Batal"),
                 React.createElement("button", { type: "submit", className: "px-4 py-2 bg-emerald-600 text-white rounded" }, "Simpan")))));
 }
+
+function PwaInstallModal({ onClose, deferredPrompt, onInstalled, activePlatform, setActivePlatform }) {
+    const isPromptAvailable = Boolean(deferredPrompt || window.pdkqPwaPrompt);
+
+    const handleDirectPrompt = async () => {
+        const promptEvent = deferredPrompt || window.pdkqPwaPrompt;
+        if (promptEvent) {
+            try {
+                await promptEvent.prompt();
+                const choice = await promptEvent.userChoice;
+                if (choice && choice.outcome === 'accepted') {
+                    if (onInstalled) onInstalled();
+                    onClose();
+                }
+                window.pdkqPwaPrompt = null;
+            } catch (e) {
+                console.warn('Direct prompt failed:', e);
+            }
+        }
+    };
+
+    return React.createElement("div", { className: "fixed inset-0 bg-black/65 backdrop-blur-xs flex items-center justify-center p-3 pb-24 sm:p-4 z-50 overflow-y-auto" },
+        React.createElement("div", { className: "bg-white rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden animate-in fade-in zoom-in duration-200 border border-emerald-100 flex flex-col max-h-[92vh]" },
+            React.createElement("div", { className: "bg-gradient-to-r from-[#04583d] via-[#056b4a] to-[#03442e] text-white p-5 flex items-start justify-between relative overflow-hidden" },
+                React.createElement("div", { className: "relative z-10 flex items-center gap-3.5" },
+                    React.createElement("div", { className: "w-12 h-12 rounded-2xl bg-amber-400 text-emerald-950 flex items-center justify-center font-black text-xl shadow-md flex-shrink-0" },
+                        React.createElement(Smartphone, { className: "w-7 h-7 text-emerald-950" })
+                    ),
+                    React.createElement("div", null,
+                        React.createElement("div", { className: "flex items-center gap-2" },
+                            React.createElement("h3", { className: "font-black text-lg text-white leading-tight" }, "Pasang Aplikasi PDKQu"),
+                            React.createElement("span", { className: "bg-amber-400 text-emerald-950 text-[10px] font-black px-1.5 py-0.5 rounded uppercase tracking-wide" }, "PWA")
+                        ),
+                        React.createElement("p", { className: "text-emerald-100 text-xs mt-0.5" }, "Akses cepat dari layar utama, responsif & siap offline")
+                    )
+                ),
+                React.createElement("button", { onClick: onClose, className: "relative z-10 text-emerald-200 hover:text-white p-1 rounded-lg hover:bg-white/10 transition-colors cursor-pointer", "aria-label": "Tutup Dialog" },
+                    React.createElement(X, { className: "w-6 h-6" })
+                )
+            ),
+            React.createElement("div", { className: "flex border-b border-gray-100 bg-gray-50/80 p-2 gap-1.5" },
+                React.createElement("button", {
+                    type: "button",
+                    onClick: () => setActivePlatform('android'),
+                    className: `flex-1 py-2 px-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${activePlatform === 'android' ? 'bg-[#04583d] text-white shadow-xs' : 'text-gray-600 hover:bg-gray-200/60'}`
+                }, "🤖 Android"),
+                React.createElement("button", {
+                    type: "button",
+                    onClick: () => setActivePlatform('ios'),
+                    className: `flex-1 py-2 px-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${activePlatform === 'ios' ? 'bg-[#04583d] text-white shadow-xs' : 'text-gray-600 hover:bg-gray-200/60'}`
+                }, "🍎 iPhone / iPad"),
+                React.createElement("button", {
+                    type: "button",
+                    onClick: () => setActivePlatform('desktop'),
+                    className: `flex-1 py-2 px-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${activePlatform === 'desktop' ? 'bg-[#04583d] text-white shadow-xs' : 'text-gray-600 hover:bg-gray-200/60'}`
+                }, "💻 Laptop / PC")
+            ),
+            React.createElement("div", { className: "p-5 overflow-y-auto flex-1 space-y-4" },
+                isPromptAvailable && React.createElement("div", { className: "p-3.5 bg-emerald-50 border border-emerald-200 rounded-2xl flex items-center justify-between gap-3" },
+                    React.createElement("div", { className: "min-w-0" },
+                        React.createElement("div", { className: "font-black text-emerald-900 text-xs" }, "Browser Mendukung Dialog Otomatis"),
+                        React.createElement("div", { className: "text-emerald-700 text-[11px] mt-0.5" }, "Klik tombol di samping untuk memunculkan konfirmasi sistem.")
+                    ),
+                    React.createElement("button", {
+                        type: "button",
+                        onClick: handleDirectPrompt,
+                        className: "bg-[#04583d] hover:bg-[#03442e] text-white px-3.5 py-2 rounded-xl text-xs font-black shadow-md flex items-center gap-1.5 cursor-pointer flex-shrink-0"
+                    },
+                        React.createElement(Download, { className: "w-3.5 h-3.5" }),
+                        "Pasang Sekarang"
+                    )
+                ),
+                activePlatform === 'android' && React.createElement("div", { className: "space-y-3" },
+                    React.createElement("div", { className: "text-xs font-bold text-gray-700 uppercase tracking-wide" }, "Langkah Pemasangan di Android (Chrome / Edge):"),
+                    React.createElement("div", { className: "flex items-start gap-3 p-3 bg-gray-50 rounded-xl border border-gray-100" },
+                        React.createElement("div", { className: "w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs font-bold flex-shrink-0" }, "1"),
+                        React.createElement("div", { className: "text-xs text-gray-700" },
+                            "Ketuk menu ", React.createElement("strong", null, "Titik Tiga (⋮)"), " di pojok kanan atas browser Google Chrome atau Microsoft Edge."
+                        )
+                    ),
+                    React.createElement("div", { className: "flex items-start gap-3 p-3 bg-gray-50 rounded-xl border border-gray-100" },
+                        React.createElement("div", { className: "w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs font-bold flex-shrink-0" }, "2"),
+                        React.createElement("div", { className: "text-xs text-gray-700" },
+                            "Pilih opsi bertuliskan ", React.createElement("strong", { className: "text-emerald-800" }, "\"Pasang Aplikasi\""), " atau ", React.createElement("strong", { className: "text-emerald-800" }, "\"Tambahkan ke Layar Utama\""), " (Add to Home screen)."
+                        )
+                    ),
+                    React.createElement("div", { className: "flex items-start gap-3 p-3 bg-gray-50 rounded-xl border border-gray-100" },
+                        React.createElement("div", { className: "w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs font-bold flex-shrink-0" }, "3"),
+                        React.createElement("div", { className: "text-xs text-gray-700" },
+                            "Ketuk tombol ", React.createElement("strong", null, "\"Pasang\""), " pada konfirmasi dialog. Ikon PDKQu akan langsung muncul di layar utama HP Anda!"
+                        )
+                    )
+                ),
+                activePlatform === 'ios' && React.createElement("div", { className: "space-y-3" },
+                    React.createElement("div", { className: "text-xs font-bold text-gray-700 uppercase tracking-wide" }, "Langkah Pemasangan di iPhone / iPad (Safari):"),
+                    React.createElement("div", { className: "flex items-start gap-3 p-3 bg-gray-50 rounded-xl border border-gray-100" },
+                        React.createElement("div", { className: "w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs font-bold flex-shrink-0" }, "1"),
+                        React.createElement("div", { className: "text-xs text-gray-700" },
+                            "Buka situs ini di browser ", React.createElement("strong", null, "Safari"), ", lalu ketuk tombol ", React.createElement("strong", null, "Bagikan (Share)"), " (ikon kotak bertanda panah ke atas ⎋ di bilah bawah Safari)."
+                        )
+                    ),
+                    React.createElement("div", { className: "flex items-start gap-3 p-3 bg-gray-50 rounded-xl border border-gray-100" },
+                        React.createElement("div", { className: "w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs font-bold flex-shrink-0" }, "2"),
+                        React.createElement("div", { className: "text-xs text-gray-700" },
+                            "Gulir menu lembar kerja ke bawah, lalu ketuk pilihan bertuliskan ", React.createElement("strong", { className: "text-emerald-800" }, "\"Tambah ke Layar Utama\""), " (Add to Home Screen ➕)."
+                        )
+                    ),
+                    React.createElement("div", { className: "flex items-start gap-3 p-3 bg-gray-50 rounded-xl border border-gray-100" },
+                        React.createElement("div", { className: "w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs font-bold flex-shrink-0" }, "3"),
+                        React.createElement("div", { className: "text-xs text-gray-700" },
+                            "Ketuk tombol ", React.createElement("strong", null, "\"Tambah\""), " di pojok kanan atas. Aplikasi PDKQu langsung terpasang di layar utama iPhone Anda!"
+                        )
+                    )
+                ),
+                activePlatform === 'desktop' && React.createElement("div", { className: "space-y-3" },
+                    React.createElement("div", { className: "text-xs font-bold text-gray-700 uppercase tracking-wide" }, "Langkah Pemasangan di Komputer / Laptop:"),
+                    React.createElement("div", { className: "flex items-start gap-3 p-3 bg-gray-50 rounded-xl border border-gray-100" },
+                        React.createElement("div", { className: "w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs font-bold flex-shrink-0" }, "1"),
+                        React.createElement("div", { className: "text-xs text-gray-700" },
+                            "Di browser Google Chrome atau Microsoft Edge, perhatikan bagian kanan bilah alamat (URL bar) tempat Anda mengetik alamat web."
+                        )
+                    ),
+                    React.createElement("div", { className: "flex items-start gap-3 p-3 bg-gray-50 rounded-xl border border-gray-100" },
+                        React.createElement("div", { className: "w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs font-bold flex-shrink-0" }, "2"),
+                        React.createElement("div", { className: "text-xs text-gray-700" },
+                            "Klik ikon ", React.createElement("strong", { className: "text-emerald-800" }, "\"Install PDKQu\""), " (berupa ikon monitor dengan tanda panah ke bawah) atau klik menu Titik Tiga (⋮) > Simpan & Bagikan > Pasang PDKQu."
+                        )
+                    ),
+                    React.createElement("div", { className: "flex items-start gap-3 p-3 bg-gray-50 rounded-xl border border-gray-100" },
+                        React.createElement("div", { className: "w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs font-bold flex-shrink-0" }, "3"),
+                        React.createElement("div", { className: "text-xs text-gray-700" },
+                            "Klik ", React.createElement("strong", null, "\"Pasang\""), ". Aplikasi akan terbuka di jendela independen tanpa bilah browser."
+                        )
+                    )
+                ),
+                React.createElement("div", { className: "p-3 bg-amber-50/70 border border-amber-200/60 rounded-xl text-[11px] text-amber-900 leading-relaxed" },
+                    "💡 ", React.createElement("strong", null, "Keuntungan PWA:"), " Aplikasi tidak memerlukan download ratusan MB dari Google Play Store / App Store, hemat kuota data, responsif, dan dapat dibuka secara instan di lapangan."
+                )
+            ),
+            React.createElement("div", { className: "p-4 bg-gray-50 border-t border-gray-100 flex items-center justify-end gap-2" },
+                React.createElement("button", {
+                    type: "button",
+                    onClick: onClose,
+                    className: "px-5 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold text-xs rounded-xl transition-colors cursor-pointer"
+                }, "Tutup")
+            )
+        )
+    );
+}
+
 import { createRoot } from 'https://esm.sh/react-dom@18.3.1/client';
 createRoot(document.getElementById('root')).render(React.createElement(App));
 

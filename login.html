@@ -2,9 +2,30 @@
 <html lang="id">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Login - PDKQu Sistem Informasi Qurban</title>
 <meta name="robots" content="noindex,nofollow,noarchive">
+
+<!-- PWA Manifest & Meta Tags -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#04583d">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="PDKQu">
+<link rel="icon" type="image/svg+xml" href="icons/icon.svg">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+
+<script>
+  window.deferredPwaPrompt = null;
+  window.addEventListener('beforeinstallprompt', function(e) {
+    e.preventDefault();
+    window.deferredPwaPrompt = e;
+    var btn = document.getElementById('pwa-login-install');
+    if (btn) btn.style.display = 'inline-flex';
+  });
+</script>
 <style>
 :root{
   --primary:#059669;
@@ -160,10 +181,48 @@ form>div:last-child{
 <input id="password" name="password" type="password" required autocomplete="current-password" placeholder="Masukkan password">
 <button type="submit">Masuk ke Sistem</button>
 <div style="margin-top:16px;text-align:center;color:#94a3b8;font-size:12px">Akun default: <strong style="color:#475569">admin / admin</strong></div>
+
+<div id="pwa-login-container" style="margin-top:16px;text-align:center;padding-top:14px;border-top:1px dashed #e2e8f0">
+  <button type="button" id="pwa-login-install" style="background:#ecfdf5;color:#04583d;border:1px solid #a7f3d0;padding:9px 16px;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px">
+    <span>📲</span> Pasang Aplikasi PDKQu di Layar HP
+  </button>
+</div>
 </form>
 <script>
 const q=new URLSearchParams(location.search);
 if(q.get('error')==='1')document.getElementById('msg').hidden=false;
+
+// Progressive Web App registration
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('sw.js').catch(function(e) {
+      console.warn('SW registration failed:', e);
+    });
+  });
+}
+
+// Hide install button if running in standalone PWA mode
+if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
+  var pwaCont = document.getElementById('pwa-login-container');
+  if (pwaCont) pwaCont.style.display = 'none';
+}
+
+var installBtn = document.getElementById('pwa-login-install');
+if (installBtn) {
+  installBtn.addEventListener('click', async function() {
+    if (window.deferredPwaPrompt) {
+      window.deferredPwaPrompt.prompt();
+      var res = await window.deferredPwaPrompt.userChoice;
+      if (res && res.outcome === 'accepted') {
+        var pwaCont = document.getElementById('pwa-login-container');
+        if (pwaCont) pwaCont.style.display = 'none';
+      }
+      window.deferredPwaPrompt = null;
+    } else {
+      alert("Petunjuk Pemasangan PDKQu:\n\n• Android (Chrome / Edge):\nKetuk ikon titik tiga (⋮) di pojok kanan atas browser, lalu pilih 'Pasang Aplikasi' atau 'Tambahkan ke Layar Utama'.\n\n• iPhone / iPad (Safari):\nKetuk tombol Bagikan (Share / ikon kotak berpanah ke atas di bilah bawah), gulir ke bawah lalu pilih 'Tambah ke Layar Utama' (Add to Home Screen).");
+    }
+  });
+}
 </script>
 </body>
 </html>
