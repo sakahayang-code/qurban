@@ -9,10 +9,13 @@ session_set_cookie_params([
 ]);
 session_start();
 
-if (empty($_SESSION['authenticated'])) {
-    header('Location: login.html', true, 302);
-    exit;
-}
 header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
 header('Pragma: no-cache');
+
+// Serve login directly with HTTP 200 OK so Chrome PWA start_url check always succeeds without 302 redirect
+if (empty($_SESSION['authenticated'])) {
+    require __DIR__ . '/login.html';
+    exit;
+}
+
 require __DIR__ . '/app.html';

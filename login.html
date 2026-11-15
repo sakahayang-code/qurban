@@ -19,6 +19,9 @@
 
 <script>
   window.deferredPwaPrompt = null;
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js', { scope: './' }).catch(function() {});
+  }
   window.addEventListener('beforeinstallprompt', function(e) {
     e.preventDefault();
     window.deferredPwaPrompt = e;

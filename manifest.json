@@ -1,9 +1,9 @@
 {
-  "id": "index.php?source=pwa",
+  "id": "pdkqu-qurban-app",
   "name": "PDKQu - Sistem Manajemen Qurban",
   "short_name": "PDKQu",
   "description": "Aplikasi Manajemen Panitia Qurban Modern, Cepat & Terintegrasi",
-  "start_url": "index.php?source=pwa",
+  "start_url": "index.php",
   "scope": "./",
   "display": "standalone",
   "display_override": ["standalone", "minimal-ui"],

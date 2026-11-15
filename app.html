@@ -16,10 +16,22 @@
   <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
   <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 
-  <!-- Early PWA Prompt & Install Detector -->
+  <!-- Immediate Service Worker & Early PWA Prompt Detector -->
   <script>
     window.pdkqPwaPrompt = null;
     window.pdkqPwaInstalled = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || window.navigator.standalone === true;
+
+    // Register Service Worker immediately in head for fast PWA qualification
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js', { scope: './' })
+        .then(function(reg) {
+          console.log('[PDKQu PWA] SW registered immediately:', reg.scope);
+        })
+        .catch(function(err) {
+          console.warn('[PDKQu PWA] SW immediate registration warning:', err);
+        });
+    }
+
     window.addEventListener('beforeinstallprompt', function(e) {
       e.preventDefault();
       window.pdkqPwaPrompt = e;
@@ -351,7 +363,7 @@ function App() {
     }, []);
 
     const handleInstallClick = async () => {
-        const promptEvent = deferredPrompt || window.pdkqPwaPrompt;
+        let promptEvent = deferredPrompt || window.pdkqPwaPrompt;
         if (promptEvent) {
             try {
                 await promptEvent.prompt();
@@ -359,17 +371,50 @@ function App() {
                 if (choice && choice.outcome === 'accepted') {
                     setIsStandalone(true);
                     setShowPwaBanner(false);
-                    showToast('PDKQu berhasil dipasang ke Layar Utama!');
+                    showToast('Alhamdulillah, PDKQu berhasil dipasang ke Layar Utama!');
                 }
                 setDeferredPrompt(null);
                 window.pdkqPwaPrompt = null;
+                return;
             } catch (err) {
-                console.warn('[PDKQu PWA] Gagal membuka prompt otomatis, menampilkan petunjuk:', err);
-                setShowInstallModal(true);
+                console.warn('[PDKQu PWA] Direct prompt error:', err);
             }
-        } else {
-            setShowInstallModal(true);
         }
+
+        // Wait up to 1.5s for in-flight prompt event if user clicked immediately on load
+        showToast('Membuka dialog instalasi langsung...', 'info');
+        const waitPrompt = new Promise((resolve) => {
+            const onReady = (e) => {
+                window.removeEventListener('pdkq-pwa-ready', onReady);
+                resolve(e.detail || window.pdkqPwaPrompt);
+            };
+            window.addEventListener('pdkq-pwa-ready', onReady);
+            setTimeout(() => {
+                window.removeEventListener('pdkq-pwa-ready', onReady);
+                resolve(window.pdkqPwaPrompt || null);
+            }, 1400);
+        });
+
+        const readyPrompt = await waitPrompt;
+        if (readyPrompt) {
+            try {
+                await readyPrompt.prompt();
+                const choice = await readyPrompt.userChoice;
+                if (choice && choice.outcome === 'accepted') {
+                    setIsStandalone(true);
+                    setShowPwaBanner(false);
+                    showToast('Alhamdulillah, PDKQu berhasil dipasang ke Layar Utama!');
+                }
+                setDeferredPrompt(null);
+                window.pdkqPwaPrompt = null;
+                return;
+            } catch (err) {
+                console.warn('[PDKQu PWA] Late prompt error:', err);
+            }
+        }
+
+        // Fallback to instruction modal only if platform strictly disallows JS prompt (e.g. iOS Safari)
+        setShowInstallModal(true);
     };
 
     const handleDismissPwa = () => {

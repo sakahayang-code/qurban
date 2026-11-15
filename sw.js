@@ -1,10 +1,10 @@
 /**
- * PDKQu Service Worker
+ * PDKQu Service Worker v2.0
  * Provides offline shell caching, asset persistence, and network resilience
  * for Panitia Qurban field operations.
  */
 
-const CACHE_NAME = 'pdkqu-cache-v1';
+const CACHE_NAME = 'pdkqu-cache-v2';
 const STATIC_ASSETS = [
   './',
   'index.php',
@@ -15,25 +15,32 @@ const STATIC_ASSETS = [
   'icons/icon.svg'
 ];
 
-// Install Event - Pre-cache critical application shell
+// Install Event - Pre-cache critical application shell smoothly
 self.addEventListener('install', (event) => {
+  self.skipWaiting();
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(STATIC_ASSETS).catch((err) => {
-        console.warn('[PDKQu SW] Warning pre-caching assets:', err);
-      });
-    }).then(() => self.skipWaiting())
+    caches.open(CACHE_NAME).then(async (cache) => {
+      for (const asset of STATIC_ASSETS) {
+        try {
+          const res = await fetch(asset, { cache: 'no-cache' });
+          if (res && res.status === 200) {
+            await cache.put(asset, res);
+          }
+        } catch (e) {
+          // Pre-cache item warning non-blocking
+        }
+      }
+    })
   );
 });
 
-// Activate Event - Clean up previous cache versions
+// Activate Event - Clean up previous cache versions & claim immediately
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(
         cacheNames.map((name) => {
           if (name !== CACHE_NAME) {
-            console.log('[PDKQu SW] Deleting obsolete cache:', name);
             return caches.delete(name);
           }
         })
@@ -45,12 +52,10 @@ self.addEventListener('activate', (event) => {
 // Fetch Event - Dynamic caching strategy
 self.addEventListener('fetch', (event) => {
   const request = event.request;
-  const url = new URL(request.url);
-
-  // Skip non-GET requests (mutations must go to live server)
   if (request.method !== 'GET') {
     return;
   }
+  const url = new URL(request.url);
 
   // API Requests: Network First, fallback to cached data if offline
   if (url.pathname.endsWith('api.php') || url.search.includes('action=')) {
@@ -104,7 +109,6 @@ self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.match(request).then((cachedResponse) => {
       if (cachedResponse) {
-        // Fetch in background to update cache
         fetch(request).then((networkResponse) => {
           if (networkResponse && networkResponse.status === 200) {
             caches.open(CACHE_NAME).then((cache) => cache.put(request, networkResponse));
